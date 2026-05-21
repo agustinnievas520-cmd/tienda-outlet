@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <!-- White background circle -->
+  <circle cx="150" cy="150" r="148" fill="white"/>
+  <!-- Gold border (thin, elegant) -->
+  <circle cx="150" cy="150" r="145" fill="none" stroke="#C4952A" stroke-width="5"/>
+  <circle cx="150" cy="150" r="132" fill="none" stroke="#C4952A" stroke-width="1.5"/>
+
+  <!-- Icons — light gold lines on white -->
+  <g stroke="#C4952A" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Pendant lamp top center -->
+    <line x1="150" y1="32" x2="150" y2="54" stroke-width="3"/>
+    <line x1="141" y1="54" x2="159" y2="54" stroke-width="2.5"/>
+    <line x1="141" y1="54" x2="130" y2="80" stroke-width="2.5"/>
+    <line x1="159" y1="54" x2="170" y2="80" stroke-width="2.5"/>
+    <line x1="127" y1="80" x2="173" y2="80" stroke-width="3"/>
+
+    <!-- TV / monitor left -->
+    <rect x="38" y="92" width="72" height="52" rx="3" stroke-width="2.5"/>
+    <line x1="74" y1="144" x2="74" y2="158" stroke-width="3"/>
+    <line x1="55" y1="158" x2="93" y2="158" stroke-width="3"/>
+
+    <!-- Armchair right -->
+    <rect x="186" y="90" width="52" height="52" rx="4" stroke-width="2.5"/>
+    <rect x="168" y="112" width="18" height="24" rx="4" stroke-width="2.5"/>
+    <rect x="238" y="112" width="18" height="24" rx="4" stroke-width="2.5"/>
+    <rect x="175" y="142" width="72" height="22" rx="4" stroke-width="2.5"/>
+  </g>
+
+  <!-- Thin separator -->
+  <line x1="50" y1="182" x2="250" y2="182" stroke="#C4952A" stroke-width="1.2"/>
+
+  <!-- Brand name -->
+  <text x="150" y="212"
+    font-family="'Arial Black', 'Arial Bold', Arial, Helvetica, sans-serif"
+    font-size="26" font-weight="900" letter-spacing="1"
+    text-anchor="middle" fill="#C4952A">OUTLET HOGAR</text>
+</svg>

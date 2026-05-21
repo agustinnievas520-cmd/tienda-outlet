@@ -1,0 +1,151 @@
+.nav {
+  background: #fff;
+  border-bottom: 1px solid #e5e5e5;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 70px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.logoIconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.logoName {
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: -0.3px;
+}
+
+.outlet {
+  font-weight: 400;
+  color: #1a1a1a;
+}
+
+.hogar {
+  font-weight: 800;
+  color: #1a1a1a;
+}
+
+.logoSub {
+  font-size: 11px;
+  color: #888;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.search {
+  flex: 1;
+  display: flex;
+  border: 1.5px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+
+.search:focus-within {
+  border-color: #FFD100;
+  box-shadow: 0 0 0 3px rgba(255,209,0,0.15);
+}
+
+.searchInput {
+  flex: 1;
+  border: none;
+  padding: 11px 16px;
+  font-size: 14px;
+  color: #333;
+  outline: none;
+  background: #fff;
+}
+
+.searchInput::placeholder { color: #aaa; }
+
+.searchBtn {
+  background: #FFD100;
+  border: none;
+  padding: 11px 20px;
+  cursor: pointer;
+  color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  transition: background 0.15s ease;
+}
+
+.searchBtn:hover { background: #f0c800; }
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.catalogoBtn {
+  color: #333;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 18px;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.catalogoBtn:hover { border-color: #333; }
+
+.waBtn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #25D366;
+  color: #fff;
+  text-decoration: none;
+  padding: 9px 18px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.waBtn:hover { background: #1ebe5d; }
+
+@media (max-width: 900px) {
+  .catalogoBtn { display: none; }
+  .waBtn span { display: none; }
+}
+
+@media (max-width: 600px) {
+  .inner { padding: 0 12px; gap: 12px; height: 60px; }
+  .logoName { font-size: 16px; }
+  .outlet { display: none; }
+}

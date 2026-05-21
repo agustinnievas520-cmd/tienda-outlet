@@ -1,0 +1,96 @@
+.section {
+  background: #fff;
+  border-bottom: 8px solid #f5f5f5;
+}
+
+/* Banner rojo llamativo */
+.banner {
+  background: linear-gradient(135deg, #c62828 0%, #e53935 100%);
+  padding: 20px 0;
+}
+
+.bannerInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.bannerLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.fire {
+  font-size: 48px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.bannerTitle {
+  font-size: 26px;
+  font-weight: 900;
+  color: #FFD100;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.bannerSub {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.verTodos {
+  font-size: 14px;
+  font-weight: 800;
+  color: #FFD100;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 2px solid #FFD100;
+  padding: 8px 18px;
+  border-radius: 8px;
+  transition: background 0.15s ease, color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.verTodos:hover {
+  background: #FFD100;
+  color: #c62828;
+}
+
+/* Grid de productos */
+.inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px 24px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 1100px) {
+  .grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .grid { grid-template-columns: repeat(3, 1fr); }
+  .bannerTitle { font-size: 20px; }
+  .fire { font-size: 36px; }
+}
+
+@media (max-width: 500px) {
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .inner { padding: 16px 12px; }
+  .bannerInner { padding: 0 12px; flex-direction: column; align-items: flex-start; gap: 10px; }
+  .verTodos { align-self: flex-end; }
+}

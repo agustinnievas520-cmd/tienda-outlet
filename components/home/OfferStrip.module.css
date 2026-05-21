@@ -1,0 +1,150 @@
+.strip {
+  background: linear-gradient(90deg, #1A1A1A 0%, #2E2E2E 100%);
+  border-top: 2px solid #C9962A;
+  border-bottom: 2px solid #C9962A;
+  margin: 24px 0;
+}
+
+.inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.fire {
+  font-size: 36px;
+  line-height: 1;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #E8B84B;
+  letter-spacing: 1px;
+}
+
+.sub {
+  font-size: 13px;
+  color: #ccc;
+}
+
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.timerLabel {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.timer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.digit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #C9962A;
+  border-radius: 6px;
+  padding: 6px 10px;
+  min-width: 52px;
+}
+
+.num {
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.digitLabel {
+  font-size: 9px;
+  color: rgba(255,255,255,0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sep {
+  font-size: 24px;
+  font-weight: 800;
+  color: #C9962A;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.oldPrice {
+  font-size: 14px;
+  color: #666;
+  text-decoration: line-through;
+}
+
+.price {
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.btn {
+  background: #C9962A;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: #E8B84B;
+}
+
+@media (max-width: 900px) {
+  .inner { flex-wrap: wrap; justify-content: center; gap: 16px; }
+  .left { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 600px) {
+  .inner { padding: 16px 12px; }
+  .right { flex-wrap: wrap; justify-content: center; }
+  .digit { min-width: 44px; padding: 5px 8px; }
+  .num { font-size: 20px; }
+}

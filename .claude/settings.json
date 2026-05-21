@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"c:\\\\Users\\\\Usuario\\\\TIENDA OUTLET\")",
+      "PowerShell(npm config set strict-ssl false)",
+      "PowerShell(npm config get strict-ssl)"
+    ]
+  }
+}

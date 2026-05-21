@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Producto {
+  id           Int      @id @default(autoincrement())
+  nombre       String
+  categoria    String
+  precio_costo Float
+  imagen_url   String
+  disponible   Boolean  @default(true)
+  url_origen   String   @unique
+  descripcion  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Configuracion {
+  id                Int    @id @default(autoincrement())
+  margen_ganancia   Float  @default(1.35)
+  margen_financiado Float  @default(1.75)
+  cuotas            Int    @default(12)
+  interes_cuota     Float  @default(0.038)
+  whatsapp_numero   String @default("5491100000000")
+  whatsapp_numero_2 String @default("")
+}
+
+model LogSincronizacion {
+  id                    Int      @id @default(autoincrement())
+  fecha                 DateTime @default(now())
+  productos_nuevos      Int
+  productos_actualizados Int
+  errores               String?
+}

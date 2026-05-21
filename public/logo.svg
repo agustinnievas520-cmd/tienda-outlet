@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <radialGradient id="gold" cx="42%" cy="38%" r="62%">
+      <stop offset="0%" stop-color="#edbc68"/>
+      <stop offset="50%" stop-color="#c88c2a"/>
+      <stop offset="100%" stop-color="#9e6210"/>
+    </radialGradient>
+    <clipPath id="c">
+      <circle cx="150" cy="150" r="125"/>
+    </clipPath>
+  </defs>
+
+  <!-- Outer dark ring -->
+  <circle cx="150" cy="150" r="149" fill="#18100a"/>
+  <!-- Cream/white ring -->
+  <circle cx="150" cy="150" r="141" fill="#f0ece0"/>
+  <!-- Inner dark ring -->
+  <circle cx="150" cy="150" r="133" fill="#18100a"/>
+  <!-- Golden fill -->
+  <circle cx="150" cy="150" r="126" fill="url(#gold)"/>
+
+  <!-- Icons (clipped to golden circle) -->
+  <g clip-path="url(#c)" stroke="#18100a" fill="none" stroke-linecap="round" stroke-linejoin="round">
+
+    <!-- Pendant lamp (top center) -->
+    <line x1="150" y1="28" x2="150" y2="50" stroke-width="3.5"/>
+    <line x1="141" y1="50" x2="159" y2="50" stroke-width="3"/>
+    <line x1="141" y1="50" x2="130" y2="78" stroke-width="3"/>
+    <line x1="159" y1="50" x2="170" y2="78" stroke-width="3"/>
+    <line x1="128" y1="78" x2="172" y2="78" stroke-width="3.5"/>
+
+    <!-- TV / Monitor (left) -->
+    <rect x="37" y="90" width="70" height="52" rx="3" stroke-width="3"/>
+    <line x1="72" y1="142" x2="72" y2="157" stroke-width="3.5"/>
+    <line x1="53" y1="157" x2="91" y2="157" stroke-width="3.5"/>
+
+    <!-- Armchair (right, front view) -->
+    <rect x="185" y="88" width="50" height="50" rx="4" stroke-width="3"/>
+    <rect x="168" y="110" width="17" height="22" rx="4" stroke-width="3"/>
+    <rect x="235" y="110" width="17" height="22" rx="4" stroke-width="3"/>
+    <rect x="175" y="138" width="70" height="22" rx="4" stroke-width="3"/>
+
+  </g>
+
+  <!-- Separator line -->
+  <line x1="44" y1="178" x2="256" y2="178" stroke="#18100a" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- Brand name -->
+  <text x="150" y="207"
+    font-family="'Arial Black', 'Arial Bold', Arial, Helvetica, sans-serif"
+    font-size="27" font-weight="900" letter-spacing="1"
+    text-anchor="middle" fill="#18100a">OUTLET HOGAR</text>
+
+  <!-- Tagline -->
+  <text x="150" y="225"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="11.5" letter-spacing="2.5"
+    text-anchor="middle" fill="#18100a">TODO PARA TU HOGAR</text>
+</svg>

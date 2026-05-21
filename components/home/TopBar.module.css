@@ -1,0 +1,32 @@
+.bar {
+  background: #FFD100;
+}
+
+.inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 9px 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+.item:last-child:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 700px) {
+  .inner { grid-template-columns: 1fr; gap: 4px; padding: 8px 12px; }
+  .item:not(:first-child) { display: none; }
+}
