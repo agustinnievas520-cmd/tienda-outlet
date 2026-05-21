@@ -1,12 +1,13 @@
 .footer {
-  background: #333;
-  padding-top: 40px;
+  background: #111;
+  border-top: 3px solid #C9962A;
+  padding-top: 48px;
 }
 
 .inner {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 24px 36px;
+  padding: 0 24px 40px;
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 40px;
@@ -15,36 +16,38 @@
 .brand {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .logoIcon {
-  font-size: 30px;
+  font-size: 32px;
 }
 
 .logoName {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 17px;
+  font-weight: 800;
   color: #fff;
+  letter-spacing: 0.3px;
 }
 
 .logoSub {
   font-size: 10px;
-  color: #aaa;
+  color: #C9962A;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  font-weight: 600;
 }
 
 .tagline {
   font-size: 13px;
-  color: #aaa;
-  line-height: 1.6;
+  color: #888;
+  line-height: 1.7;
   margin: 0;
 }
 
@@ -57,24 +60,26 @@
   background: #25D366;
   color: #fff;
   text-decoration: none;
-  padding: 8px 14px;
-  border-radius: 4px;
+  padding: 9px 16px;
+  border-radius: 5px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   transition: background 0.15s ease;
 }
 
 .socialBtn:hover { background: #1ebe5d; }
 
-.col { display: flex; flex-direction: column; gap: 10px; }
+.col { display: flex; flex-direction: column; gap: 12px; }
 
 .colTitle {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
-  color: #fff;
+  color: #C9962A;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   margin: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #2a2a2a;
 }
 
 .list {
@@ -83,20 +88,20 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 8px;
 }
 
 .list a {
-  color: #aaa;
+  color: #888;
   text-decoration: none;
   font-size: 13px;
   transition: color 0.15s ease;
 }
 
-.list a:hover { color: #fff; }
-.list li { color: #aaa; font-size: 13px; }
+.list a:hover { color: #C9962A; }
+.list li { color: #888; font-size: 13px; }
 
-.bottom { border-top: 1px solid rgba(255,255,255,0.08); }
+.bottom { border-top: 1px solid #1e1e1e; }
 
 .bottomInner {
   max-width: 1280px;
@@ -106,7 +111,7 @@
   justify-content: space-between;
   gap: 16px;
   font-size: 11px;
-  color: #666;
+  color: #555;
 }
 
 @media (max-width: 900px) {
@@ -115,6 +120,6 @@
 }
 
 @media (max-width: 560px) {
-  .inner { grid-template-columns: 1fr; padding: 0 12px 32px; }
+  .inner { grid-template-columns: 1fr; padding: 0 16px 32px; }
   .bottomInner { flex-direction: column; gap: 4px; }
 }

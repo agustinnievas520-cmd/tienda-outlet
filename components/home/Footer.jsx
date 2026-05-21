@@ -1,4 +1,5 @@
 import styles from "./Footer.module.css";
+import Image from "next/image";
 
 const WA = "5403401642045";
 
@@ -8,7 +9,7 @@ export default function Footer() {
       <div className={styles.inner}>
         <div className={styles.brand}>
           <div className={styles.logo}>
-            <span className={styles.logoIcon}>🏠</span>
+            <Image src="/logo.svg" alt="Outlet Hogar" width={40} height={40} />
             <div>
               <div className={styles.logoName}>Outlet Hogar</div>
               <div className={styles.logoSub}>Todo para tu hogar</div>
