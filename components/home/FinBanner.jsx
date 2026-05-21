@@ -3,7 +3,7 @@ import styles from "./FinBanner.module.css";
 const WA = "5403401642045";
 
 const CalendarIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9962A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFD100" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <rect x="3" y="4" width="18" height="18" rx="2"/>
     <line x1="16" y1="2" x2="16" y2="6"/>
     <line x1="8" y1="2" x2="8" y2="6"/>
@@ -12,7 +12,7 @@ const CalendarIcon = () => (
 );
 
 const WalletIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9962A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFD100" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="7" width="20" height="14" rx="2"/>
     <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
     <circle cx="12" cy="14" r="2"/>

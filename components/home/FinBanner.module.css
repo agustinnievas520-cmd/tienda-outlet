@@ -25,7 +25,7 @@
   gap: 8px;
   font-size: 11px;
   font-weight: 700;
-  color: #C9962A;
+  color: #FFD100;
   text-transform: uppercase;
   letter-spacing: 1.5px;
 }
@@ -34,7 +34,7 @@
   display: inline-block;
   width: 16px;
   height: 2px;
-  background: #C9962A;
+  background: #FFD100;
   border-radius: 2px;
 }
 
@@ -47,7 +47,7 @@
 }
 
 .titleGold {
-  color: #C9962A;
+  color: #FFD100;
 }
 
 .desc {
@@ -61,8 +61,8 @@
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  background: #C9962A;
-  color: #fff;
+  background: #FFD100;
+  color: #111;
   text-decoration: none;
   padding: 13px 28px;
   border-radius: 6px;
@@ -73,7 +73,7 @@
 }
 
 .btn:hover {
-  background: #b38000;
+  background: #e6bc00;
 }
 
 .cards {
@@ -84,7 +84,7 @@
 
 .card {
   background: #1a1a1a;
-  border: 1px solid #C9962A;
+  border: 1px solid #FFD100;
   border-radius: 10px;
   padding: 22px 16px;
   display: flex;
@@ -101,7 +101,7 @@
 .cardLabel {
   font-size: 10px;
   font-weight: 700;
-  color: #C9962A;
+  color: #FFD100;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
