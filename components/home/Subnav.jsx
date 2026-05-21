@@ -2,13 +2,13 @@
 import styles from "./Subnav.module.css";
 
 const categorias = [
-  { label: "Electrodomésticos", href: "/catalogo?cat=electrodomesticos" },
-  { label: "Tecnología", href: "/catalogo?cat=tecnologia" },
-  { label: "Muebles y Hogar", href: "/catalogo?cat=muebles" },
-  { label: "Motos", href: "/catalogo?cat=motos" },
-  { label: "Bicicletas", href: "/catalogo?cat=bicicletas" },
-  { label: "Baño", href: "/catalogo?cat=bano" },
-  { label: "Combos", href: "/catalogo?cat=combos" },
+  { label: "Electrodomésticos", href: "/catalogo?categoria=Electrodom%C3%A9sticos" },
+  { label: "Tecnología", href: "/catalogo?categoria=Inform%C3%A1tica+y+Celulares" },
+  { label: "Muebles y Hogar", href: "/catalogo?categoria=Muebles" },
+  { label: "Motos", href: "/catalogo?q=moto" },
+  { label: "Bicicletas", href: "/catalogo?q=bicicleta" },
+  { label: "Baño", href: "/catalogo?q=ba%C3%B1o" },
+  { label: "Combos", href: "/catalogo?q=combo" },
   { label: "🔥 Ofertas", href: "/catalogo?orden=precio_asc" },
 ];
 

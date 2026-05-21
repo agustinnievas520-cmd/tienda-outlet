@@ -28,9 +28,7 @@ export async function GET(request: NextRequest) {
     };
     if (categoria) where.categoria = categoria;
     if (busqueda) {
-      // SQLite no soporta mode:'insensitive', usamos contains con el término original
-      // y además probamos en minúscula para mejor cobertura
-      where.nombre = { contains: busqueda };
+      where.nombre = { contains: busqueda, mode: "insensitive" };
     }
 
     // Ordenamiento
