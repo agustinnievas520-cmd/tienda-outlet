@@ -111,15 +111,18 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
             </div>
 
             {/* Imagen */}
-            <div className="relative aspect-square mx-4 flex-1">
+            <div className="relative aspect-square mx-4 flex-1 overflow-hidden">
               <Image
                 src={imgSrc}
                 alt={producto.nombre}
                 fill
                 className="object-contain p-4"
+                style={{ objectPosition: "50% 5%" }}
                 sizes="(max-width: 768px) 100vw, 42vw"
                 unoptimized
               />
+              {/* Gradiente que cubre la franja inferior del proveedor */}
+              <div className="absolute inset-x-0 bottom-0 h-[18%] bg-gradient-to-t from-white to-transparent pointer-events-none z-[5]" />
             </div>
 
             {/* Branding Outlet Hogar */}

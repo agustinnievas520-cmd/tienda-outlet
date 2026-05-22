@@ -30,6 +30,7 @@ export default function ProductCard({ product }) {
           loading="lazy"
           onError={(e) => { e.currentTarget.style.opacity = "0"; }}
         />
+        <div className={styles.imgMask} />
       </div>
       <div className={styles.body}>
         <p className={styles.name}>{nombre}</p>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 
 interface Producto {
@@ -33,6 +34,7 @@ function formatearPrecio(valor: number): string {
 }
 
 export default function TarjetaProducto({ producto, whatsappNumero, onVerDetalle }: Props) {
+  const [imgError, setImgError] = useState(false);
   const mensajeWA = encodeURIComponent(
     `Hola! Estoy interesado en ${producto.nombre}. ¿Me podés dar más info y opciones de financiación?`
   );
@@ -51,15 +53,21 @@ export default function TarjetaProducto({ producto, whatsappNumero, onVerDetalle
         onClick={onVerDetalle}
         title="Ver detalle"
       >
-        {producto.imagen_url ? (
-          <Image
-            src={imgSrc}
-            alt={producto.nombre}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            unoptimized
-          />
+        {producto.imagen_url && !imgError ? (
+          <>
+            <Image
+              src={imgSrc}
+              alt={producto.nombre}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              style={{ objectPosition: "50% 5%" }}
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              unoptimized
+              onError={() => setImgError(true)}
+            />
+            {/* Gradiente que cubre la franja inferior del proveedor */}
+            <div className="absolute inset-x-0 bottom-0 h-[22%] bg-gradient-to-t from-gray-100 to-transparent pointer-events-none z-[5]" />
+          </>
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-300">
             <svg
