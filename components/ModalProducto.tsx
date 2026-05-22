@@ -56,9 +56,7 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
       );
 
   const urlWA = `https://wa.me/${numeroDestino}?text=${mensajeWA}`;
-  const imgSrc = producto.imagen_url.startsWith("/")
-    ? `${producto.imagen_url}?v=3`
-    : `/api/imagen?v=10&url=${encodeURIComponent(producto.imagen_url)}`;
+  const imgSrc = `/api/imagen?v=11&url=${encodeURIComponent(producto.imagen_url.split("?")[0])}`;
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onCerrar(); };

@@ -45,7 +45,13 @@ function ComboCard({ combo }) {
             <div className={styles.productoItem}>
               <div className={styles.imgWrap}>
                 {cantidad > 1 && <span className={styles.cantBadge}>x{cantidad}</span>}
-                <img src={p.imagen_url} alt={p.nombre} className={styles.img} />
+                <img
+                  src={`/api/imagen?v=11&url=${encodeURIComponent((p.imagen_url || "").split("?")[0])}`}
+                  alt={p.nombre}
+                  className={styles.img}
+                  onError={(e) => { e.currentTarget.style.opacity = "0"; }}
+                />
+                <div className={styles.imgMask} />
               </div>
               <div className={styles.productoNombre}>{label ?? p.nombre}</div>
               <div className={styles.productoPrecio}>{formatPrecio(p.precio_contado * cantidad)}</div>

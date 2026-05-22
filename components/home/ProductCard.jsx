@@ -13,6 +13,7 @@ export default function ProductCard({ product }) {
   const descuento = precio_financiado > precio_contado
     ? Math.round(((precio_financiado - precio_contado) / precio_financiado) * 100)
     : 0;
+  const imgSrc = `/api/imagen?v=11&url=${encodeURIComponent((imagen_url || "").split("?")[0])}`;
 
   return (
     <a
@@ -24,7 +25,7 @@ export default function ProductCard({ product }) {
       <div className={styles.imgWrap}>
         {descuento > 0 && <span className={styles.disc}>{descuento}% OFF</span>}
         <img
-          src={imagen_url}
+          src={imgSrc}
           alt={nombre}
           className={styles.img}
           loading="lazy"

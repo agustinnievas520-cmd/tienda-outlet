@@ -41,9 +41,7 @@ export default function TarjetaProducto({ producto, whatsappNumero, onVerDetalle
   const urlWA = `https://wa.me/${whatsappNumero}?text=${mensajeWA}`;
 
   const tienePrecio = producto.precio_costo > 0;
-  const imgSrc = producto.imagen_url.startsWith("/")
-    ? `${producto.imagen_url}?v=3`
-    : `/api/imagen?v=10&url=${encodeURIComponent(producto.imagen_url)}`;
+  const imgSrc = `/api/imagen?v=11&url=${encodeURIComponent(producto.imagen_url.split("?")[0])}`;
 
   return (
     <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden flex flex-col group">
