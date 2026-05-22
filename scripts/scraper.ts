@@ -150,12 +150,16 @@ async function main() {
                 });
 
                 if (existente) {
+                  // Nunca sobreescribir imagen local con URL externa del proveedor
+                  const imagenFinal = existente.imagen_url?.startsWith("/imagenes/")
+                    ? existente.imagen_url
+                    : (p.imagen_url || existente.imagen_url);
                   await prisma.producto.update({
                     where: { url_origen: p.url_origen },
                     data: {
                       nombre: p.nombre,
                       categoria: categoria.nombre,
-                      imagen_url: p.imagen_url || existente.imagen_url,
+                      imagen_url: imagenFinal,
                       precio_costo: p.precio_costo > 0 ? p.precio_costo : existente.precio_costo,
                       disponible: p.disponible,
                     },
