@@ -59,7 +59,7 @@ async function leerTotalProductos(page: Page): Promise<number> {
 async function extraerProductos(page: Page): Promise<ProductoExtraido[]> {
   return page.evaluate(() => {
     const resultado: Array<{
-      nombre: string; imagen_url: string; url_origen: string; precio_costo: number;
+      nombre: string; imagen_url: string; url_origen: string; precio_costo: number; disponible: boolean;
     }> = [];
 
     document.querySelectorAll("li.product").forEach((item) => {
