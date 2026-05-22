@@ -13,14 +13,14 @@ const promos = [
       { icon: "🎨", text: "Colores más reales" },
       { icon: "🛡️", text: "Garantía oficial" },
     ],
-    color: "#111214",
-    overlayFrom: "rgba(17,18,20,1)",
-    overlayMid: "rgba(17,18,20,0.82)",
-    overlayTo: "rgba(17,18,20,0.15)",
+    bg: "#0e0e12",
     accent: "#FFD100",
+    rightBg: "linear-gradient(135deg, #1a1a2e 0%, #0d0d20 100%)",
+    glowColor: "rgba(90,120,255,0.22)",
     href: "/catalogo?categoria=Smart+TV",
     cta: "Ver ofertas",
     img: "/categorias/smart-tv.jpg",
+    imgStyle: { objectFit: "cover", objectPosition: "62% center" },
   },
   {
     tagIcon: "❄️",
@@ -33,14 +33,14 @@ const promos = [
       { icon: "🛡️", text: "Seguridad garantizada" },
       { icon: "💳", text: "12 cuotas sin interés" },
     ],
-    color: "#091525",
-    overlayFrom: "rgba(9,21,37,1)",
-    overlayMid: "rgba(9,21,37,0.82)",
-    overlayTo: "rgba(9,21,37,0.15)",
+    bg: "#080f1c",
     accent: "#4db8ff",
+    rightBg: "linear-gradient(135deg, #f2e8d8 0%, #fdf5eb 100%)",
+    glowColor: "rgba(255,140,30,0.35)",
     href: "/catalogo?categoria=Climatizaci%C3%B3n",
     cta: "Ver calefacción",
-    img: "/categorias/climatizacion.jpg",
+    img: "/imagenes/productos/1099.webp",
+    imgStyle: { objectFit: "contain", objectPosition: "center 15%" },
   },
   {
     tagIcon: "⭐",
@@ -53,14 +53,14 @@ const promos = [
       { icon: "⚙️", text: "Calidad garantizada" },
       { icon: "💳", text: "12 cuotas sin interés" },
     ],
-    color: "#0c1c0c",
-    overlayFrom: "rgba(12,28,12,1)",
-    overlayMid: "rgba(12,28,12,0.82)",
-    overlayTo: "rgba(12,28,12,0.15)",
+    bg: "#0b190b",
     accent: "#6ed940",
+    rightBg: "linear-gradient(135deg, #121f10 0%, #0a1508 100%)",
+    glowColor: "rgba(110,217,64,0.2)",
     href: "/catalogo?q=bicicleta",
     cta: "Ver bicicletas",
     img: "/categorias/bicicletas.jpg",
+    imgStyle: { objectFit: "cover", objectPosition: "center" },
   },
 ];
 
@@ -77,74 +77,71 @@ export default function PromoGrid() {
               key={p.tag}
               href={p.href}
               className={styles.card}
-              style={{ background: p.color }}
+              style={{ background: p.bg }}
             >
-              {/* Imagen de fondo */}
-              <img
-                src={p.img}
-                alt=""
-                className={styles.bgImg}
-                aria-hidden="true"
-                onError={(e) => { e.currentTarget.style.display = "none"; }}
-              />
-
-              {/* Overlay degradado */}
-              <div
-                className={styles.overlay}
-                style={{
-                  background: `linear-gradient(100deg, ${p.overlayFrom} 32%, ${p.overlayMid} 54%, ${p.overlayTo} 80%)`,
-                }}
-              />
-
-              {/* Contenido */}
-              <div className={styles.content}>
-                {/* Badge */}
+              {/* Panel izquierdo — texto */}
+              <div className={styles.textPanel}>
                 <span
                   className={styles.tag}
-                  style={{ color: p.accent, borderColor: `${p.accent}55` }}
+                  style={{ color: p.accent, borderColor: `${p.accent}44` }}
                 >
-                  <span className={styles.tagIcon}>{p.tagIcon}</span>
+                  <span>{p.tagIcon}</span>
                   {p.tag}
                 </span>
 
-                {/* Título */}
                 <div className={styles.titleBlock}>
                   {p.titleLines.map((line) => (
                     <span key={line} className={styles.titleLine}>
                       {line}
                     </span>
                   ))}
-                  <span
-                    className={styles.titleAccent}
-                    style={{ color: p.accent }}
-                  >
+                  <span className={styles.titleAccent} style={{ color: p.accent }}>
                     {p.titleAccent}
                   </span>
                 </div>
 
-                {/* Subtítulo */}
                 <p className={styles.sub}>{p.sub}</p>
 
-                {/* Features */}
                 <ul className={styles.features}>
                   {p.features.map((f) => (
                     <li key={f.text} className={styles.feature}>
                       <span className={styles.featureIcon}>{f.icon}</span>
-                      <span>{f.text}</span>
+                      <span className={styles.featureText}>{f.text}</span>
                     </li>
                   ))}
                 </ul>
 
-                {/* CTA */}
                 <span
                   className={styles.cta}
-                  style={{ background: p.accent, color: p.color }}
+                  style={{ background: p.accent, color: p.bg }}
                 >
                   {p.cta}
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                 </span>
+              </div>
+
+              {/* Panel derecho — producto */}
+              <div className={styles.imgPanel} style={{ background: p.rightBg }}>
+                {/* Glow detrás del producto */}
+                <div
+                  className={styles.glow}
+                  style={{ background: `radial-gradient(ellipse at 50% 60%, ${p.glowColor} 0%, transparent 70%)` }}
+                />
+                {/* Transición izquierda */}
+                <div
+                  className={styles.imgFade}
+                  style={{ background: `linear-gradient(to right, ${p.bg} 0%, transparent 50%)` }}
+                />
+                <img
+                  src={p.img}
+                  alt=""
+                  className={styles.productImg}
+                  style={p.imgStyle}
+                  aria-hidden="true"
+                  onError={(e) => { e.currentTarget.style.opacity = "0"; }}
+                />
               </div>
             </a>
           ))}
