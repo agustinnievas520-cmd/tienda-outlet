@@ -343,24 +343,6 @@ export default async function HomePage() {
         />
       )}
 
-      {secciones.flatMap(([cat, prods], i) => {
-        const items = [];
-        if (i === insertarOfertaEn) {
-          items.push(<OfertaSemanal key="oferta-semanal" products={gastronomicosConPrecios} />);
-        }
-        items.push(
-          <ProductSection
-            key={cat}
-            title={cat}
-            products={prods}
-            verTodosHref={`/catalogo?categoria=${encodeURIComponent(cat)}`}
-          />
-        );
-        return items;
-      })}
-      {insertarOfertaEn >= secciones.length && (
-        <OfertaSemanal products={gastronomicosConPrecios} />
-      )}
 
       <CombosSection combos={combos} />
 
