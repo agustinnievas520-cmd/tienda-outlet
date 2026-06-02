@@ -13,7 +13,7 @@ export default function ProductCard({ product }) {
   const descuento = precio_financiado > precio_contado
     ? Math.round(((precio_financiado - precio_contado) / precio_financiado) * 100)
     : 0;
-  const imgSrc = `/api/imagen?v=11&url=${encodeURIComponent((imagen_url || "").split("?")[0])}`;
+  const imgSrc = `/api/imagen?v=12&url=${encodeURIComponent((imagen_url || "").split("?")[0])}`;
 
   return (
     <a

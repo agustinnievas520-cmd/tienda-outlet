@@ -1,6 +1,22 @@
 import puppeteer, { Browser, Page } from "puppeteer-core";
 import { PrismaClient } from "@prisma/client";
 import * as fs from "fs";
+import * as path from "path";
+
+// Cargar .env.local automáticamente (Next.js lo hace, ts-node no)
+const envFile = path.join(__dirname, "..", ".env.local");
+if (fs.existsSync(envFile)) {
+  for (const line of fs.readFileSync(envFile, "utf-8").split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const idx = trimmed.indexOf("=");
+    if (idx < 0) continue;
+    const key = trimmed.slice(0, idx);
+    let val = trimmed.slice(idx + 1);
+    if (val.startsWith('"') && val.endsWith('"')) val = val.slice(1, -1);
+    if (!process.env[key]) process.env[key] = val;
+  }
+}
 
 const prisma = new PrismaClient();
 const DELAY_MS = 1200;
@@ -207,13 +223,17 @@ async function main() {
   } finally {
     if (browser) await browser.close();
 
-    await prisma.logSincronizacion.create({
-      data: {
-        productos_nuevos: productosNuevos,
-        productos_actualizados: productosActualizados,
-        errores: errores.length > 0 ? errores.slice(0, 20).join("\n") : null,
-      },
-    });
+    try {
+      await prisma.logSincronizacion.create({
+        data: {
+          productos_nuevos: productosNuevos,
+          productos_actualizados: productosActualizados,
+          errores: errores.length > 0 ? errores.slice(0, 20).join("\n") : null,
+        },
+      });
+    } catch (logErr) {
+      console.error(`⚠️  No se pudo guardar el log: ${logErr}`);
+    }
 
     console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
     console.log(`✅ Nuevos:       ${productosNuevos}`);
