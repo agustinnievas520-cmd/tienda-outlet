@@ -1,6 +1,8 @@
 import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
 import CatalogoCliente from "@/components/CatalogoCliente";
+
+export const dynamic = "force-dynamic";
 import TopBar from "@/components/home/TopBar";
 import Navbar from "@/components/home/Navbar";
 import Subnav from "@/components/home/Subnav";

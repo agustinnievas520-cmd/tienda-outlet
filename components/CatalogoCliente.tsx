@@ -190,7 +190,7 @@ export default function CatalogoCliente({ whatsappNumero, whatsappNumero2 = "" }
           {categorias.length > 0 && (
             <div className="flex gap-2 mt-3 overflow-x-auto pb-1 scrollbar-none">
               <button
-                onClick={() => setCategoriaActiva("")}
+                onClick={() => { setCategoriaActiva(""); setBusqueda(""); }}
                 className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
                   categoriaActiva === ""
                     ? "bg-[#1a1a2e] text-white"
@@ -202,7 +202,7 @@ export default function CatalogoCliente({ whatsappNumero, whatsappNumero2 = "" }
               {categorias.map((cat) => (
                 <button
                   key={cat}
-                  onClick={() => setCategoriaActiva(cat === categoriaActiva ? "" : cat)}
+                  onClick={() => { setCategoriaActiva(cat === categoriaActiva ? "" : cat); setBusqueda(""); }}
                   className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
                     categoriaActiva === cat
                       ? "bg-[#1a1a2e] text-white"
@@ -259,7 +259,7 @@ export default function CatalogoCliente({ whatsappNumero, whatsappNumero2 = "" }
                 <TarjetaProducto
                   key={producto.id}
                   producto={producto}
-                  whatsappNumero={whatsappNumero}
+                  whatsappNumero={numeroModal1}
                   onVerDetalle={() => setProductoModal(producto)}
                 />
               ))}
