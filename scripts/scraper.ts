@@ -75,6 +75,54 @@ async function leerTotalProductos(page: Page): Promise<number> {
   });
 }
 
+// El listado usa carga diferida: cada <img> arranca con el logo de Viena como placeholder
+// y recién se reemplaza por la foto real cuando el elemento entra en el viewport. Sin este
+// scroll, se termina guardando el logo como si fuera la imagen del producto.
+async function forzarCargaDeImagenes(page: Page): Promise<void> {
+  await page.evaluate(async () => {
+    const paso = 300;
+    const alturaTotal = document.body.scrollHeight;
+    for (let y = 0; y < alturaTotal; y += paso) {
+      window.scrollTo(0, y);
+      await new Promise((r) => setTimeout(r, 150));
+    }
+  });
+
+  // Reintentos dirigidos: forzar al viewport cualquier imagen que siga en el placeholder
+  for (let intento = 0; intento < 3; intento++) {
+    const pendientes = await page.evaluate(
+      () => document.querySelectorAll(".product-box .thumb img[src*='logo-vienamuebles']").length
+    );
+    if (pendientes === 0) break;
+    await page.evaluate(() => {
+      document.querySelectorAll(".product-box .thumb img[src*='logo-vienamuebles']").forEach((img) =>
+        img.scrollIntoView({ block: "center" })
+      );
+    });
+    await sleep(700);
+  }
+
+  await page.evaluate(() => window.scrollTo(0, 0));
+}
+
+// Última instancia: si en el listado la imagen sigue siendo el placeholder, se busca
+// la foto real entrando a la ficha del producto (ahí carga directo, sin lazy-load).
+async function obtenerImagenDesdeFicha(page: Page, urlProducto: string): Promise<string | null> {
+  try {
+    await page.goto(urlProducto, { waitUntil: "networkidle2", timeout: 20000 });
+    await sleep(1000);
+    const imagen = await page.evaluate(() => {
+      const img = Array.from(document.querySelectorAll(".thumb img.img-contained")).find(
+        (i) => !(i as HTMLImageElement).src.includes("logo-vienamuebles")
+      ) as HTMLImageElement | undefined;
+      return img?.src || null;
+    });
+    return imagen;
+  } catch {
+    return null;
+  }
+}
+
 async function extraerProductos(page: Page, baseUrl: string): Promise<ProductoExtraido[]> {
   return page.evaluate((base) => {
     const resultado: Array<{
@@ -148,8 +196,24 @@ async function main() {
               console.log(`   📄 Página 1/${totalPaginas}`);
             }
 
+            await forzarCargaDeImagenes(page);
             const productos = await extraerProductos(page, BASE_URL);
             console.log(`   → ${productos.length} productos`);
+
+            const conPlaceholder = productos.filter((p) => p.imagen_url.includes("logo-vienamuebles"));
+            if (conPlaceholder.length > 0) {
+              console.log(`   🔁 Buscando foto real de ${conPlaceholder.length} producto(s) en su ficha...`);
+              for (const p of conPlaceholder) {
+                const imagenReal = await obtenerImagenDesdeFicha(page, p.url_origen);
+                if (imagenReal) p.imagen_url = imagenReal;
+                await sleep(400);
+              }
+              // volver a la pagina de listado por si quedan mas paginas en esta categoria
+              await page.goto(pagina > 1 ? `${categoriaUrl}?page=${pagina}` : categoriaUrl, {
+                waitUntil: "domcontentloaded",
+                timeout: 30000,
+              });
+            }
 
             for (const p of productos) {
               try {

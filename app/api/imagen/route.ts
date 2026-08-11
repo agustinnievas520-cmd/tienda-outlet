@@ -23,8 +23,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "URL requerida" }, { status: 400 });
   }
 
-  // Placeholder de Viena: devolver SVG neutro sin branding del proveedor
-  if (url === VIENA_PLACEHOLDER) {
+  // Placeholder/logo de Viena (incl. el usado por el sitio nuevo como imagen de carga
+  // cuando el producto no tiene foto real): devolver SVG neutro sin branding del proveedor
+  if (url === VIENA_PLACEHOLDER || url.includes("logo-vienamuebles")) {
     return new NextResponse(PLACEHOLDER_SVG, {
       headers: {
         "Content-Type": "image/svg+xml",
