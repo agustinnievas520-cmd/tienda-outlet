@@ -20,21 +20,25 @@ if (fs.existsSync(envFile)) {
 
 const prisma = new PrismaClient();
 const DELAY_MS = 1200;
+const BASE_URL = "https://www.vienamuebles.com";
+const PRODUCTOS_POR_PAGINA = 12;
 
+// Viena Muebles migró de plataforma en 2026-08: nuevas URLs de categoría (sin /product-category/,
+// sin barra final) y paginación por query string ?page=N. Los slugs se relevaron desde el nav del sitio.
 const CATEGORIAS = [
-  { nombre: "Muebles", url: "https://vienamuebles.com/product-category/muebles/" },
-  { nombre: "Electrodomésticos", url: "https://vienamuebles.com/product-category/electrodomesticos/" },
-  { nombre: "Cocina y Lavado", url: "https://vienamuebles.com/product-category/cocina-y-lavado/" },
-  { nombre: "Smart TV", url: "https://vienamuebles.com/product-category/smart-tv/" },
-  { nombre: "Audio, Video y Accesorios", url: "https://vienamuebles.com/product-category/audio-video-y-accesorios/" },
-  { nombre: "Climatización", url: "https://vienamuebles.com/product-category/climatizacion/" },
-  { nombre: "Colchones y Sommiers", url: "https://vienamuebles.com/product-category/colchones-y-sommiers/" },
-  { nombre: "Hogar y Jardín", url: "https://vienamuebles.com/product-category/hogar-y-jardin/" },
-  { nombre: "Informática y Celulares", url: "https://vienamuebles.com/product-category/informatica-y-celulares/" },
-  { nombre: "Deporte y Tiempo Libre", url: "https://vienamuebles.com/product-category/deporte-y-tiempo-libre/" },
-  { nombre: "Salud y Fitness", url: "https://vienamuebles.com/product-category/salud-cuidado-pers-y-fitness/" },
-  { nombre: "Juguetes e Infantiles", url: "https://vienamuebles.com/product-category/juguetes-e-infantiles/" },
-  { nombre: "Comercial y Gastronómico", url: "https://vienamuebles.com/product-category/comercial-y-gastronomico/" },
+  { nombre: "Muebles", slug: "muebles" },
+  { nombre: "Electrodomésticos", slug: "electrodomesticos" },
+  { nombre: "Cocina y Lavado", slug: "cocina-y-lavado" },
+  { nombre: "Smart TV", slug: "smart-tv" },
+  { nombre: "Audio, Video y Accesorios", slug: "audio-video-y-accesorios" },
+  { nombre: "Climatización", slug: "climatizacion" },
+  { nombre: "Colchones y Sommiers", slug: "colchones-y-sommiers" },
+  { nombre: "Hogar y Jardín", slug: "hogar-y-jardin" },
+  { nombre: "Informática y Celulares", slug: "informatica-y-celulares" },
+  { nombre: "Deporte y Tiempo Libre", slug: "deporte-y-tiempo-libre" },
+  { nombre: "Salud y Fitness", slug: "salud-cuidado-pers-y-fitness" },
+  { nombre: "Juguetes e Infantiles", slug: "juguetes-e-infantiles" },
+  { nombre: "Comercial y Gastronómico", slug: "comercial-y-gastronomico" },
 ];
 
 const RUTAS_CHROME = [
@@ -62,46 +66,35 @@ interface ProductoExtraido {
   disponible: boolean;
 }
 
-// Lee el total de resultados del contador ("Mostrando 1–12 de 353 resultados" → 353)
 async function leerTotalProductos(page: Page): Promise<number> {
   return page.evaluate(() => {
-    const texto = document.querySelector(".woocommerce-result-count")?.textContent || "";
-    const match = texto.match(/de\s+([\d.]+)\s+resultado/);
+    const texto = document.body.innerText || "";
+    const match = texto.match(/de\s+([\d.]+)\s+productos/i);
     if (match) return parseInt(match[1].replace(/\./g, ""), 10);
     return 0;
   });
 }
 
-async function extraerProductos(page: Page): Promise<ProductoExtraido[]> {
-  return page.evaluate(() => {
+async function extraerProductos(page: Page, baseUrl: string): Promise<ProductoExtraido[]> {
+  return page.evaluate((base) => {
     const resultado: Array<{
       nombre: string; imagen_url: string; url_origen: string; precio_costo: number; disponible: boolean;
     }> = [];
 
-    document.querySelectorAll("li.product").forEach((item) => {
-      const nombre = item.querySelector("h3")?.textContent?.trim() || "";
+    document.querySelectorAll(".product-box").forEach((box) => {
+      const nombre = box.querySelector('meta[itemprop="name"]')?.getAttribute("content")?.trim() || "";
+      const url_origen = box.querySelector('link[itemprop="url"]')?.getAttribute("href") || "";
 
-      let url_origen = "";
-      item.querySelectorAll("a").forEach((a) => {
-        const h = (a as HTMLAnchorElement).href;
-        if (h.includes("/productos/") && !url_origen) url_origen = h;
-      });
+      const precioStr = box.querySelector('meta[itemprop="price"]')?.getAttribute("content") || "0";
+      const precio_costo = Math.round(parseFloat(precioStr)) || 0;
 
-      const imgEl = item.querySelector("img") as HTMLImageElement | null;
-      const imagen_url = imgEl?.src?.split("?")[0] || "";
+      const disponibilidad = box.querySelector('meta[itemprop="availability"]')?.getAttribute("content") || "";
+      const disponible = disponibilidad.includes("InStock");
 
-      const precioTexto =
-        item.querySelector(".cl-price-rating")?.textContent?.trim() ||
-        item.querySelector(".woocommerce-Price-amount")?.textContent?.trim() || "";
-
-      let precio_costo = 0;
-      if (precioTexto) {
-        const sinPuntos = precioTexto.replace(/[^0-9]/g, "");
-        precio_costo = parseInt(sinPuntos, 10) || 0;
+      let imagen_url = box.querySelector(".thumb img")?.getAttribute("src") || "";
+      if (imagen_url && !imagen_url.startsWith("http")) {
+        imagen_url = base.replace(/\/$/, "") + "/" + imagen_url.replace(/^\//, "");
       }
-
-      // WooCommerce marca los sin stock con clase "outofstock" en el li
-      const disponible = !item.classList.contains("outofstock");
 
       if (nombre && url_origen) {
         resultado.push({ nombre, imagen_url, url_origen, precio_costo, disponible });
@@ -109,16 +102,17 @@ async function extraerProductos(page: Page): Promise<ProductoExtraido[]> {
     });
 
     return resultado;
-  });
+  }, baseUrl);
 }
 
 async function main() {
   console.log("🚀 Iniciando scraper completo de Viena Muebles...\n");
 
   let browser: Browser | null = null;
-  let productosNuevos = 0;
   let productosActualizados = 0;
   const errores: string[] = [];
+  const sinMatch: ProductoExtraido[] = [];
+  const idsEmparejados = new Set<number>();
 
   try {
     browser = await puppeteer.launch({
@@ -128,27 +122,25 @@ async function main() {
     });
 
     const page = await browser.newPage();
-    // UA simplificado: el UA completo de Chrome activa isotope JS que mueve los li del DOM
-    await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
+    await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36");
     await page.setViewport({ width: 1280, height: 800 });
 
     for (const categoria of CATEGORIAS) {
       console.log(`\n🏷️  ${categoria.nombre}`);
+      const categoriaUrl = `${BASE_URL}/${categoria.slug}`;
 
       try {
-        // Página 1: obtener productos Y total
-        await page.goto(categoria.url, { waitUntil: "networkidle2", timeout: 30000 });
+        await page.goto(categoriaUrl, { waitUntil: "networkidle2", timeout: 30000 });
         await sleep(DELAY_MS);
 
         const total = await leerTotalProductos(page);
-        const totalPaginas = total > 0 ? Math.ceil(total / 12) : 1;
+        const totalPaginas = total > 0 ? Math.ceil(total / PRODUCTOS_POR_PAGINA) : 1;
         console.log(`   📊 Total: ${total} productos → ${totalPaginas} página(s)`);
 
-        // Procesar todas las páginas
         for (let pagina = 1; pagina <= totalPaginas; pagina++) {
           try {
             if (pagina > 1) {
-              const urlPagina = `${categoria.url}page/${pagina}/`;
+              const urlPagina = `${categoriaUrl}?page=${pagina}`;
               console.log(`   📄 Página ${pagina}/${totalPaginas}: ${urlPagina}`);
               await page.goto(urlPagina, { waitUntil: "networkidle2", timeout: 30000 });
               await sleep(DELAY_MS);
@@ -156,46 +148,50 @@ async function main() {
               console.log(`   📄 Página 1/${totalPaginas}`);
             }
 
-            const productos = await extraerProductos(page);
+            const productos = await extraerProductos(page, BASE_URL);
             console.log(`   → ${productos.length} productos`);
 
             for (const p of productos) {
               try {
-                const existente = await prisma.producto.findUnique({
-                  where: { url_origen: p.url_origen },
-                });
+                // 1) match por url_origen (sirve para sincronizaciones futuras, ya con la URL nueva)
+                let existente = await prisma.producto.findUnique({ where: { url_origen: p.url_origen } });
+
+                // 2) fallback: match por nombre exacto contra el catálogo pre-migración,
+                //    evitando reusar una fila ya emparejada en esta misma corrida
+                if (!existente) {
+                  existente = await prisma.producto.findFirst({
+                    where: {
+                      nombre: { equals: p.nombre, mode: "insensitive" },
+                      id: { notIn: Array.from(idsEmparejados) },
+                    },
+                  });
+                }
 
                 if (existente) {
-                  // Nunca sobreescribir imagen local con URL externa del proveedor
+                  idsEmparejados.add(existente.id);
+                  // Nunca sobreescribir imagen local (ya limpiada de logo) con URL externa del proveedor
                   const imagenFinal = existente.imagen_url?.startsWith("/imagenes/")
                     ? existente.imagen_url
                     : (p.imagen_url || existente.imagen_url);
                   await prisma.producto.update({
-                    where: { url_origen: p.url_origen },
+                    where: { id: existente.id },
                     data: {
                       nombre: p.nombre,
                       categoria: categoria.nombre,
                       imagen_url: imagenFinal,
                       precio_costo: p.precio_costo > 0 ? p.precio_costo : existente.precio_costo,
                       disponible: p.disponible,
+                      url_origen: p.url_origen,
                     },
                   });
                   productosActualizados++;
                 } else {
-                  await prisma.producto.create({
-                    data: {
-                      nombre: p.nombre,
-                      categoria: categoria.nombre,
-                      precio_costo: p.precio_costo,
-                      imagen_url: p.imagen_url,
-                      url_origen: p.url_origen,
-                      disponible: p.disponible,
-                    },
-                  });
-                  productosNuevos++;
+                  // No se encontró coincidencia: no se inserta automáticamente,
+                  // se reporta aparte para revisión manual (evita duplicados/altas erróneas).
+                  sinMatch.push({ ...p, nombre: `[${categoria.nombre}] ${p.nombre}` });
                 }
               } catch (err) {
-                const msg = `Error guardando "${p.nombre}": ${err}`;
+                const msg = `Error procesando "${p.nombre}": ${err}`;
                 errores.push(msg);
                 console.error(`   ❌ ${msg}`);
               }
@@ -208,7 +204,7 @@ async function main() {
           }
         }
 
-        console.log(`   ✔ Nuevos: ${productosNuevos} | Actualizados: ${productosActualizados}`);
+        console.log(`   ✔ Actualizados hasta ahora: ${productosActualizados}`);
 
       } catch (err) {
         const msg = `Error en categoría ${categoria.nombre}: ${err}`;
@@ -223,10 +219,16 @@ async function main() {
   } finally {
     if (browser) await browser.close();
 
+    if (sinMatch.length > 0) {
+      const reportePath = path.join(__dirname, "_productos-sin-match.json");
+      fs.writeFileSync(reportePath, JSON.stringify(sinMatch, null, 2), "utf-8");
+      console.log(`\n📝 Reporte de productos sin match guardado en: ${reportePath}`);
+    }
+
     try {
       await prisma.logSincronizacion.create({
         data: {
-          productos_nuevos: productosNuevos,
+          productos_nuevos: 0,
           productos_actualizados: productosActualizados,
           errores: errores.length > 0 ? errores.slice(0, 20).join("\n") : null,
         },
@@ -236,9 +238,9 @@ async function main() {
     }
 
     console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-    console.log(`✅ Nuevos:       ${productosNuevos}`);
-    console.log(`🔄 Actualizados: ${productosActualizados}`);
-    console.log(`❌ Errores:      ${errores.length}`);
+    console.log(`🔄 Actualizados:   ${productosActualizados}`);
+    console.log(`❓ Sin match:      ${sinMatch.length}`);
+    console.log(`❌ Errores:        ${errores.length}`);
     console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
     await prisma.$disconnect();

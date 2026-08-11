@@ -49,6 +49,7 @@ export async function GET(request: NextRequest) {
     // Imagen externa: validar origen
     const ALLOWED = [
       "https://vienamuebles.com/",
+      "https://www.vienamuebles.com/",
       "https://http2.mlstatic.com/",
       "https://mlstatic.com/",
     ];
