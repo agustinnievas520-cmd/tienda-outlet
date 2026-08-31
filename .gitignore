@@ -34,3 +34,6 @@ next-env.d.ts
 
 # dist de scripts
 /dist
+
+# config local de Claude Code (contiene credenciales en el historial de permisos)
+.claude/settings.local.json
