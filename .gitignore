@@ -37,3 +37,5 @@ next-env.d.ts
 
 # config local de Claude Code (contiene credenciales en el historial de permisos)
 .claude/settings.local.json
+
+.vercel
