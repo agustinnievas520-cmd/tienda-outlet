@@ -457,7 +457,7 @@ export default function AdminPage() {
           </div>
           <button
             onClick={cerrarSesion}
-            className="text-sm text-gray-400 hover:text-white transition-colors"
+            className="text-sm text-white bg-white/10 hover:bg-white/20 px-4 py-1.5 rounded-lg transition-colors border border-white/20"
           >
             Cerrar sesión
           </button>

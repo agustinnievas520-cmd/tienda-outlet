@@ -28,7 +28,14 @@ export async function GET(request: NextRequest) {
     };
     if (categoria) where.categoria = categoria;
     if (busqueda) {
-      where.nombre = { contains: busqueda, mode: "insensitive" };
+      const palabras = busqueda.split(/\s+/).filter(Boolean);
+      if (palabras.length === 1) {
+        where.nombre = { contains: palabras[0], mode: "insensitive" };
+      } else {
+        where.AND = palabras.map((p) => ({
+          nombre: { contains: p, mode: "insensitive" },
+        }));
+      }
     }
 
     // Ordenamiento
