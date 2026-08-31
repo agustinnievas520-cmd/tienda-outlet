@@ -133,13 +133,40 @@ async function extraerProductos(page: Page, baseUrl: string): Promise<ProductoEx
       const nombre = box.querySelector('meta[itemprop="name"]')?.getAttribute("content")?.trim() || "";
       const url_origen = box.querySelector('link[itemprop="url"]')?.getAttribute("href") || "";
 
-      const precioStr = box.querySelector('meta[itemprop="price"]')?.getAttribute("content") || "0";
-      const precio_costo = Math.round(parseFloat(precioStr)) || 0;
+      // Viena muestra 2 precios: el de lista (meta itemprop="price") y el de pago
+      // de contado con -20%, este último es el que se usa como costo real.
+      const precioListaStr = box.querySelector('meta[itemprop="price"]')?.getAttribute("content") || "0";
+      const precioLista = Math.round(parseFloat(precioListaStr)) || 0;
+
+      const precioContadoStr = box
+        .querySelector(".product_price_bank_discounts_till_container_list .price")
+        ?.textContent?.replace(/[^\d,]/g, "")
+        .replace(",", ".") || "";
+      const precioContado = Math.round(parseFloat(precioContadoStr)) || 0;
+
+      const precio_costo = precioContado > 0 ? precioContado : precioLista;
 
       const disponibilidad = box.querySelector('meta[itemprop="availability"]')?.getAttribute("content") || "";
       const disponible = disponibilidad.includes("InStock");
 
-      let imagen_url = box.querySelector(".thumb img")?.getAttribute("src") || "";
+      // Tomar la versión de mayor resolución del srcset (el src por defecto es la miniatura
+      // más chica, ~300px); el proveedor ahora ofrece copias de hasta ~1280px de la misma foto.
+      const imgEl = box.querySelector(".thumb img");
+      let imagen_url = imgEl?.getAttribute("src") || "";
+      const srcset = imgEl?.getAttribute("srcset") || "";
+      if (srcset) {
+        const candidatos = srcset
+          .split(",")
+          .map((entry) => {
+            const [url, ancho] = entry.trim().split(/\s+/);
+            return { url, ancho: parseInt(ancho) || 0 };
+          })
+          .filter((c) => c.url);
+        if (candidatos.length > 0) {
+          candidatos.sort((a, b) => b.ancho - a.ancho);
+          imagen_url = candidatos[0].url;
+        }
+      }
       if (imagen_url && !imagen_url.startsWith("http")) {
         imagen_url = base.replace(/\/$/, "") + "/" + imagen_url.replace(/^\//, "");
       }
@@ -289,6 +316,20 @@ async function main() {
       console.log(`\n📝 Reporte de productos sin match guardado en: ${reportePath}`);
     }
 
+    // Reconciliación: un producto que ya no aparece en ninguna página de ninguna categoría
+    // fue eliminado por el proveedor. Se lo marca no disponible para que deje de verse en la
+    // vidriera (no se borra, por si vuelve a aparecer en una corrida futura).
+    // Solo se hace si la corrida fue limpia: con errores, faltarían páginas por revisar y se
+    // marcarían productos vigentes como no disponibles por error.
+    let productosNoDisponibles = 0;
+    if (errores.length === 0) {
+      const resultado = await prisma.producto.updateMany({
+        where: { id: { notIn: Array.from(idsEmparejados) }, disponible: true },
+        data: { disponible: false },
+      });
+      productosNoDisponibles = resultado.count;
+    }
+
     try {
       await prisma.logSincronizacion.create({
         data: {
@@ -302,9 +343,14 @@ async function main() {
     }
 
     console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-    console.log(`🔄 Actualizados:   ${productosActualizados}`);
-    console.log(`❓ Sin match:      ${sinMatch.length}`);
-    console.log(`❌ Errores:        ${errores.length}`);
+    console.log(`🔄 Actualizados:        ${productosActualizados}`);
+    console.log(`❓ Sin match:           ${sinMatch.length}`);
+    console.log(`❌ Errores:             ${errores.length}`);
+    if (errores.length === 0) {
+      console.log(`📦 Marcados no disp.:   ${productosNoDisponibles} (ya no están en la web del proveedor)`);
+    } else {
+      console.log(`⚠️  Marcado de no disponibles omitido por errores en la corrida`);
+    }
     console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
     await prisma.$disconnect();
