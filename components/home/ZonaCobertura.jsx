@@ -11,7 +11,7 @@ const LOCALIDADES = [
   "Nuevo Torino", "Pellegrini", "Piamonte", "Pilar", "Rafaela",
   "San Carlos", "San Jorge", "San Vicente", "Santa Clara de Buena Vista",
   "Santa Fe", "Santo Tomé", "Sastre", "Susana",
-  "Elisa (Clucellas)", "San Martín de las Escobas",
+  "Estación Clucellas", "San Martín de las Escobas",
 ];
 
 export default function ZonaCobertura() {
