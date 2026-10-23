@@ -10,6 +10,7 @@ import Navbar from "@/components/home/Navbar";
 import Subnav from "@/components/home/Subnav";
 import HeroSlider from "@/components/home/HeroSlider";
 import TrustBar from "@/components/home/TrustBar";
+import ZonaCobertura from "@/components/home/ZonaCobertura";
 import CategoryGrid from "@/components/home/CategoryGrid";
 import ProductSection from "@/components/home/ProductSection";
 import PromoGrid from "@/components/home/PromoGrid";
@@ -246,6 +247,7 @@ export default async function HomePage() {
       )}
 
       <TrustBar />
+      <ZonaCobertura />
       <FinBanner />
       <Footer />
     </div>
