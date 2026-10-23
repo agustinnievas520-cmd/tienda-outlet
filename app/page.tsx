@@ -13,7 +13,6 @@ import TrustBar from "@/components/home/TrustBar";
 import CategoryGrid from "@/components/home/CategoryGrid";
 import ProductSection from "@/components/home/ProductSection";
 import PromoGrid from "@/components/home/PromoGrid";
-import CombosSection from "@/components/home/CombosSection";
 import OfertaSemanal from "@/components/home/OfertaSemanal";
 import FinBanner from "@/components/home/FinBanner";
 import Footer from "@/components/home/Footer";
@@ -21,23 +20,7 @@ import Footer from "@/components/home/Footer";
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const q1 = (contains: string, cat?: string) => prisma.producto.findMany({
-    where: { disponible: true, ...(cat ? { categoria: cat } : { nombre: { contains } }) },
-    take: 1, orderBy: { precio_costo: "asc" },
-  }).then((r) => r[0] ?? null);
-
   const [config, todosLosProductos, productosTrending, productosVerano, productosGastronomicos,
-    // Slots para combos
-    slotColchon, slotAlmohada, slotBaseColchon,
-    slotTv, slotRack,
-    slotLavarropas, slotSecarropa, slotTendedero,
-    slotCafetera, slotTostadora,
-    slotHornoCombo, slotFreidoraCombo,
-    slotCaloventorCombo, slotVentilador,
-    slotJuguete1, slotJuguete2,
-    slotSommier1p, slotColchon1p,
-    slotSommier2p, slotColchon2p,
-    slotAlmohadaEco,
   ] = await Promise.all([
     prisma.configuracion.findFirst(),
     prisma.producto.findMany({
@@ -154,38 +137,6 @@ export default async function HomePage() {
         (p) => { if (vistos.has(p.id)) return false; vistos.add(p.id); return true; }
       );
     }),
-    // Slots combos
-    q1("olchón", undefined), q1("lmohada", undefined), q1("ase cama", undefined),
-    q1("", "Smart TV"), q1("ack TV", undefined),
-    q1("awarropas", undefined), q1("ecarropa", undefined), q1("endedero", undefined),
-    q1("afetera", undefined), q1("ostadora", undefined),
-    q1("orno eléctric", undefined), q1("reidora", undefined),
-    prisma.producto.findMany({ where: { disponible: true, nombre: { contains: "CW910" } }, take: 1, orderBy: { precio_costo: "asc" } }).then(r => r[0] ?? null),
-    prisma.producto.findMany({ where: { disponible: true, nombre: { contains: "Neba 2000" } }, take: 1, orderBy: { precio_costo: "asc" } }).then(r => r[0] ?? null),
-    q1("", "Juguetes e Infantiles"), q1("uñec", undefined),
-    // Combo sommier 1 plaza — productos específicos
-    prisma.producto.findMany({
-      where: { disponible: true, nombre: { contains: "Sensations 0.80" } },
-      take: 1, orderBy: { precio_costo: "asc" },
-    }).then((r) => r[0] ?? null),
-    prisma.producto.findMany({
-      where: { disponible: true, AND: [{ nombre: { contains: "olchon" } }, { nombre: { contains: "lasico 80 x 190 x 20" } }] },
-      take: 1, orderBy: { precio_costo: "asc" },
-    }).then((r) => r[0] ?? null),
-    // Combo sommier 2 plazas
-    prisma.producto.findMany({
-      where: { disponible: true, nombre: { contains: "Confort Sensations 1,40" } },
-      take: 1, orderBy: { precio_costo: "asc" },
-    }).then((r) => r[0] ?? null),
-    prisma.producto.findMany({
-      where: { disponible: true, AND: [{ nombre: { contains: "olchon" } }, { nombre: { contains: "140 x 190 x 23" } }] },
-      take: 1, orderBy: { precio_costo: "asc" },
-    }).then((r) => r[0] ?? null),
-    // Almohada específica para combo 1 plaza
-    prisma.producto.findMany({
-      where: { disponible: true, nombre: { contains: "Support Compacta" } },
-      take: 1, orderBy: { precio_costo: "asc" },
-    }).then((r) => r[0] ?? null),
   ]);
 
   const cfg = config ?? {
@@ -208,45 +159,6 @@ export default async function HomePage() {
     cuotas: cfg.cuotas,
     entrega_inicial: calcularEntregaInicial(p.precio_costo),
   }));
-
-  const toProducto = (p: any) => p ? ({
-    id: p.id, nombre: p.nombre, categoria: p.categoria, imagen_url: p.imagen_url,
-    precio_contado: calcularPrecioContado(p.precio_costo, cfg),
-    precio_financiado: calcularPrecioFinanciado(p.precio_costo, cfg),
-    precio_cuota: calcularPrecioCuota(p.precio_costo, cfg),
-    cuotas: cfg.cuotas,
-  }) : null;
-
-  const combos = [
-    { id: "dormitorio", emoji: "🛏️", nombre: "Dormitorio Completo", productos: [slotColchon, slotAlmohada, slotBaseColchon].map(toProducto) },
-    { id: "entretenimiento", emoji: "📺", nombre: "Smart TV + Mueble", productos: [slotTv, slotRack].map(toProducto) },
-    { id: "lavadero", emoji: "🧺", nombre: "Lavadero Completo", productos: [slotLavarropas, slotSecarropa, slotTendedero].map(toProducto) },
-    { id: "desayuno", emoji: "☕", nombre: "Desayuno Perfecto", productos: [slotCafetera, slotTostadora].map(toProducto) },
-    { id: "cocina", emoji: "🍕", nombre: "Cocina Creativa", productos: [slotHornoCombo, slotFreidoraCombo].map(toProducto) },
-    {
-      id: "clima", emoji: "🌡️", nombre: "Combo Invierno Calefacción",
-      slots: [
-        { producto: toProducto(slotCaloventorCombo), cantidad: 1, label: "Turbocalefactor Liliana CW910 Split" },
-        { producto: toProducto(slotVentilador), cantidad: 1, label: "Caloventor Neba 2000W Termostato" },
-      ].filter((s) => s.producto),
-    },
-    {
-      id: "sommier-1p", emoji: "🛏️", nombre: "Sommier 1 Plaza Completo",
-      slots: [
-        { producto: toProducto(slotSommier1p), cantidad: 1, label: "Sommier King Koil Sensations 0.80x2.00" },
-        { producto: toProducto(slotColchon1p), cantidad: 1, label: "Colchón Inducol Clásico 80x190" },
-        { producto: toProducto(slotAlmohadaEco), cantidad: 2, label: "Almohada Support Compacta Medium" },
-      ].filter((s) => s.producto),
-    },
-    {
-      id: "sommier-2p", emoji: "🛏️", nombre: "Sommier 2 Plazas Completo",
-      slots: [
-        { producto: toProducto(slotSommier2p), cantidad: 1, label: "Sommier King Koil Confort Sensations 1,40x1,90" },
-        { producto: toProducto(slotColchon2p), cantidad: 1, label: "Colchón Inducol Clásico 140x190x23" },
-        { producto: toProducto(slotAlmohadaEco), cantidad: 2, label: "Almohada Support Compacta Medium" },
-      ].filter((s) => s.producto),
-    },
-  ];
 
   const trendingConPrecios = productosTrending.map((p) => ({
     id: p.id,
@@ -332,9 +244,6 @@ export default async function HomePage() {
           verTodosHref="/catalogo"
         />
       )}
-
-
-      <CombosSection combos={combos} />
 
       <TrustBar />
       <FinBanner />
