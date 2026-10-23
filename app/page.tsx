@@ -26,7 +26,7 @@ export default async function HomePage() {
     take: 1, orderBy: { precio_costo: "asc" },
   }).then((r) => r[0] ?? null);
 
-  const [config, todosLosProductos, productosTrending, productosCalefaccion, productosGastronomicos,
+  const [config, todosLosProductos, productosTrending, productosVerano, productosGastronomicos,
     // Slots para combos
     slotColchon, slotAlmohada, slotBaseColchon,
     slotTv, slotRack,
@@ -51,56 +51,46 @@ export default async function HomePage() {
       orderBy: { precio_costo: "asc" },
     }),
     Promise.all([
-      // Calefactores (Tromen, Longvie y otros)
+      // Ventiladores
       prisma.producto.findMany({
-        where: { disponible: true, nombre: { contains: "alefactor" } },
-        take: 5,
+        where: { disponible: true, nombre: { contains: "entilador" } },
+        take: 4,
         orderBy: { precio_costo: "asc" },
       }),
-      // Caloventores
+      // Aires acondicionados / split (excluye el turbocalefactor "tipo split")
       prisma.producto.findMany({
-        where: { disponible: true, nombre: { contains: "aloventor" } },
+        where: {
+          disponible: true,
+          OR: [
+            { nombre: { contains: "ire acondicionado" } },
+            { nombre: { contains: "split", mode: "insensitive" } },
+          ],
+          AND: [{ nombre: { not: { contains: "alefactor" } } }],
+        },
         take: 3,
         orderBy: { precio_costo: "asc" },
       }),
-      // Estufas infrarrojas (excluye termómetros infrarrojos)
+      // Piletas
       prisma.producto.findMany({
-        where: {
-          disponible: true,
-          AND: [
-            { nombre: { contains: "nfrarroj" } },
-            { nombre: { not: { contains: "ermómet" } } },
-            { nombre: { not: { contains: "ermometro" } } },
-            { nombre: { not: { contains: "ermómetro" } } },
-          ],
-        },
+        where: { disponible: true, nombre: { contains: "ileta" } },
+        take: 3,
+        orderBy: { precio_costo: "asc" },
+      }),
+      // Reposeras
+      prisma.producto.findMany({
+        where: { disponible: true, nombre: { contains: "eposera" } },
         take: 2,
         orderBy: { precio_costo: "asc" },
       }),
-      // Garraferas
+      // Sombrillas
       prisma.producto.findMany({
-        where: { disponible: true, nombre: { contains: "arrafer" } },
+        where: { disponible: true, nombre: { contains: "ombrilla" } },
         take: 2,
         orderBy: { precio_costo: "asc" },
       }),
-      // Estufas a gas/eléctricas (excluye infrarrojas, calefactores y termómetros)
-      prisma.producto.findMany({
-        where: {
-          disponible: true,
-          AND: [
-            { nombre: { contains: "stufa" } },
-            { nombre: { not: { contains: "nfrarroj" } } },
-            { nombre: { not: { contains: "alefactor" } } },
-            { nombre: { not: { contains: "ermómet" } } },
-            { nombre: { not: { contains: "ermometro" } } },
-          ],
-        },
-        take: 2,
-        orderBy: { precio_costo: "asc" },
-      }),
-    ]).then(([calefactores, caloventores, infrarrojos, garraferas, estufas]: [any[], any[], any[], any[], any[]]) => {
+    ]).then(([ventiladores, aires, piletas, reposeras, sombrillas]: [any[], any[], any[], any[], any[]]) => {
       const vistos = new Set<number>();
-      return [...calefactores, ...caloventores, ...infrarrojos, ...garraferas, ...estufas].filter(
+      return [...ventiladores, ...aires, ...piletas, ...reposeras, ...sombrillas].filter(
         (p) => { if (vistos.has(p.id)) return false; vistos.add(p.id); return true; }
       );
     }),
@@ -282,7 +272,7 @@ export default async function HomePage() {
     entrega_inicial: calcularEntregaInicial(p.precio_costo),
   }));
 
-  const calefaccionConPrecios = productosCalefaccion.map((p) => ({
+  const veranoConPrecios = productosVerano.map((p) => ({
     id: p.id,
     nombre: p.nombre,
     categoria: p.categoria,
@@ -335,11 +325,11 @@ export default async function HomePage() {
 
       <CategoryGrid />
 
-      {calefaccionConPrecios.length > 0 && (
+      {veranoConPrecios.length > 0 && (
         <ProductSection
-          title="🧥 Preparate para el frío — Estufas y caloventores"
-          products={calefaccionConPrecios}
-          verTodosHref="/catalogo?categoria=Climatizaci%C3%B3n"
+          title="🏖️ Preparate para el verano — Piletas, ventiladores y aires"
+          products={veranoConPrecios}
+          verTodosHref="/catalogo"
         />
       )}
 
