@@ -16,6 +16,7 @@ import ProductSection from "@/components/home/ProductSection";
 import PromoGrid from "@/components/home/PromoGrid";
 import OfertaSemanal from "@/components/home/OfertaSemanal";
 import FinBanner from "@/components/home/FinBanner";
+import Institucional from "@/components/home/Institucional";
 import Footer from "@/components/home/Footer";
 
 export const dynamic = "force-dynamic";
@@ -249,6 +250,7 @@ export default async function HomePage() {
       <TrustBar />
       <ZonaCobertura />
       <FinBanner />
+      <Institucional />
       <Footer />
     </div>
   );
