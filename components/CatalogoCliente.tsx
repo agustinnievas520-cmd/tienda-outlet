@@ -31,19 +31,20 @@ interface RespuestaAPI {
 interface Props {
   whatsappNumero: string;
   whatsappNumero2?: string;
+  // Resuelto en el servidor (desde ?v= o la cookie "vendedor"): si viene
+  // seteado, todos los leads van a este número sin alternar.
+  vendedorFijo?: string;
 }
 
-export default function CatalogoCliente({ whatsappNumero, whatsappNumero2 = "" }: Props) {
+export default function CatalogoCliente({ whatsappNumero, whatsappNumero2 = "", vendedorFijo }: Props) {
   const searchParams = useSearchParams();
   const [productos, setProductos] = useState<Producto[]>([]);
   const [categorias, setCategorias] = useState<string[]>([]);
   const [categoriaActiva, setCategoriaActiva] = useState(searchParams.get("categoria") ?? "");
   const [busqueda, setBusqueda] = useState(searchParams.get("q") ?? "");
 
-  // Si el link tiene ?v=1 o ?v=2, fijar el número del vendedor (no alternar)
-  const vendedorParam = searchParams.get("v");
-  const numeroModal1 = vendedorParam === "2" ? (whatsappNumero2 || whatsappNumero) : whatsappNumero;
-  const numeroModal2 = vendedorParam ? "" : whatsappNumero2; // sin param → alternar; con param → fijo
+  const numeroModal1 = vendedorFijo || whatsappNumero;
+  const numeroModal2 = vendedorFijo ? "" : whatsappNumero2; // vendedor fijo → no alternar
   const [orden, setOrden] = useState("precio_asc");
   const [cargando, setCargando] = useState(true);
   const [cargandoMas, setCargandoMas] = useState(false);

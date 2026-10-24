@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import {
   calcularPrecioContado,
@@ -5,7 +6,7 @@ import {
   calcularPrecioCuota,
   calcularEntregaInicial,
 } from "@/lib/calculos";
-import { resolverWhatsapp } from "@/lib/whatsapp";
+import { resolverWhatsapp, vendedorActivo } from "@/lib/whatsapp";
 import TopBar from "@/components/home/TopBar";
 import Navbar from "@/components/home/Navbar";
 import Subnav from "@/components/home/Subnav";
@@ -27,7 +28,9 @@ export default async function HomePage({
 }: {
   searchParams: Promise<{ v?: string }>;
 }) {
-  const { v } = await searchParams;
+  const { v: vQuery } = await searchParams;
+  const cookieStore = await cookies();
+  const v = vendedorActivo(vQuery, cookieStore.get("vendedor")?.value);
 
   const [config, todosLosProductos, productosTrending, productosVerano, productosGastronomicos,
   ] = await Promise.all([

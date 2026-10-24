@@ -1,7 +1,8 @@
 import { Suspense } from "react";
+import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import CatalogoCliente from "@/components/CatalogoCliente";
-import { resolverWhatsapp } from "@/lib/whatsapp";
+import { resolverWhatsapp, vendedorActivo } from "@/lib/whatsapp";
 
 export const dynamic = "force-dynamic";
 import TopBar from "@/components/home/TopBar";
@@ -27,8 +28,11 @@ export default async function CatalogoPage({
   searchParams: Promise<{ v?: string }>;
 }) {
   const { numero1, numero2 } = await getWhatsapp();
-  const { v } = await searchParams;
+  const { v: vQuery } = await searchParams;
+  const cookieStore = await cookies();
+  const v = vendedorActivo(vQuery, cookieStore.get("vendedor")?.value);
   const whatsappActivo = resolverWhatsapp(v, numero1, numero2);
+  const vendedorFijo = v === "2" && numero2 ? numero2 : v === "1" ? numero1 : undefined;
 
   return (
     <div style={{ background: "#f5f5f5", minHeight: "100vh" }}>
@@ -37,7 +41,7 @@ export default async function CatalogoPage({
       <Subnav />
 
       <Suspense fallback={<div style={{ padding: "40px", textAlign: "center", color: "#999" }}>Cargando catálogo...</div>}>
-        <CatalogoCliente whatsappNumero={numero1} whatsappNumero2={numero2} />
+        <CatalogoCliente whatsappNumero={numero1} whatsappNumero2={numero2} vendedorFijo={vendedorFijo} />
       </Suspense>
 
       <Footer whatsappNumero={whatsappActivo} />
