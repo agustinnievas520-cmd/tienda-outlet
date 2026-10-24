@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
 import CatalogoCliente from "@/components/CatalogoCliente";
+import { resolverWhatsapp } from "@/lib/whatsapp";
 
 export const dynamic = "force-dynamic";
 import TopBar from "@/components/home/TopBar";
@@ -20,20 +21,26 @@ async function getWhatsapp(): Promise<{ numero1: string; numero2: string }> {
   }
 }
 
-export default async function CatalogoPage() {
+export default async function CatalogoPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ v?: string }>;
+}) {
   const { numero1, numero2 } = await getWhatsapp();
+  const { v } = await searchParams;
+  const whatsappActivo = resolverWhatsapp(v, numero1, numero2);
 
   return (
     <div style={{ background: "#f5f5f5", minHeight: "100vh" }}>
-      <TopBar />
-      <Navbar />
+      <TopBar whatsappNumero={whatsappActivo} />
+      <Navbar whatsappNumero={whatsappActivo} />
       <Subnav />
 
       <Suspense fallback={<div style={{ padding: "40px", textAlign: "center", color: "#999" }}>Cargando catálogo...</div>}>
         <CatalogoCliente whatsappNumero={numero1} whatsappNumero2={numero2} />
       </Suspense>
 
-      <Footer />
+      <Footer whatsappNumero={whatsappActivo} />
     </div>
   );
 }

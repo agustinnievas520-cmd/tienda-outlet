@@ -5,6 +5,7 @@ import {
   calcularPrecioCuota,
   calcularEntregaInicial,
 } from "@/lib/calculos";
+import { resolverWhatsapp } from "@/lib/whatsapp";
 import TopBar from "@/components/home/TopBar";
 import Navbar from "@/components/home/Navbar";
 import Subnav from "@/components/home/Subnav";
@@ -21,7 +22,13 @@ import Footer from "@/components/home/Footer";
 
 export const dynamic = "force-dynamic";
 
-export default async function HomePage() {
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ v?: string }>;
+}) {
+  const { v } = await searchParams;
+
   const [config, todosLosProductos, productosTrending, productosVerano, productosGastronomicos,
   ] = await Promise.all([
     prisma.configuracion.findFirst(),
@@ -148,7 +155,10 @@ export default async function HomePage() {
     cuotas: 12,
     interes_cuota: 0.038,
     whatsapp_numero: "5403401642045",
+    whatsapp_numero_2: "",
   };
+
+  const whatsappActivo = resolverWhatsapp(v, cfg.whatsapp_numero, cfg.whatsapp_numero_2);
 
   const productosConPrecios = todosLosProductos.map((p) => ({
     id: p.id,
@@ -222,10 +232,10 @@ export default async function HomePage() {
 
   return (
     <div style={{ background: "#f5f5f5", minHeight: "100vh" }}>
-      <TopBar />
-      <Navbar />
+      <TopBar whatsappNumero={whatsappActivo} />
+      <Navbar whatsappNumero={whatsappActivo} />
       <Subnav />
-      <HeroSlider heroImages={heroImages} />
+      <HeroSlider heroImages={heroImages} whatsappNumero={whatsappActivo} />
 
       <PromoGrid />
 
@@ -234,6 +244,7 @@ export default async function HomePage() {
           title="Lo más buscado ahora"
           products={trendingConPrecios}
           verTodosHref="/catalogo?categoria=Smart+TV"
+          whatsappNumero={whatsappActivo}
         />
       )}
 
@@ -244,14 +255,15 @@ export default async function HomePage() {
           title="🏖️ Preparate para el verano — Piletas, ventiladores y aires"
           products={veranoConPrecios}
           verTodosHref="/catalogo"
+          whatsappNumero={whatsappActivo}
         />
       )}
 
       <TrustBar />
-      <ZonaCobertura />
-      <FinBanner />
+      <ZonaCobertura whatsappNumero={whatsappActivo} />
+      <FinBanner whatsappNumero={whatsappActivo} />
       <Institucional />
-      <Footer />
+      <Footer whatsappNumero={whatsappActivo} />
     </div>
   );
 }

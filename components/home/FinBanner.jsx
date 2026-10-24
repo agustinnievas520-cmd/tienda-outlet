@@ -1,6 +1,6 @@
 import styles from "./FinBanner.module.css";
 
-const WA = "5403401642045";
+const WA_DEFAULT = "5403401642045";
 
 const CalendarIcon = () => (
   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFD100" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -25,7 +25,8 @@ const modalidades = [
   { icon: <WalletIcon />,   label: "Mensual",    cuotas: "3 cuotas",  desc: "Pagás una vez por mes, más cómodo y espaciado" },
 ];
 
-export default function FinBanner() {
+export default function FinBanner({ whatsappNumero = WA_DEFAULT }) {
+  const WA = whatsappNumero;
   return (
     <section className={styles.section}>
       <div className={styles.inner}>

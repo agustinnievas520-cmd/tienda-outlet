@@ -3,9 +3,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./Navbar.module.css";
 
-const WA = "5403401642045";
+const WA_DEFAULT = "5403401642045";
 
-export default function Navbar() {
+export default function Navbar({ whatsappNumero = WA_DEFAULT }) {
+  const WA = whatsappNumero;
   const [query, setQuery] = useState("");
   const router = useRouter();
 

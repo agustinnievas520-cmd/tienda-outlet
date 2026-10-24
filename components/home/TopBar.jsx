@@ -1,8 +1,9 @@
 import styles from "./TopBar.module.css";
 
-const WA = "5403401642045";
+const WA_DEFAULT = "5403401642045";
 
-export default function TopBar() {
+export default function TopBar({ whatsappNumero = WA_DEFAULT }) {
+  const WA = whatsappNumero;
   return (
     <div className={styles.bar}>
       <div className={styles.inner}>

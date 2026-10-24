@@ -1,6 +1,6 @@
 import styles from "./Footer.module.css";
 
-const WA = "5403401642045";
+const WA_DEFAULT = "5403401642045";
 
 const stats = [
   {
@@ -49,7 +49,8 @@ const stats = [
   },
 ];
 
-export default function Footer() {
+export default function Footer({ whatsappNumero = WA_DEFAULT }) {
+  const WA = whatsappNumero;
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>

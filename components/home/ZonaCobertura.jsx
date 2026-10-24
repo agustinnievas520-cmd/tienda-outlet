@@ -1,6 +1,6 @@
 import styles from "./ZonaCobertura.module.css";
 
-const WA = "5403401642045";
+const WA_DEFAULT = "5403401642045";
 
 const SEDE = "El Trébol";
 
@@ -14,7 +14,8 @@ const LOCALIDADES = [
   "Estación Clucellas", "San Martín de las Escobas",
 ];
 
-export default function ZonaCobertura() {
+export default function ZonaCobertura({ whatsappNumero = WA_DEFAULT }) {
+  const WA = whatsappNumero;
   return (
     <section className={styles.section}>
       <div className={styles.inner}>

@@ -1,7 +1,7 @@
 import styles from "./ProductSection.module.css";
 import ProductCard from "./ProductCard";
 
-export default function ProductSection({ title, products, verTodosHref }) {
+export default function ProductSection({ title, products, verTodosHref, whatsappNumero }) {
   if (!products || products.length === 0) return null;
 
   return (
@@ -17,7 +17,7 @@ export default function ProductSection({ title, products, verTodosHref }) {
         </div>
         <div className={styles.grid}>
           {products.map((p) => (
-            <ProductCard key={p.id} product={p} />
+            <ProductCard key={p.id} product={p} whatsappNumero={whatsappNumero} />
           ))}
         </div>
       </div>

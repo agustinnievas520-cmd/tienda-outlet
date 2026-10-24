@@ -2,36 +2,39 @@
 import { useState, useEffect, useCallback } from "react";
 import styles from "./HeroSlider.module.css";
 
-const WA = "5403401642045";
+const WA_DEFAULT = "5403401642045";
 
-const slides = [
-  {
-    badge: "OFERTAS ESPECIALES",
-    line1: "LO MEJOR PARA",
-    line2: "TU HOGAR",
-    trust: ["Hasta 12 cuotas sin interés", "Envíos rápidos a domicilio", "Garantía en todos los productos"],
-    cta: "Ver ofertas",
-    ctaHref: "/catalogo",
-  },
-  {
-    badge: "NUEVO INGRESO",
-    line1: "TECNOLOGÍA",
-    line2: "AL MEJOR PRECIO",
-    trust: ["Smart TVs, celulares y más", "Stock permanente", "Financiación directa sin banco"],
-    cta: "Ver tecnología",
-    ctaHref: "/catalogo?categoria=Smart+TV",
-  },
-  {
-    badge: "FINANCIACIÓN PROPIA",
-    line1: "LLEVATE HOY,",
-    line2: "PAGÁ DESPUÉS",
-    trust: ["Solo con tu DNI", "Sin tarjeta ni banco", "Cuotas semanales, quincenales o mensuales"],
-    cta: "Consultar ahora",
-    ctaHref: `https://wa.me/${WA}`,
-  },
-];
+function getSlides(WA) {
+  return [
+    {
+      badge: "OFERTAS ESPECIALES",
+      line1: "LO MEJOR PARA",
+      line2: "TU HOGAR",
+      trust: ["Hasta 12 cuotas sin interés", "Envíos rápidos a domicilio", "Garantía en todos los productos"],
+      cta: "Ver ofertas",
+      ctaHref: "/catalogo",
+    },
+    {
+      badge: "NUEVO INGRESO",
+      line1: "TECNOLOGÍA",
+      line2: "AL MEJOR PRECIO",
+      trust: ["Smart TVs, celulares y más", "Stock permanente", "Financiación directa sin banco"],
+      cta: "Ver tecnología",
+      ctaHref: "/catalogo?categoria=Smart+TV",
+    },
+    {
+      badge: "FINANCIACIÓN PROPIA",
+      line1: "LLEVATE HOY,",
+      line2: "PAGÁ DESPUÉS",
+      trust: ["Solo con tu DNI", "Sin tarjeta ni banco", "Cuotas semanales, quincenales o mensuales"],
+      cta: "Consultar ahora",
+      ctaHref: `https://wa.me/${WA}`,
+    },
+  ];
+}
 
-export default function HeroSlider({ heroImages = [] }) {
+export default function HeroSlider({ heroImages = [], whatsappNumero = WA_DEFAULT }) {
+  const slides = getSlides(whatsappNumero);
   const [current, setCurrent] = useState(0);
 
   const next = useCallback(() => setCurrent((c) => (c + 1) % slides.length), []);

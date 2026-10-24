@@ -1,13 +1,14 @@
 "use client";
 import styles from "./ProductCard.module.css";
 
-const WA = "5403401642045";
+const WA_DEFAULT = "5403401642045";
 
 function fmt(n) {
   return Math.round(n).toLocaleString("es-AR");
 }
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, whatsappNumero = WA_DEFAULT }) {
+  const WA = whatsappNumero;
   const { nombre, precio_contado, precio_financiado, precio_cuota, cuotas, imagen_url, entrega_inicial } = product;
   const waMsg = encodeURIComponent(`Hola, me interesa: ${nombre}`);
   const descuento = precio_financiado > precio_contado
