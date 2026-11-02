@@ -66,14 +66,36 @@ export async function GET(request: NextRequest) {
       // (así "muebles" encuentra la categoría aunque ningún nombre de producto
       // contenga literalmente esa palabra).
       const palabras = busqueda.split(/\s+/).filter(Boolean);
-      const condicionesPalabras = palabras.map((palabra) => {
-        const condicionesVariantes = variantesPalabra(palabra).map(
+      const variantesPorPalabra = palabras.map(variantesPalabra);
+      const condicionesPalabras = variantesPorPalabra.map((variantes) => {
+        const condicionesVariantes = variantes.map(
           (v) => Prisma.sql`(unaccent(nombre) ILIKE unaccent(${"%" + v + "%"}) OR unaccent(categoria) ILIKE unaccent(${"%" + v + "%"}))`
         );
         return Prisma.sql`(${Prisma.join(condicionesVariantes, " OR ")})`;
       });
       const condicionBusqueda = Prisma.join(condicionesPalabras, " AND ");
       const condicionCategoria = categoria ? Prisma.sql`AND categoria = ${categoria}` : Prisma.empty;
+
+      // Relevancia: un match "flojo" (solo por categoría, como "Tendedero" al
+      // buscar "cocina") no debe competir en pie de igualdad con un producto
+      // que de verdad se llama así. Sin esto, con el orden por precio por
+      // defecto, las cocinas de verdad (caras) quedaban enterradas detrás de
+      // anafes y balanzas baratos de la misma categoría "Cocina y Lavado".
+      const condEmpiezaConNombre = Prisma.join(
+        variantesPorPalabra[0].map((v) => Prisma.sql`unaccent(nombre) ILIKE unaccent(${v + "%"})`),
+        " OR "
+      );
+      const condContieneEnNombre = Prisma.join(
+        variantesPorPalabra.flat().map((v) => Prisma.sql`unaccent(nombre) ILIKE unaccent(${"%" + v + "%"})`),
+        " OR "
+      );
+      const relevanciaRaw = Prisma.sql`
+        CASE
+          WHEN (${condEmpiezaConNombre}) THEN 0
+          WHEN (${condContieneEnNombre}) THEN 1
+          ELSE 2
+        END
+      `;
 
       let ordenRaw = Prisma.sql`"createdAt" DESC`;
       if (orden === "precio_asc") ordenRaw = Prisma.sql`precio_costo ASC`;
@@ -83,7 +105,7 @@ export async function GET(request: NextRequest) {
         prisma.$queryRaw<any[]>`
           SELECT * FROM "Producto"
           WHERE disponible = true ${condicionCategoria} AND (${condicionBusqueda})
-          ORDER BY ${ordenRaw}
+          ORDER BY (${relevanciaRaw}) ASC, ${ordenRaw}
           LIMIT ${limite} OFFSET ${skip}
         `,
         prisma.$queryRaw<{ count: bigint }[]>`
