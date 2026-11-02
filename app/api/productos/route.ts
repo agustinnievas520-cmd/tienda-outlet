@@ -5,12 +5,37 @@ import { calcularPrecioContado, calcularPrecioCuota, calcularPrecioFinanciado, c
 
 const LIMITE_POR_PAGINA = 48;
 
+// Sinónimos frecuentes verificados contra el catálogo real: casos donde el
+// producto existe pero bajo una palabra distinta a la que buscaría un
+// cliente (ej. "frigorífico" no aparece nunca, pero "heladera" sí). No
+// incluye abreviaturas cortas como "pc" porque chocan con códigos de
+// modelo (DLD02PC, PCA012NE, etc.) y ensucian resultados no relacionados.
+const GRUPOS_SINONIMOS: string[][] = [
+  ["heladera", "frigorifico", "refrigerador"],
+  ["pileta", "piscina"],
+  ["computadora", "compu", "notebook", "laptop"],
+  ["pesa", "mancuerna", "gimnasio"],
+  ["aire", "split", "acondicionado"],
+];
+
+function sinonimosDe(palabra: string): string[] {
+  return GRUPOS_SINONIMOS.find((grupo) => grupo.includes(palabra)) ?? [];
+}
+
 // Variantes simples de una palabra para tolerar singular/plural en español
-// ("muebles" → también probar "mueble", "colchones" → también "colchon").
+// ("muebles" → también probar "mueble", "colchones" → también "colchon",
+// "luces" → también "luz") y sinónimos verificados.
 function variantesPalabra(palabra: string): string[] {
   const variantes = new Set([palabra]);
   if (palabra.length > 4 && palabra.endsWith("es")) variantes.add(palabra.slice(0, -2));
   if (palabra.length > 3 && palabra.endsWith("s")) variantes.add(palabra.slice(0, -1));
+  // Plural irregular de palabras terminadas en "z": luz→luces, lápiz→lápices
+  if (palabra.length > 4 && palabra.endsWith("ces")) variantes.add(palabra.slice(0, -3) + "z");
+
+  for (const v of Array.from(variantes)) {
+    sinonimosDe(v).forEach((s) => variantes.add(s));
+  }
+
   return Array.from(variantes);
 }
 
