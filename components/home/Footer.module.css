@@ -1,6 +1,6 @@
 .footer {
-  background: #C9994F;
-  border-top: 3px solid #EADBC4;
+  background: #F3EADC;
+  border-top: 3px solid #C9994F;
   padding-top: 48px;
 }
 
@@ -39,12 +39,12 @@
 .logoName {
   font-size: 17px;
   font-weight: 800;
-  color: #fff;
+  color: #3B2A1E;
 }
 
 .logoSub {
   font-size: 10px;
-  color: #fff;
+  color: #A67A3A;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 600;
@@ -79,7 +79,7 @@
 .colTitle {
   font-size: 11px;
   font-weight: 700;
-  color: #fff;
+  color: #A67A3A;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin: 0;
@@ -107,7 +107,7 @@
   padding: 2px 0;
 }
 
-.linkRow:hover { color: #fff; }
+.linkRow:hover { color: #A67A3A; }
 
 .chevron {
   color: #5A4530;
@@ -115,7 +115,7 @@
   transition: color 0.15s ease;
 }
 
-.linkRow:hover .chevron { color: #fff; }
+.linkRow:hover .chevron { color: #A67A3A; }
 
 .contactItem {
   display: flex;
@@ -133,14 +133,14 @@
   transition: color 0.15s ease;
 }
 
-.contactItem a:hover { color: #fff; }
+.contactItem a:hover { color: #A67A3A; }
 
 .contactItem svg { flex-shrink: 0; margin-top: 2px; }
 
 /* Stats bar */
 .stats {
   border-top: 1px solid rgba(59,42,30,0.15);
-  background: #C9994F;
+  background: #F3EADC;
 }
 
 .statsInner {
@@ -161,7 +161,7 @@
 .statValue {
   font-size: 15px;
   font-weight: 800;
-  color: #fff;
+  color: #A67A3A;
 }
 
 .statLabel {

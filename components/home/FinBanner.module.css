@@ -1,5 +1,5 @@
 .section {
-  background: #C9994F;
+  background: #F3EADC;
   padding: 60px 0;
 }
 
@@ -25,7 +25,7 @@
   gap: 8px;
   font-size: 11px;
   font-weight: 700;
-  color: #fff;
+  color: #A67A3A;
   text-transform: uppercase;
   letter-spacing: 1.5px;
 }
@@ -41,13 +41,13 @@
 .title {
   font-size: 34px;
   font-weight: 800;
-  color: #fff;
+  color: #3B2A1E;
   line-height: 1.2;
   margin: 0;
 }
 
 .titleGold {
-  color: #fff;
+  color: #A67A3A;
 }
 
 .desc {
@@ -61,8 +61,8 @@
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  background: #fff;
-  color: #3B2A1E;
+  background: #C9994F;
+  color: #fff;
   text-decoration: none;
   padding: 13px 28px;
   border-radius: 6px;
@@ -73,7 +73,7 @@
 }
 
 .btn:hover {
-  background: #F7F1E8;
+  background: #B5853F;
 }
 
 .cards {
@@ -83,7 +83,7 @@
 }
 
 .card {
-  background: #C9994F;
+  background: #FFFCF7;
   border: 1px solid #C9994F;
   border-radius: 10px;
   padding: 22px 16px;
@@ -101,7 +101,7 @@
 .cardLabel {
   font-size: 10px;
   font-weight: 700;
-  color: #fff;
+  color: #A67A3A;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -109,7 +109,7 @@
 .cardCuotas {
   font-size: 20px;
   font-weight: 800;
-  color: #fff;
+  color: #3B2A1E;
 }
 
 .cardDesc {

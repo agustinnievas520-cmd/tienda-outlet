@@ -1,5 +1,5 @@
 .section {
-  background: #C9994F;
+  background: #F3EADC;
   padding: 88px 0 96px;
 }
 
@@ -56,7 +56,7 @@
   font-size: 22px;
   font-weight: 700;
   line-height: 1.3;
-  color: #fff;
+  color: #3B2A1E;
   letter-spacing: -0.2px;
 }
 
@@ -87,12 +87,12 @@
 
 .valorItem:first-child { border-left: none; }
 
-.valorIcon { color: #fff; }
+.valorIcon { color: #3B2A1E; }
 
 .valorLabel {
   font-size: 14px;
   font-weight: 700;
-  color: #fff;
+  color: #3B2A1E;
 }
 
 .valorDesc {
@@ -154,7 +154,7 @@
 }
 
 .cierreText span {
-  color: #fff;
+  color: #3B2A1E;
   font-weight: 700;
 }
 

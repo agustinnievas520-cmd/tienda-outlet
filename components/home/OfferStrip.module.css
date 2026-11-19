@@ -1,5 +1,5 @@
 .strip {
-  background: #C9994F;
+  background: #F3EADC;
   border-top: 2px solid #EADBC4;
   border-bottom: 2px solid #EADBC4;
   margin: 24px 0;
@@ -41,7 +41,7 @@
 .title {
   font-size: 16px;
   font-weight: 800;
-  color: #fff;
+  color: #A67A3A;
   letter-spacing: 1px;
 }
 
@@ -83,7 +83,7 @@
 .num {
   font-size: 24px;
   font-weight: 800;
-  color: #fff;
+  color: #3B2A1E;
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
@@ -98,7 +98,7 @@
 .sep {
   font-size: 24px;
   font-weight: 800;
-  color: #fff;
+  color: #A67A3A;
   line-height: 1;
   margin-bottom: 12px;
 }
@@ -118,12 +118,12 @@
 .price {
   font-size: 24px;
   font-weight: 800;
-  color: #fff;
+  color: #3B2A1E;
 }
 
 .btn {
   background: #C9994F;
-  color: #fff;
+  color: #3B2A1E;
   text-decoration: none;
   padding: 10px 24px;
   border-radius: 8px;
