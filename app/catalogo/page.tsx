@@ -31,8 +31,7 @@ export default async function CatalogoPage({
   const { v: vQuery } = await searchParams;
   const cookieStore = await cookies();
   const v = vendedorActivo(vQuery, cookieStore.get("vendedor")?.value);
-  const whatsappActivo = resolverWhatsapp(v, numero1, numero2);
-  const vendedorFijo = v === "2" && numero2 ? numero2 : v === "1" ? numero1 : undefined;
+  const { activo: whatsappActivo, fijo: vendedorFijo } = await resolverWhatsapp(v, numero1, numero2);
 
   return (
     <div style={{ background: "#f5f5f5", minHeight: "100vh" }}>

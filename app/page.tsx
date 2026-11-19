@@ -161,7 +161,7 @@ export default async function HomePage({
     whatsapp_numero_2: "",
   };
 
-  const whatsappActivo = resolverWhatsapp(v, cfg.whatsapp_numero, cfg.whatsapp_numero_2);
+  const { activo: whatsappActivo } = await resolverWhatsapp(v, cfg.whatsapp_numero, cfg.whatsapp_numero_2);
 
   const productosConPrecios = todosLosProductos.map((p) => ({
     id: p.id,

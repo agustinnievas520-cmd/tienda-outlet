@@ -28,6 +28,15 @@ interface Configuracion {
   whatsapp_numero_2: string;
 }
 
+interface Vendedor {
+  id: number;
+  nombre: string;
+  localidad: string;
+  whatsapp: string;
+  codigo: string;
+  activo: boolean;
+}
+
 interface LogSync {
   id: number;
   fecha: string;
@@ -62,8 +71,15 @@ export default function AdminPage() {
   const [password, setPassword] = useState("");
   const [errorAuth, setErrorAuth] = useState("");
   const [seccionActiva, setSeccionActiva] = useState<
-    "config" | "productos" | "sync" | "stats" | "cotizador"
+    "config" | "productos" | "sync" | "stats" | "cotizador" | "vendedores"
   >("config");
+
+  // ─── Vendedores ────────────────────────────────────────────
+  const [vendedores, setVendedores] = useState<Vendedor[]>([]);
+  const [formVendedor, setFormVendedor] = useState({ nombre: "", localidad: "", whatsapp: "" });
+  const [guardandoVendedor, setGuardandoVendedor] = useState(false);
+  const [editandoVendedor, setEditandoVendedor] = useState<Vendedor | null>(null);
+  const [linkCopiado, setLinkCopiado] = useState<number | null>(null);
 
   // ─── Cotizador ─────────────────────────────────────────────
   const [cotBusqueda, setCotBusqueda] = useState("");
@@ -202,6 +218,82 @@ export default function AdminPage() {
     setProductos(todos);
   }, [categoriaFiltro]);
 
+  const cargarVendedores = useCallback(async () => {
+    const res = await fetch("/api/admin/vendedores", {
+      headers: { "x-api-key": localStorage.getItem("admin_outlet_key") || "" },
+    });
+    if (res.ok) setVendedores(await res.json());
+  }, []);
+
+  const linkVendedor = (codigo: string) =>
+    `${typeof window !== "undefined" ? window.location.origin : ""}/?v=${codigo}`;
+
+  const copiarLinkVendedor = async (v: Vendedor) => {
+    try {
+      await navigator.clipboard.writeText(linkVendedor(v.codigo));
+      setLinkCopiado(v.id);
+      setTimeout(() => setLinkCopiado(null), 2000);
+    } catch {
+      mostrarExito("❌ No se pudo copiar, copialo a mano");
+    }
+  };
+
+  const crearVendedor = async () => {
+    setGuardandoVendedor(true);
+    try {
+      const res = await fetch("/api/admin/vendedores", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-api-key": getApiKey() },
+        body: JSON.stringify(formVendedor),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setFormVendedor({ nombre: "", localidad: "", whatsapp: "" });
+        await cargarVendedores();
+        mostrarExito(`✅ Vendedor ${data.nombre} agregado`);
+      } else {
+        mostrarExito(`❌ ${data.error || "Error al agregar vendedor"}`);
+      }
+    } catch {
+      mostrarExito("❌ Error de conexión");
+    } finally {
+      setGuardandoVendedor(false);
+    }
+  };
+
+  const actualizarVendedor = async (id: number, cambios: Partial<Vendedor>) => {
+    try {
+      const res = await fetch(`/api/admin/vendedores/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", "x-api-key": getApiKey() },
+        body: JSON.stringify(cambios),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        await cargarVendedores();
+        return true;
+      }
+      mostrarExito(`❌ ${data.error || "Error al guardar"}`);
+    } catch {
+      mostrarExito("❌ Error de conexión");
+    }
+    return false;
+  };
+
+  const borrarVendedor = async (v: Vendedor) => {
+    if (!confirm(`¿Borrar a ${v.nombre}? Su link va a dejar de funcionar (los clientes que entren por ahí te van a escribir a vos).`)) return;
+    const res = await fetch(`/api/admin/vendedores/${v.id}`, {
+      method: "DELETE",
+      headers: { "x-api-key": getApiKey() },
+    });
+    if (res.ok) {
+      await cargarVendedores();
+      mostrarExito("✅ Vendedor borrado");
+    } else {
+      mostrarExito("❌ Error al borrar");
+    }
+  };
+
   const cargarLogs = useCallback(async () => {
     const res = await fetch("/api/sync/logs");
     if (res.ok) setLogs(await res.json());
@@ -212,6 +304,7 @@ export default function AdminPage() {
       cargarConfig();
       cargarProductos();
       cargarLogs();
+      cargarVendedores();
     }
   }, [autenticado, cargarConfig, cargarProductos, cargarLogs]);
 
@@ -479,6 +572,7 @@ export default function AdminPage() {
               { id: "config", label: "Configuración" },
               { id: "productos", label: `Productos (${productos.length})` },
               { id: "cotizador", label: "💰 Cotizador" },
+              { id: "vendedores", label: `👥 Vendedores (${vendedores.length})` },
               { id: "sync", label: "Sincronización" },
               { id: "stats", label: "Estadísticas" },
             ] as const
@@ -1117,6 +1211,158 @@ export default function AdminPage() {
                   </div>
                 )}
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* ═══════════ SECCIÓN: VENDEDORES ═══════════ */}
+        {seccionActiva === "vendedores" && (
+          <div className="space-y-6 max-w-3xl">
+            <div className="bg-white rounded-2xl shadow-sm p-6">
+              <h2 className="text-lg font-semibold text-gray-800 mb-1">Agregar vendedor</h2>
+              <p className="text-sm text-gray-500 mb-5">
+                Cada vendedor recibe su propio link. Los clientes que entren por ese link le escriben a su WhatsApp.
+              </p>
+              <div className="grid sm:grid-cols-3 gap-3">
+                <input
+                  type="text"
+                  value={formVendedor.nombre}
+                  onChange={(e) => setFormVendedor((f) => ({ ...f, nombre: e.target.value }))}
+                  placeholder="Nombre (ej: Juan)"
+                  className="px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#1a1a2e] focus:ring-2 focus:ring-[#1a1a2e]/20 outline-none text-sm"
+                />
+                <input
+                  type="text"
+                  value={formVendedor.localidad}
+                  onChange={(e) => setFormVendedor((f) => ({ ...f, localidad: e.target.value }))}
+                  placeholder="Localidad (ej: Rafaela)"
+                  className="px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#1a1a2e] focus:ring-2 focus:ring-[#1a1a2e]/20 outline-none text-sm"
+                />
+                <input
+                  type="tel"
+                  value={formVendedor.whatsapp}
+                  onChange={(e) => setFormVendedor((f) => ({ ...f, whatsapp: e.target.value }))}
+                  placeholder="WhatsApp (ej: 5493401...)"
+                  className="px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#1a1a2e] focus:ring-2 focus:ring-[#1a1a2e]/20 outline-none text-sm"
+                />
+              </div>
+              <p className="text-xs text-gray-400 mt-2">WhatsApp con código de país, sin + ni espacios (54 9 + característica + número).</p>
+              <button
+                onClick={crearVendedor}
+                disabled={guardandoVendedor || !formVendedor.nombre.trim() || !formVendedor.whatsapp.trim()}
+                className="mt-4 px-5 py-2.5 rounded-xl bg-[#1a1a2e] text-white text-sm font-medium disabled:opacity-40"
+              >
+                {guardandoVendedor ? "Guardando..." : "Agregar vendedor"}
+              </button>
+            </div>
+
+            <div className="bg-white rounded-2xl shadow-sm p-6">
+              <h2 className="text-lg font-semibold text-gray-800 mb-4">Tus vendedores</h2>
+              {vendedores.length === 0 ? (
+                <p className="text-sm text-gray-400">Todavía no cargaste ningún vendedor.</p>
+              ) : (
+                <div className="space-y-3">
+                  {vendedores.map((v) =>
+                    editandoVendedor?.id === v.id ? (
+                      <div key={v.id} className="border border-[#1a1a2e] rounded-xl p-4 space-y-3">
+                        <div className="grid sm:grid-cols-3 gap-3">
+                          <input
+                            type="text"
+                            value={editandoVendedor.nombre}
+                            onChange={(e) => setEditandoVendedor({ ...editandoVendedor, nombre: e.target.value })}
+                            className="px-3 py-2 rounded-lg border border-gray-200 text-sm"
+                          />
+                          <input
+                            type="text"
+                            value={editandoVendedor.localidad}
+                            onChange={(e) => setEditandoVendedor({ ...editandoVendedor, localidad: e.target.value })}
+                            placeholder="Localidad"
+                            className="px-3 py-2 rounded-lg border border-gray-200 text-sm"
+                          />
+                          <input
+                            type="tel"
+                            value={editandoVendedor.whatsapp}
+                            onChange={(e) => setEditandoVendedor({ ...editandoVendedor, whatsapp: e.target.value })}
+                            className="px-3 py-2 rounded-lg border border-gray-200 text-sm"
+                          />
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={async () => {
+                              const ok = await actualizarVendedor(v.id, {
+                                nombre: editandoVendedor.nombre,
+                                localidad: editandoVendedor.localidad,
+                                whatsapp: editandoVendedor.whatsapp,
+                              });
+                              if (ok) {
+                                setEditandoVendedor(null);
+                                mostrarExito("✅ Cambios guardados");
+                              }
+                            }}
+                            className="px-4 py-2 rounded-lg bg-[#1a1a2e] text-white text-sm"
+                          >
+                            Guardar
+                          </button>
+                          <button
+                            onClick={() => setEditandoVendedor(null)}
+                            className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 text-sm"
+                          >
+                            Cancelar
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div
+                        key={v.id}
+                        className={`border rounded-xl p-4 ${v.activo ? "border-gray-200" : "border-gray-100 bg-gray-50 opacity-70"}`}
+                      >
+                        <div className="flex flex-wrap items-start justify-between gap-2">
+                          <div>
+                            <p className="font-semibold text-gray-800">
+                              {v.nombre}
+                              {v.localidad && <span className="font-normal text-gray-500"> · {v.localidad}</span>}
+                              {!v.activo && <span className="ml-2 text-xs text-red-500 font-medium">PAUSADO</span>}
+                            </p>
+                            <p className="text-sm text-gray-500">WhatsApp: {v.whatsapp}</p>
+                          </div>
+                          <div className="flex flex-wrap gap-1 text-sm">
+                            <button onClick={() => setEditandoVendedor(v)} className="px-3 py-1.5 rounded-lg text-gray-600 hover:bg-gray-100">
+                              Editar
+                            </button>
+                            <button
+                              onClick={async () => {
+                                if (await actualizarVendedor(v.id, { activo: !v.activo })) {
+                                  mostrarExito(v.activo ? "⏸️ Vendedor pausado" : "▶️ Vendedor activado");
+                                }
+                              }}
+                              className="px-3 py-1.5 rounded-lg text-gray-600 hover:bg-gray-100"
+                            >
+                              {v.activo ? "Pausar" : "Activar"}
+                            </button>
+                            <button onClick={() => borrarVendedor(v)} className="px-3 py-1.5 rounded-lg text-red-500 hover:bg-red-50">
+                              Borrar
+                            </button>
+                          </div>
+                        </div>
+                        <div className="mt-3 flex items-center gap-2">
+                          <code className="flex-1 min-w-0 truncate text-xs bg-gray-100 rounded-lg px-3 py-2 text-gray-700">
+                            {linkVendedor(v.codigo)}
+                          </code>
+                          <button
+                            onClick={() => copiarLinkVendedor(v)}
+                            className="flex-shrink-0 px-3 py-2 rounded-lg bg-[#c9a84c] text-white text-xs font-medium"
+                          >
+                            {linkCopiado === v.id ? "¡Copiado!" : "Copiar link"}
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+              )}
+              <p className="text-xs text-gray-400 mt-4">
+                Si pausás o borrás un vendedor, los clientes que entren por su link te escriben al número principal.
+              </p>
             </div>
           </div>
         )}

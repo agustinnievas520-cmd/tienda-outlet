@@ -37,3 +37,15 @@ model LogSincronizacion {
   productos_actualizados Int
   errores               String?
 }
+
+// Vendedores externos: cada uno tiene su link (?v=codigo) y los clientes
+// que entran por ese link le escriben a su WhatsApp.
+model Vendedor {
+  id        Int      @id @default(autoincrement())
+  nombre    String
+  localidad String   @default("")
+  whatsapp  String
+  codigo    String   @unique
+  activo    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
