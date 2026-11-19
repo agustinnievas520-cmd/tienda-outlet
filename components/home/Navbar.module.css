@@ -84,8 +84,8 @@
 }
 
 .search:focus-within {
-  border-color: #B8864B;
-  box-shadow: 0 0 0 3px rgba(184,134,75,0.15);
+  border-color: #C9994F;
+  box-shadow: 0 0 0 3px rgba(201,153,79,0.15);
 }
 
 .searchInput {
@@ -101,7 +101,7 @@
 .searchInput::placeholder { color: #aaa; }
 
 .searchBtn {
-  background: #B8864B;
+  background: #C9994F;
   border: none;
   padding: 11px 20px;
   cursor: pointer;
@@ -112,7 +112,7 @@
   transition: background 0.15s ease;
 }
 
-.searchBtn:hover { background: #A2733C; }
+.searchBtn:hover { background: #B5853F; }
 
 .actions {
   display: flex;

@@ -26,7 +26,7 @@
 
 .verTodas {
   font-size: 14px;
-  color: #B8864B;
+  color: #C9994F;
   font-weight: 700;
   text-decoration: none;
   transition: opacity 0.15s ease;
@@ -54,8 +54,8 @@
 }
 
 .card:hover {
-  border-color: #B8864B;
-  box-shadow: 0 6px 20px rgba(184,134,75,0.18);
+  border-color: #C9994F;
+  box-shadow: 0 6px 20px rgba(201,153,79,0.18);
   transform: translateY(-3px);
 }
 

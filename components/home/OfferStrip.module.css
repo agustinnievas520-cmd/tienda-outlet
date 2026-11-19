@@ -1,7 +1,7 @@
 .strip {
-  background: linear-gradient(90deg, #3B2A1E 0%, #2E2E2E 100%);
-  border-top: 2px solid #B8864B;
-  border-bottom: 2px solid #B8864B;
+  background: #C9994F;
+  border-top: 2px solid #EADBC4;
+  border-bottom: 2px solid #EADBC4;
   margin: 24px 0;
 }
 
@@ -41,13 +41,13 @@
 .title {
   font-size: 16px;
   font-weight: 800;
-  color: #B8864B;
+  color: #fff;
   letter-spacing: 1px;
 }
 
 .sub {
   font-size: 13px;
-  color: #ccc;
+  color: #4A3826;
 }
 
 .center {
@@ -59,7 +59,7 @@
 
 .timerLabel {
   font-size: 11px;
-  color: #888;
+  color: #4A3826;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -74,7 +74,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: #B8864B;
+  background: #C9994F;
   border-radius: 6px;
   padding: 6px 10px;
   min-width: 52px;
@@ -90,7 +90,7 @@
 
 .digitLabel {
   font-size: 9px;
-  color: rgba(255,255,255,0.8);
+  color: #3B2A1E;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -98,7 +98,7 @@
 .sep {
   font-size: 24px;
   font-weight: 800;
-  color: #B8864B;
+  color: #fff;
   line-height: 1;
   margin-bottom: 12px;
 }
@@ -111,7 +111,7 @@
 
 .oldPrice {
   font-size: 14px;
-  color: #666;
+  color: #5A4530;
   text-decoration: line-through;
 }
 
@@ -122,7 +122,7 @@
 }
 
 .btn {
-  background: #B8864B;
+  background: #C9994F;
   color: #fff;
   text-decoration: none;
   padding: 10px 24px;
@@ -134,7 +134,7 @@
 }
 
 .btn:hover {
-  background: #B8864B;
+  background: #C9994F;
 }
 
 @media (max-width: 900px) {

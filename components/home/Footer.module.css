@@ -1,6 +1,6 @@
 .footer {
-  background: #3B2A1E;
-  border-top: 3px solid #B8864B;
+  background: #C9994F;
+  border-top: 3px solid #EADBC4;
   padding-top: 48px;
 }
 
@@ -44,7 +44,7 @@
 
 .logoSub {
   font-size: 10px;
-  color: #B8864B;
+  color: #fff;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 600;
@@ -52,7 +52,7 @@
 
 .tagline {
   font-size: 13px;
-  color: #777;
+  color: #4A3826;
   line-height: 1.7;
   margin: 0;
 }
@@ -79,12 +79,12 @@
 .colTitle {
   font-size: 11px;
   font-weight: 700;
-  color: #B8864B;
+  color: #fff;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin: 0;
   padding-bottom: 10px;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid rgba(59,42,30,0.15);
 }
 
 .list {
@@ -100,47 +100,47 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #888;
+  color: #4A3826;
   text-decoration: none;
   font-size: 13px;
   transition: color 0.15s ease;
   padding: 2px 0;
 }
 
-.linkRow:hover { color: #B8864B; }
+.linkRow:hover { color: #fff; }
 
 .chevron {
-  color: #555;
+  color: #5A4530;
   font-size: 15px;
   transition: color 0.15s ease;
 }
 
-.linkRow:hover .chevron { color: #B8864B; }
+.linkRow:hover .chevron { color: #fff; }
 
 .contactItem {
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  color: #888;
+  color: #4A3826;
   font-size: 13px;
   line-height: 1.5;
 }
 
 .contactItem a {
-  color: #888;
+  color: #4A3826;
   text-decoration: none;
   font-size: 13px;
   transition: color 0.15s ease;
 }
 
-.contactItem a:hover { color: #B8864B; }
+.contactItem a:hover { color: #fff; }
 
 .contactItem svg { flex-shrink: 0; margin-top: 2px; }
 
 /* Stats bar */
 .stats {
-  border-top: 1px solid #1e1e1e;
-  background: #3B2A1E;
+  border-top: 1px solid rgba(59,42,30,0.15);
+  background: #C9994F;
 }
 
 .statsInner {
@@ -161,16 +161,16 @@
 .statValue {
   font-size: 15px;
   font-weight: 800;
-  color: #B8864B;
+  color: #fff;
 }
 
 .statLabel {
   font-size: 12px;
-  color: #666;
+  color: #5A4530;
 }
 
 /* Bottom */
-.bottom { border-top: 1px solid #3B2A1E; }
+.bottom { border-top: 1px solid rgba(59,42,30,0.15); }
 
 .bottomInner {
   max-width: 1280px;
@@ -180,7 +180,7 @@
   justify-content: space-between;
   gap: 16px;
   font-size: 11px;
-  color: #444;
+  color: #5A4530;
 }
 
 @media (max-width: 1024px) {

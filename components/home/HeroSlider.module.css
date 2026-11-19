@@ -43,7 +43,7 @@
 
 .badge {
   display: inline-block;
-  background: #B8864B;
+  background: #C9994F;
   color: #fff;
   font-size: 11px;
   font-weight: 800;
@@ -66,7 +66,7 @@
 .line2 {
   font-size: 48px;
   font-weight: 700;
-  color: #B8864B;
+  color: #C9994F;
   line-height: 1.05;
   margin: 0;
   letter-spacing: -1px;
@@ -95,7 +95,7 @@
 .cta {
   display: inline-flex;
   align-items: center;
-  background: #B8864B;
+  background: #C9994F;
   color: #fff;
   text-decoration: none;
   padding: 12px 28px;
@@ -108,7 +108,7 @@
 }
 
 .cta:hover {
-  background: #A2733C;
+  background: #B5853F;
   transform: translateY(-1px);
 }
 
@@ -129,7 +129,7 @@
 .decoText {
   font-size: 72px;
   font-weight: 900;
-  color: rgba(184,134,75,0.18);
+  color: rgba(201,153,79,0.18);
   letter-spacing: -2px;
   text-transform: uppercase;
 }
@@ -155,7 +155,7 @@
 }
 
 .dotActive {
-  background: #B8864B;
+  background: #C9994F;
   transform: scale(1.4);
 }
 

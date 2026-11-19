@@ -31,8 +31,8 @@
 }
 
 .link:hover {
-  color: #B8864B;
-  border-bottom-color: #B8864B;
+  color: #C9994F;
+  border-bottom-color: #C9994F;
 }
 
 @media (max-width: 600px) {

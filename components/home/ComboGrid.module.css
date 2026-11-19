@@ -33,14 +33,14 @@
 .verTodos {
   font-size: 13px;
   font-weight: 600;
-  color: #B8864B;
+  color: #C9994F;
   text-decoration: none;
   white-space: nowrap;
   transition: color 0.15s ease;
 }
 
 .verTodos:hover {
-  color: #B8864B;
+  color: #C9994F;
 }
 
 .grid {

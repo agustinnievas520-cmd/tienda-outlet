@@ -95,7 +95,7 @@ export default function TarjetaProducto({ producto, whatsappNumero, onVerDetalle
 
         {/* Badge de categoría */}
         <div className="absolute top-2 left-2">
-          <span className="bg-[#3B2A1E]/80 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
+          <span className="bg-[#C9994F]/80 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
             {producto.categoria}
           </span>
         </div>
@@ -125,14 +125,14 @@ export default function TarjetaProducto({ producto, whatsappNumero, onVerDetalle
               <span className="text-xs text-gray-400 ml-1">s/ interés</span>
             </div>
             {producto.entrega_inicial != null && producto.entrega_inicial > 0 && (
-              <div className="text-xs font-bold text-[#B8864B] mt-0.5">
+              <div className="text-xs font-bold text-[#C9994F] mt-0.5">
                 Entrega: {formatearPrecio(producto.entrega_inicial)}
               </div>
             )}
           </div>
         ) : (
           <div className="mb-4">
-            <span className="text-sm text-[#B8864B] font-medium">
+            <span className="text-sm text-[#C9994F] font-medium">
               Consultá por precio
             </span>
           </div>

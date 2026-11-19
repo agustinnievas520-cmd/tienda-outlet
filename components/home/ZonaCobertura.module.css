@@ -60,7 +60,7 @@
   width: fit-content;
   padding: 12px 22px;
   border-radius: 10px;
-  background: #3B2A1E;
+  background: #C9994F;
   color: #fff;
   font-size: 13.5px;
   font-weight: 700;
@@ -69,7 +69,7 @@
 }
 
 .cta:hover {
-  background: #B8864B;
+  background: #C9994F;
   transform: translateY(-1px);
 }
 
@@ -96,8 +96,8 @@
 }
 
 .pillSede {
-  background: #3B2A1E;
-  border-color: #3B2A1E;
+  background: #C9994F;
+  border-color: #C9994F;
   color: #fff;
 }
 
@@ -106,7 +106,7 @@
   font-weight: 800;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: #B8864B;
+  color: #C9994F;
   background: rgba(255, 255, 255, 0.12);
   border-radius: 100px;
   padding: 2px 7px;

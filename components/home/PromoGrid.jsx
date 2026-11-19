@@ -20,7 +20,7 @@ const Icon = {
 // derecha y detalles en bronce. Se aplica a todas las tarjetas.
 const ESTILO_MARCA = {
   bg: "#F7F1E8",
-  accent: "#B8864B",
+  accent: "#C9994F",
   overlay: "linear-gradient(105deg, rgba(247,241,232,0.98) 30%, rgba(247,241,232,0.88) 46%, rgba(247,241,232,0.2) 72%, transparent 90%)",
   lightRay: "none",
   productGlow: "none",

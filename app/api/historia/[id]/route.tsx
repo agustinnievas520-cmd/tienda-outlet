@@ -21,7 +21,7 @@ export const dynamic = "force-dynamic";
 const W = 1080;
 const H = 1920;
 const AZUL = "#3B2A1E";
-const DORADO = "#B8864B";
+const DORADO = "#C9994F";
 const FONDO = "#F7F1E8";
 
 async function cargarFuentes() {
@@ -231,13 +231,13 @@ export async function GET(
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    background: AZUL,
+                    background: DORADO,
                     color: "white",
                     borderRadius: 28,
                     padding: "22px 10px",
                   }}
                 >
-                  <div style={{ fontSize: 30, color: DORADO, fontWeight: 600, letterSpacing: 2 }}>
+                  <div style={{ fontSize: 30, color: "#3B2A1E", fontWeight: 600, letterSpacing: 2 }}>
                     {op.modalidad.toUpperCase()}
                   </div>
                   <div style={{ fontSize: 50, fontWeight: 600, marginTop: 6 }}>
@@ -271,7 +271,7 @@ export async function GET(
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            background: DORADO,
+            background: "#B5853F",
             color: "white",
             paddingTop: 34,
             paddingBottom: 190,
