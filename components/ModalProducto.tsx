@@ -217,12 +217,12 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
                 {opciones[0] && (
                   <div className="bg-[#C9994F] rounded-xl px-4 py-3.5 flex items-center justify-between">
                     <div>
-                      <p className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold mb-1">Entrega inicial</p>
+                      <p className="text-[11px] text-[#3B2A1E] uppercase tracking-widest font-bold mb-1">Entrega inicial</p>
                       <p className="text-2xl font-black text-white leading-none">{formatearPrecio(opciones[0].entrega)}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[10px] text-gray-400 uppercase tracking-wide font-semibold mb-1">Total financiado</p>
-                      <p className="text-sm font-bold text-[#C9994F]">{formatearPrecio(opciones[0].ventaFinal)}</p>
+                      <p className="text-[11px] text-[#3B2A1E] uppercase tracking-wide font-bold mb-1">Total financiado</p>
+                      <p className="text-base font-bold text-white">{formatearPrecio(opciones[0].ventaFinal)}</p>
                     </div>
                   </div>
                 )}

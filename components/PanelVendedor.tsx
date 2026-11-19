@@ -136,16 +136,16 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
   return (
     <div className="min-h-screen bg-[#F7F1E8]">
       {/* Encabezado */}
-      <header className="bg-[#C9994F] text-white px-4 pt-6 pb-5">
+      <header className="bg-[#F3EADC] text-[#3B2A1E] px-4 pt-6 pb-5 border-b-4 border-[#C9994F]">
         <div className="max-w-5xl mx-auto">
-          <p className="text-[#C9994F] text-xs font-semibold tracking-widest">OUTLET HOGAR · PANEL DE VENDEDOR</p>
-          <h1 className="text-2xl font-semibold mt-1">Hola, {vendedor.nombre} 👋</h1>
-          <p className="text-white/70 text-sm mt-1">
-            Tocá <strong className="text-white">&quot;Subir a historia&quot;</strong> en cualquier producto. La imagen sale con
+          <p className="text-[#A67A3A] text-xs font-bold tracking-widest">OUTLET HOGAR · PANEL DE VENDEDOR</p>
+          <h1 className="text-3xl font-semibold mt-1">Hola, {vendedor.nombre} 👋</h1>
+          <p className="text-[#5A4530] text-sm mt-1">
+            Tocá <strong className="text-[#3B2A1E]">&quot;Subir a historia&quot;</strong> en cualquier producto. La imagen sale con
             los precios del día y tu WhatsApp.
           </p>
-          <div className="mt-4 flex items-center gap-2 bg-white/10 rounded-xl p-2">
-            <span className="flex-1 min-w-0 truncate text-xs text-white/80 px-2">Tu link: {miLink}</span>
+          <div className="mt-4 flex items-center gap-2 bg-white rounded-xl p-2 border border-[#EADBC4]">
+            <span className="flex-1 min-w-0 truncate text-xs text-[#5A4530] px-2">Tu link: {miLink}</span>
             <button
               onClick={copiarLink}
               className="flex-shrink-0 bg-[#C9994F] text-white text-xs font-semibold px-3 py-2 rounded-lg"
