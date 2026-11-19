@@ -3,7 +3,9 @@ import sharp from "sharp";
 import path from "path";
 import fs from "fs";
 
-const VIENA_PLACEHOLDER = "https://vienamuebles.com/wp-content/uploads/clientResources/marca-y-producto_no-image.jpg";
+const SELLO_PATH = path.join(process.cwd(), "public", "sello-outlet.png");
+
+const VIENA_PLACEHOLDER ="https://vienamuebles.com/wp-content/uploads/clientResources/marca-y-producto_no-image.jpg";
 
 const PLACEHOLDER_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
   <rect width="400" height="300" fill="#f3f4f6"/>
@@ -102,18 +104,21 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Imágenes de Viena: tapar logo con franja blanca en todo el ancho, 22% desde abajo
+  // Imágenes de Viena: su logo está en la esquina inferior izquierda.
+  // Se tapa solo ese rincón con el sello de Outlet Hogar (30% x 18% de la foto),
+  // así el logo de Viena no se ve y el producto no queda cortado abajo.
   try {
-    const image = sharp(raw!);
-    const { width = 400, height = 400 } = await image.metadata();
-    const coverH = Math.round(height * 0.22);
-    const white = Buffer.from(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${coverH}">
-        <rect width="${width}" height="${coverH}" fill="white"/>
-      </svg>`
-    );
+    const image = sharp(raw!).flatten({ background: "#ffffff" });
+    const { width = 400, height = 400 } = await sharp(raw!).metadata();
+    const selloW = Math.round(width * 0.30);
+    const selloH = Math.round(height * 0.18);
+    const margen = Math.round(Math.min(width, height) * 0.005);
+    const sello = await sharp(fs.readFileSync(SELLO_PATH))
+      .resize(selloW, selloH, { fit: "fill" })
+      .png()
+      .toBuffer();
     const processed = await image
-      .composite([{ input: white, top: height - coverH, left: 0 }])
+      .composite([{ input: sello, top: height - selloH - margen, left: margen }])
       .jpeg({ quality: 90 })
       .toBuffer();
 

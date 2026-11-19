@@ -7,7 +7,8 @@ const nextConfig: NextConfig = {
   typescript: { ignoreBuildErrors: true },
   // Fuentes y logo que usa el generador de historias (/api/historia)
   outputFileTracingIncludes: {
-    "/api/historia/[id]": ["./lib/fonts/**", "./public/logo-marca.svg"],
+    "/api/historia/[id]": ["./lib/fonts/**", "./public/logo-casa-icono.png", "./public/logo-casa-texto.png", "./public/sello-outlet.png"],
+    "/api/imagen": ["./public/sello-outlet.png"],
   },
   eslint: { ignoreDuringBuilds: true },
   images: {

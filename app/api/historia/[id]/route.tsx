@@ -62,9 +62,16 @@ async function fotoProducto(request: NextRequest, imagenUrl: string): Promise<st
   }
 }
 
-async function logo(): Promise<string> {
-  const svg = await fs.readFile(path.join(process.cwd(), "public", "logo-marca.svg"));
-  return `data:image/svg+xml;base64,${svg.toString("base64")}`;
+// Logo de la marca (el de Instagram), en dos partes: la casita y el nombre.
+async function logo(): Promise<{ icono: string; texto: string }> {
+  const [icono, texto] = await Promise.all([
+    fs.readFile(path.join(process.cwd(), "public", "logo-casa-icono.png")),
+    fs.readFile(path.join(process.cwd(), "public", "logo-casa-texto.png")),
+  ]);
+  return {
+    icono: `data:image/png;base64,${icono.toString("base64")}`,
+    texto: `data:image/png;base64,${texto.toString("base64")}`,
+  };
 }
 
 function formatearWhatsapp(numero: string): string {
@@ -128,22 +135,17 @@ export async function GET(
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: 28,
-            background: AZUL,
-            paddingTop: 150,
-            paddingBottom: 40,
+            gap: 40,
+            background: "white",
+            paddingTop: 140,
+            paddingBottom: 34,
+            borderBottom: `8px solid ${DORADO}`,
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logoSrc} width={120} height={120} alt="" />
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ fontSize: 64, fontWeight: 600, color: "white", letterSpacing: 2 }}>
-              OUTLET HOGAR
-            </div>
-            <div style={{ fontSize: 30, color: DORADO, letterSpacing: 6 }}>
-              PLANES A TU MEDIDA
-            </div>
-          </div>
+          <img src={logoSrc.icono} width={187} height={150} alt="" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={logoSrc.texto} width={420} height={111} alt="" />
         </div>
 
         {/* Foto */}
