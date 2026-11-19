@@ -416,17 +416,24 @@ export default function AdminPage() {
   const sincronizar = async () => {
     setSincronizando(true);
     try {
-      const res = await fetch("/api/sync", {
-        method: "POST",
+      // Sincronización nueva (la misma que corre sola cada mañana). Tarda ~40 s.
+      const res = await fetch("/api/cron/sincronizar", {
         headers: { "x-api-key": getApiKey() },
       });
       if (res.ok) {
-        mostrarExito("🔄 Sincronización iniciada en background...");
-        setTimeout(() => {
-          cargarLogs();
-          cargarProductos();
-        }, 5000);
+        const data = await res.json();
+        const hechos = (data.resultados || []).filter((r: { leidos?: number }) => r.leidos !== undefined);
+        const suma = (k: string) => hechos.reduce((a: number, r: Record<string, number>) => a + (r[k] || 0), 0);
+        mostrarExito(
+          `✅ Al día con Viena: ${suma("nuevos")} nuevos, ${suma("precios")} precios, ${suma("mostrados")} vuelven, ${suma("ocultados")} ocultos`
+        );
+        cargarLogs();
+        cargarProductos();
+      } else {
+        mostrarExito("❌ No se pudo sincronizar. Probá de nuevo en un rato.");
       }
+    } catch {
+      mostrarExito("❌ Error de conexión al sincronizar");
     } finally {
       setSincronizando(false);
     }
@@ -1164,15 +1171,14 @@ export default function AdminPage() {
                     d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                   />
                 </svg>
-                {sincronizando ? "Iniciando..." : "Sincronizar ahora"}
+                {sincronizando ? "Sincronizando (tarda ~1 minuto)..." : "Sincronizar ahora"}
               </button>
 
-              {sincronizando && (
-                <p className="text-sm text-gray-500 mt-3">
-                  El scraper corre en background. Los resultados aparecerán en
-                  los logs en unos minutos.
-                </p>
-              )}
+              <p className="text-sm text-gray-500 mt-3">
+                La tienda se actualiza sola todos los días a las 6 de la mañana: productos nuevos, precios,
+                stock y lo que Viena ya no tiene. Los productos que ocultás a mano o que no tienen foto no se
+                vuelven a mostrar solos.
+              </p>
             </div>
 
             {/* Tabla de logs */}

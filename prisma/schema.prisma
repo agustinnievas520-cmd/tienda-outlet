@@ -14,6 +14,8 @@ model Producto {
   precio_costo Float
   imagen_url   String
   disponible   Boolean  @default(true)
+  // Oculto a mano (ej: sin foto usable). La sincronización con Viena no lo vuelve a mostrar.
+  oculto_manual Boolean @default(false)
   url_origen   String   @unique
   descripcion  String?
   createdAt    DateTime @default(now())

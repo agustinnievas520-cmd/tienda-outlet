@@ -36,6 +36,10 @@ async function checkStock(url: string): Promise<boolean> {
 }
 
 export async function GET(req: Request) {
+  // Sistema viejo: reemplazado por /api/cron/sincronizar. Solo con contraseña.
+  if (req.headers.get("x-api-key") !== process.env.ADMIN_PASSWORD) {
+    return new Response(JSON.stringify({ error: "No autorizado" }), { status: 401 });
+  }
   const { searchParams } = new URL(req.url);
   const desde = parseInt(searchParams.get("desde") ?? "0", 10);
 

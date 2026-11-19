@@ -75,7 +75,12 @@ export async function POST(
     // La marca de tiempo en la dirección hace que todos vean la foto nueva
     // al instante (las fotos se guardan en caché por un día).
     const nuevaUrl = `/subidas/${idNum}-${Date.now()}`;
-    await prisma.producto.update({ where: { id: idNum }, data: { imagen_url: nuevaUrl } });
+    // Con foto propia el producto se vuelve a mostrar (aunque estuviera
+    // oculto a mano por no tener foto).
+    await prisma.producto.update({
+      where: { id: idNum },
+      data: { imagen_url: nuevaUrl, oculto_manual: false, disponible: true },
+    });
 
     return NextResponse.json({ ok: true, imagen_url: nuevaUrl });
   } catch (e: unknown) {
