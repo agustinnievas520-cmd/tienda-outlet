@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
+import { prisma } from "@/lib/prisma";
 import path from "path";
 import fs from "fs";
 
@@ -82,6 +83,23 @@ export async function GET(request: NextRequest) {
         "Cache-Control": "public, max-age=86400",
       },
     });
+  }
+
+  // Fotos subidas desde el admin: ya vienen listas (con sello) desde la base.
+  const subida = url.match(/^\/subidas\/(\d+)(?:-\d+)?$/);
+  if (subida) {
+    try {
+      const foto = await prisma.fotoSubida.findUnique({ where: { productoId: Number(subida[1]) } });
+      if (!foto) return NextResponse.json({ error: "Imagen no encontrada" }, { status: 404 });
+      return new NextResponse(Buffer.from(foto.datos) as unknown as BodyInit, {
+        headers: {
+          "Content-Type": "image/jpeg",
+          "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800",
+        },
+      });
+    } catch {
+      return NextResponse.json({ error: "Error al obtener imagen" }, { status: 500 });
+    }
   }
 
   let raw: Buffer;

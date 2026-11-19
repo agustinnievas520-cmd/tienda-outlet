@@ -49,3 +49,11 @@ model Vendedor {
   activo    Boolean  @default(true)
   createdAt DateTime @default(now())
 }
+
+// Fotos subidas desde el admin. Se guardan en la base (en Vercel no se
+// pueden guardar archivos). imagen_url del producto queda "/subidas/<id>-<marca>".
+model FotoSubida {
+  productoId  Int      @id
+  datos       Bytes
+  actualizado DateTime @updatedAt
+}

@@ -4,42 +4,31 @@ import sharp from "sharp";
 import * as fs from "fs";
 import * as path from "path";
 
-const OUTPUT_DIR = path.resolve("public/imagenes/productos");
-const LOGO_PATH = path.resolve("public/logo-marca.svg");
-const FINAL = 800;
+// Subida de foto de un producto desde el admin.
+// La foto se guarda en la base de datos (tabla FotoSubida), porque en Vercel
+// no se pueden guardar archivos. Se deja cuadrada, con fondo blanco, y se le
+// pone el sello de Outlet Hogar chico en el rincón de abajo a la izquierda,
+// sin tapar el resto del producto.
 
-async function procesarImagen(srcBuffer: Buffer, outPath: string, tmpSuffix: string): Promise<void> {
-  const patchH = 160;
-  const patchTop = FINAL - patchH;
+const SELLO_PATH = path.join(process.cwd(), "public", "sello-outlet.png");
+const FINAL = 900;
 
-  const whitePatch = Buffer.from(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${FINAL}" height="${patchH}">
-      <rect width="${FINAL}" height="${patchH}" fill="white"/>
-    </svg>`
-  );
-  const logoSize = 130;
-  const logoLeft = Math.round((FINAL - logoSize) / 2);
-  const logoTop = patchTop + Math.round((patchH - logoSize) / 2);
-  const logoBuffer = await sharp(LOGO_PATH)
-    .resize(logoSize, logoSize, { fit: "contain", background: { r: 255, g: 255, b: 255, alpha: 0 } })
+async function procesarImagen(srcBuffer: Buffer): Promise<Buffer> {
+  const selloW = Math.round(FINAL * 0.24);
+  const selloH = Math.round(selloW * 0.6);
+  const margen = Math.round(FINAL * 0.01);
+  const sello = await sharp(fs.readFileSync(SELLO_PATH))
+    .resize(selloW, selloH, { fit: "fill" })
     .png()
     .toBuffer();
 
-  const tmpPath = outPath.replace(".webp", `_upload${tmpSuffix}_tmp.webp`);
-
-  await sharp(srcBuffer)
+  return sharp(srcBuffer)
+    .rotate() // respeta la orientación de las fotos sacadas con el celular
     .flatten({ background: { r: 255, g: 255, b: 255 } })
     .resize(FINAL, FINAL, { fit: "contain", background: { r: 255, g: 255, b: 255 } })
-    .composite([
-      { input: whitePatch, left: 0, top: patchTop, blend: "over" },
-      { input: logoBuffer, left: logoLeft, top: logoTop, blend: "over" },
-    ])
-    .webp({ quality: 88 })
-    .toFile(tmpPath);
-
-  const buf = fs.readFileSync(tmpPath);
-  fs.writeFileSync(outPath, buf);
-  fs.unlinkSync(tmpPath);
+    .composite([{ input: sello, left: margen, top: FINAL - selloH - margen }])
+    .jpeg({ quality: 88 })
+    .toBuffer();
 }
 
 export async function POST(
@@ -74,22 +63,19 @@ export async function POST(
       return NextResponse.json({ error: "Formato no soportado. Usá JPG, PNG o WebP." }, { status: 400 });
     }
 
-    const arrayBuffer = await file.arrayBuffer();
-    const srcBuffer = Buffer.from(arrayBuffer);
+    const srcBuffer = Buffer.from(await file.arrayBuffer());
+    const datos = await procesarImagen(srcBuffer);
 
-    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-    const outPath = path.join(OUTPUT_DIR, `${idNum}.webp`);
+    await prisma.fotoSubida.upsert({
+      where: { productoId: idNum },
+      create: { productoId: idNum, datos },
+      update: { datos },
+    });
 
-    await procesarImagen(srcBuffer, outPath, String(idNum));
-
-    // Actualizar imagen_url en DB si no es local todavía
-    const nuevaUrl = `/imagenes/productos/${idNum}.webp`;
-    if (producto.imagen_url !== nuevaUrl) {
-      await prisma.producto.update({
-        where: { id: idNum },
-        data: { imagen_url: nuevaUrl },
-      });
-    }
+    // La marca de tiempo en la dirección hace que todos vean la foto nueva
+    // al instante (las fotos se guardan en caché por un día).
+    const nuevaUrl = `/subidas/${idNum}-${Date.now()}`;
+    await prisma.producto.update({ where: { id: idNum }, data: { imagen_url: nuevaUrl } });
 
     return NextResponse.json({ ok: true, imagen_url: nuevaUrl });
   } catch (e: unknown) {

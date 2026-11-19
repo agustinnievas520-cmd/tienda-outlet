@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/historia/[id]": ["./lib/fonts/**", "./public/logo-casa-icono.png", "./public/logo-casa-texto.png", "./public/sello-outlet.png"],
     "/api/imagen": ["./public/sello-outlet.png"],
+    "/api/admin/imagen/[id]": ["./public/sello-outlet.png"],
   },
   eslint: { ignoreDuringBuilds: true },
   images: {

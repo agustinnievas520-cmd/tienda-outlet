@@ -119,11 +119,33 @@ export default function AdminPage() {
   const [subiendoImagen, setSubiendoImagen] = useState<number | null>(null);
   const [imagenesLocales, setImagenesLocales] = useState<Record<number, string>>({});
 
+  // Achica la foto en el navegador antes de subirla (las fotos del celular
+  // pesan varios MB y Vercel no acepta más de ~4 MB por envío).
+  const achicarFoto = async (file: File): Promise<Blob> => {
+    try {
+      const bitmap = await createImageBitmap(file);
+      const max = 1600;
+      const escala = Math.min(1, max / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(bitmap.width * escala);
+      canvas.height = Math.round(bitmap.height * escala);
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return file;
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/jpeg", 0.9));
+      return blob ?? file;
+    } catch {
+      return file;
+    }
+  };
+
   const subirImagen = async (productoId: number, file: File) => {
     setSubiendoImagen(productoId);
     try {
       const formData = new FormData();
-      formData.append("imagen", file);
+      formData.append("imagen", await achicarFoto(file), "foto.jpg");
       const res = await fetch(`/api/admin/imagen/${productoId}`, {
         method: "POST",
         headers: { "x-api-key": getApiKey() },
@@ -131,7 +153,7 @@ export default function AdminPage() {
       });
       if (res.ok) {
         const data = await res.json();
-        setImagenesLocales(prev => ({ ...prev, [productoId]: `${data.imagen_url}?v=${Date.now()}` }));
+        setImagenesLocales(prev => ({ ...prev, [productoId]: `/api/imagen?url=${encodeURIComponent(data.imagen_url)}` }));
         mostrarExito("✅ Imagen actualizada");
       } else {
         const err = await res.json();
@@ -825,7 +847,7 @@ export default function AdminPage() {
                                     ? imagenesLocales[p.id]
                                     : p.imagen_url
                                     ? `/api/imagen?v=16&url=${encodeURIComponent(p.imagen_url.split("?")[0])}`
-                                    : "/logo-marca.svg"
+                                    : "/logo-casa-icono.png"
                                 }
                                 alt={p.nombre}
                                 className="w-10 h-10 rounded-lg object-cover bg-gray-100"
