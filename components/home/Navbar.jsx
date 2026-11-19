@@ -20,16 +20,12 @@ export default function Navbar({ whatsappNumero = WA_DEFAULT }) {
       <div className={styles.inner}>
         <a href="/" className={styles.logo}>
           <div className={styles.logoIconWrap}>
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none">
-              <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" fill="#FFD100" stroke="#FFD100" strokeWidth="1.5" strokeLinejoin="round"/>
-              <path d="M9 21V12h6v9" stroke="#1a1a1a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-casa-icono.png" alt="" className={styles.logoIcono} />
           </div>
           <div className={styles.logoText}>
-            <span className={styles.logoName}>
-              <span className={styles.outlet}>OUTLET</span>
-              <span className={styles.hogar}> HOGAR</span>
-            </span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-casa-texto.png" alt="Outlet Hogar" className={styles.logoNombreImg} />
             <span className={styles.logoSub}>
               <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
               El Trébol, Santa Fe

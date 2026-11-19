@@ -25,6 +25,19 @@
   flex-shrink: 0;
 }
 
+.logoIcono {
+  height: 42px;
+  width: auto;
+  display: block;
+}
+
+.logoNombreImg {
+  height: 30px;
+  width: auto;
+  display: block;
+  margin-bottom: 4px;
+}
+
 .logoIconWrap {
   display: flex;
   align-items: center;
@@ -147,5 +160,7 @@
 @media (max-width: 600px) {
   .inner { padding: 0 12px; gap: 12px; height: 60px; }
   .logoName { font-size: 16px; }
+  .logoIcono { height: 34px; }
+  .logoNombreImg { height: 24px; }
   .outlet { display: none; }
 }

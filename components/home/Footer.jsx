@@ -58,9 +58,8 @@ export default function Footer({ whatsappNumero = WA_DEFAULT }) {
         <div className={styles.brand}>
           <div className={styles.logo}>
             <div className={styles.logoCircle}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="#111">
-                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-              </svg>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo-casa-icono.png" alt="" style={{ width: 32, height: "auto" }} />
             </div>
             <div>
               <div className={styles.logoName}>Outlet Hogar</div>
