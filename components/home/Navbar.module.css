@@ -162,5 +162,8 @@
   .logoName { font-size: 16px; }
   .logoIcono { height: 34px; }
   .logoNombreImg { height: 24px; }
+  .waBtn { padding: 9px 11px; }
+  .searchBtn { padding: 11px 12px; }
+  .searchInput { padding: 11px 10px; min-width: 0; }
   .outlet { display: none; }
 }
