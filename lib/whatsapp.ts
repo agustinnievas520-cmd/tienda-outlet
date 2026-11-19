@@ -20,9 +20,18 @@ export function generarCodigo(texto: string): string {
     .slice(0, 40);
 }
 
-// Deja solo los dígitos de un número de WhatsApp.
+// Deja solo los dígitos y lo pasa al formato que pide WhatsApp para
+// celulares de Argentina (549 + característica + número). Acepta como lo
+// escribe la gente: "3401 642045", "03401-15642045", "+54 9 3401 642045".
 export function limpiarNumero(numero: string): string {
-  return numero.replace(/\D/g, "");
+  let n = numero.replace(/\D/g, "");
+  if (n.startsWith("549")) return n;
+  if (n.startsWith("54")) n = n.slice(2);
+  if (n.startsWith("0")) n = n.slice(1);
+  // "15" después de la característica (ej: 3401 15 642045) → se saca
+  const con15 = n.match(/^(\d{2,4})15(\d{6,8})$/);
+  if (con15 && con15[1].length + con15[2].length === 10) n = con15[1] + con15[2];
+  return n.length === 10 ? `549${n}` : numero.replace(/\D/g, "");
 }
 
 // El ?v= de la URL actual manda; si no hay, se usa la cookie que el

@@ -79,7 +79,7 @@ export default function AdminPage() {
   const [formVendedor, setFormVendedor] = useState({ nombre: "", localidad: "", whatsapp: "" });
   const [guardandoVendedor, setGuardandoVendedor] = useState(false);
   const [editandoVendedor, setEditandoVendedor] = useState<Vendedor | null>(null);
-  const [linkCopiado, setLinkCopiado] = useState<number | null>(null);
+  const [linkCopiado, setLinkCopiado] = useState<string | null>(null);
 
   // ─── Cotizador ─────────────────────────────────────────────
   const [cotBusqueda, setCotBusqueda] = useState("");
@@ -228,10 +228,15 @@ export default function AdminPage() {
   const linkVendedor = (codigo: string) =>
     `${typeof window !== "undefined" ? window.location.origin : ""}/?v=${codigo}`;
 
-  const copiarLinkVendedor = async (v: Vendedor) => {
+  const linkPanelVendedor = (codigo: string) =>
+    `${typeof window !== "undefined" ? window.location.origin : ""}/vendedor/${codigo}`;
+
+  const copiarLinkVendedor = async (v: Vendedor, tipo: "cliente" | "panel") => {
     try {
-      await navigator.clipboard.writeText(linkVendedor(v.codigo));
-      setLinkCopiado(v.id);
+      await navigator.clipboard.writeText(
+        tipo === "panel" ? linkPanelVendedor(v.codigo) : linkVendedor(v.codigo)
+      );
+      setLinkCopiado(`${v.id}-${tipo}`);
       setTimeout(() => setLinkCopiado(null), 2000);
     } catch {
       mostrarExito("❌ No se pudo copiar, copialo a mano");
@@ -1344,15 +1349,28 @@ export default function AdminPage() {
                             </button>
                           </div>
                         </div>
-                        <div className="mt-3 flex items-center gap-2">
+                        <p className="mt-3 text-xs text-gray-500">Link para clientes (lo comparte el vendedor):</p>
+                        <div className="mt-1 flex items-center gap-2">
                           <code className="flex-1 min-w-0 truncate text-xs bg-gray-100 rounded-lg px-3 py-2 text-gray-700">
                             {linkVendedor(v.codigo)}
                           </code>
                           <button
-                            onClick={() => copiarLinkVendedor(v)}
+                            onClick={() => copiarLinkVendedor(v, "cliente")}
                             className="flex-shrink-0 px-3 py-2 rounded-lg bg-[#c9a84c] text-white text-xs font-medium"
                           >
-                            {linkCopiado === v.id ? "¡Copiado!" : "Copiar link"}
+                            {linkCopiado === `${v.id}-cliente` ? "¡Copiado!" : "Copiar link"}
+                          </button>
+                        </div>
+                        <p className="mt-2 text-xs text-gray-500">Panel del vendedor (para subir historias, solo para él):</p>
+                        <div className="mt-1 flex items-center gap-2">
+                          <code className="flex-1 min-w-0 truncate text-xs bg-gray-100 rounded-lg px-3 py-2 text-gray-700">
+                            {linkPanelVendedor(v.codigo)}
+                          </code>
+                          <button
+                            onClick={() => copiarLinkVendedor(v, "panel")}
+                            className="flex-shrink-0 px-3 py-2 rounded-lg bg-[#1a1a2e] text-white text-xs font-medium"
+                          >
+                            {linkCopiado === `${v.id}-panel` ? "¡Copiado!" : "Copiar panel"}
                           </button>
                         </div>
                       </div>
