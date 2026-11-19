@@ -56,7 +56,7 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
       );
 
   const urlWA = `https://wa.me/${numeroDestino}?text=${mensajeWA}`;
-  const imgSrc = `/api/imagen?v=15&url=${encodeURIComponent(producto.imagen_url.split("?")[0])}`;
+  const imgSrc = `/api/imagen?v=16&url=${encodeURIComponent(producto.imagen_url.split("?")[0])}`;
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onCerrar(); };
@@ -125,41 +125,13 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
 
             {/* Branding Outlet Hogar */}
             <div className="hidden sm:flex items-center gap-3 px-4 py-3 border-t border-gray-100">
-              {/* Logo SVG inline */}
-              <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" className="w-11 h-11 flex-shrink-0">
-                <defs>
-                  <radialGradient id="mog" cx="42%" cy="38%" r="62%">
-                    <stop offset="0%" stopColor="#edbc68"/>
-                    <stop offset="50%" stopColor="#c88c2a"/>
-                    <stop offset="100%" stopColor="#9e6210"/>
-                  </radialGradient>
-                  <clipPath id="moic"><circle cx="150" cy="150" r="125"/></clipPath>
-                </defs>
-                <circle cx="150" cy="150" r="149" fill="#2E2219"/>
-                <circle cx="150" cy="150" r="141" fill="#f0ece0"/>
-                <circle cx="150" cy="150" r="133" fill="#2E2219"/>
-                <circle cx="150" cy="150" r="126" fill="url(#mog)"/>
-                <g clipPath="url(#moic)" stroke="#2E2219" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="150" y1="28" x2="150" y2="52" strokeWidth="4"/>
-                  <line x1="140" y1="52" x2="160" y2="52" strokeWidth="3.5"/>
-                  <line x1="140" y1="52" x2="128" y2="80" strokeWidth="3.5"/>
-                  <line x1="160" y1="52" x2="172" y2="80" strokeWidth="3.5"/>
-                  <line x1="126" y1="80" x2="174" y2="80" strokeWidth="4.5"/>
-                  <rect x="34" y="92" width="74" height="54" rx="4" strokeWidth="3.5"/>
-                  <line x1="71" y1="146" x2="71" y2="162" strokeWidth="4"/>
-                  <line x1="50" y1="162" x2="92" y2="162" strokeWidth="4"/>
-                  <rect x="186" y="90" width="52" height="52" rx="5" strokeWidth="3.5"/>
-                  <rect x="168" y="112" width="18" height="24" rx="5" strokeWidth="3.5"/>
-                  <rect x="238" y="112" width="18" height="24" rx="5" strokeWidth="3.5"/>
-                  <rect x="176" y="142" width="72" height="24" rx="5" strokeWidth="3.5"/>
-                </g>
-                <line x1="46" y1="182" x2="254" y2="182" stroke="#2E2219" strokeWidth="2" opacity="0.5"/>
-                <text x="150" y="212" fontFamily="Arial, Helvetica, sans-serif" fontSize="22" fontWeight="900" textAnchor="middle" fill="#2E2219">OUTLET HOGAR</text>
-                <text x="150" y="231" fontFamily="Arial, Helvetica, sans-serif" fontSize="11" letterSpacing="1.5" textAnchor="middle" fill="#2E2219">TODO PARA TU HOGAR</text>
-              </svg>
+              {/* Logo de la marca (el de Instagram) */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo-casa-icono.png" alt="" className="h-10 w-auto flex-shrink-0" />
               <div>
-                <p className="font-black text-[#3B2A1E] text-sm tracking-wider leading-none">OUTLET HOGAR</p>
-                <p className="text-[11px] text-[#C9994F] font-semibold tracking-widest uppercase mt-0.5">Financiación Propia</p>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logo-casa-texto.png" alt="Outlet Hogar" className="h-6 w-auto" />
+                <p className="text-[11px] text-[#A67A3A] font-semibold tracking-widest uppercase mt-1">Financiación propia</p>
               </div>
             </div>
           </div>

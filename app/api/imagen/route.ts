@@ -31,7 +31,29 @@ async function ladoDelLogo(buf: Buffer): Promise<"izquierda" | "derecha"> {
   }
 }
 
-const VIENA_PLACEHOLDER = "https://vienamuebles.com/wp-content/uploads/clientResources/marca-y-producto_no-image.jpg";
+// Fotos propias viejas: 800x800 con el logo redondo dorado viejo centrado
+// en la franja blanca de abajo (x 335-465, y 655-785).
+async function tieneLogoViejo(buf: Buffer): Promise<boolean> {
+  try {
+    const m = await sharp(buf).metadata();
+    if (m.width !== 800 || m.height !== 800) return false;
+    const { data } = await sharp(buf)
+      .extract({ left: 335, top: 655, width: 130, height: 130 })
+      .removeAlpha()
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    let oro = 0;
+    for (let i = 0; i < data.length; i += 3) {
+      const r = data[i], g = data[i + 1], b = data[i + 2];
+      if (r > 150 && g > 100 && g < 200 && b < 120 && r - b > 60) oro++;
+    }
+    return oro > 200;
+  } catch {
+    return false;
+  }
+}
+
+const VIENA_PLACEHOLDER ="https://vienamuebles.com/wp-content/uploads/clientResources/marca-y-producto_no-image.jpg";
 
 const PLACEHOLDER_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
   <rect width="400" height="300" fill="#f3f4f6"/>
@@ -115,10 +137,16 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Imágenes locales: ya son limpias, no necesitan cover
+  // Imágenes locales: la mayoría (800x800) trae el logo VIEJO redondo abajo
+  // al centro, dentro de una franja blanca. Se tapa con el sello nuevo.
   if (isLocal) {
     try {
-      const processed = await sharp(raw!).jpeg({ quality: 90 }).toBuffer();
+      let img = sharp(raw!).flatten({ background: "#ffffff" });
+      if (await tieneLogoViejo(raw!)) {
+        const sello = await sharp(fs.readFileSync(SELLO_PATH)).resize(250, 150, { fit: "fill" }).png().toBuffer();
+        img = img.composite([{ input: sello, left: 275, top: 645 }]);
+      }
+      const processed = await img.jpeg({ quality: 90 }).toBuffer();
       return new NextResponse(processed as unknown as BodyInit, {
         headers: {
           "Content-Type": "image/jpeg",
