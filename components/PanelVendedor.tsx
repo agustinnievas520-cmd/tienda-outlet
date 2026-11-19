@@ -1,14 +1,15 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import QRCode from "qrcode";
 import { calcularOpcionesFinanciamiento, formatearPrecio } from "@/lib/calculos";
 
 interface Producto {
   id: number;
   nombre: string;
-  categoria: string;
+  categoria?: string;
   precio_costo: number;
-  precio_financiado: number;
+  precio_financiado?: number;
   imagen_url: string;
 }
 
@@ -17,11 +18,28 @@ interface Props {
   categorias: string[];
 }
 
-interface Historia {
+type Destino = "instagram" | "whatsapp" | "los-dos";
+
+interface Seleccion {
   producto: Producto;
-  url: string; // object URL para la vista previa
-  archivo: File;
+  estado: "preparando" | "listo" | "error";
+  url?: string; // object URL de la imagen
+  archivo?: File;
+  blob?: Blob;
+  // elegir → (los dos) falta-whatsapp → listo
+  paso: "elegir" | "falta-whatsapp" | "listo";
 }
+
+const AYUDA: Record<"instagram" | "whatsapp", string> = {
+  instagram: "En el menú que se abre tocá Instagram y elegí Historia",
+  whatsapp: "En el menú que se abre tocá WhatsApp y elegí Mi estado",
+};
+
+const BOTONES_DESTINO: [Destino, string, string][] = [
+  ["instagram", "📸  Instagram", "bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045]"],
+  ["whatsapp", "💬  WhatsApp", "bg-[#25D366]"],
+  ["los-dos", "⭐  Los dos (Instagram y después WhatsApp)", "bg-[#C9994F]"],
+];
 
 export default function PanelVendedor({ vendedor, categorias }: Props) {
   const [productos, setProductos] = useState<Producto[]>([]);
@@ -30,8 +48,7 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
   const [pagina, setPagina] = useState(1);
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [cargando, setCargando] = useState(true);
-  const [generando, setGenerando] = useState<number | null>(null);
-  const [historia, setHistoria] = useState<Historia | null>(null);
+  const [sel, setSel] = useState<Seleccion | null>(null);
   const [aviso, setAviso] = useState("");
   const [linkCopiado, setLinkCopiado] = useState(false);
   const pedidoActual = useRef(0);
@@ -42,6 +59,16 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
   useEffect(() => {
     setMiLink(`${window.location.origin}/?v=${vendedor.codigo}`);
   }, [vendedor.codigo]);
+
+  // ¿Celular o compu? ¿Navegador interno de Instagram/Facebook (no deja compartir)?
+  const [esCelu, setEsCelu] = useState(true);
+  const [navegadorInterno, setNavegadorInterno] = useState(false);
+  const [qr, setQr] = useState("");
+  useEffect(() => {
+    const ua = navigator.userAgent;
+    setEsCelu(/Android|iPhone|iPad|iPod/i.test(ua) || window.matchMedia("(pointer: coarse)").matches);
+    setNavegadorInterno(/Instagram|FBAN|FBAV/i.test(ua));
+  }, []);
 
   const cargar = useCallback(
     async (paginaPedida: number, reemplazar: boolean) => {
@@ -75,51 +102,101 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
 
   useEffect(() => {
     if (!aviso) return;
-    const t = setTimeout(() => setAviso(""), 3500);
+    const t = setTimeout(() => setAviso(""), 4000);
     return () => clearTimeout(t);
   }, [aviso]);
 
-  const prepararHistoria = async (p: Producto) => {
-    setGenerando(p.id);
-    try {
-      const res = await fetch(`/api/historia/${p.id}?v=${encodeURIComponent(vendedor.codigo)}`);
-      if (!res.ok) throw new Error();
-      const blob = await res.blob();
-      const archivo = new File([blob], `outlet-hogar-${p.id}.png`, { type: "image/png" });
-      setHistoria({ producto: p, url: URL.createObjectURL(blob), archivo });
-    } catch {
-      setAviso("No se pudo armar la historia. Probá de nuevo.");
-    } finally {
-      setGenerando(null);
-    }
+  // Arranca a preparar la imagen apenas tocan el producto; mientras tanto
+  // ya ven el menú para elegir a dónde subirla.
+  const abrirProducto = useCallback(
+    async (p: Producto) => {
+      setSel({ producto: p, estado: "preparando", paso: "elegir" });
+      setQr("");
+      try {
+        const res = await fetch(`/api/historia/${p.id}?v=${encodeURIComponent(vendedor.codigo)}`);
+        if (!res.ok) throw new Error();
+        const blob = await res.blob();
+        const archivo = new File([blob], `outlet-hogar-${p.id}.png`, { type: "image/png" });
+        setSel((s) =>
+          s && s.producto.id === p.id
+            ? { ...s, estado: "listo", url: URL.createObjectURL(blob), archivo, blob }
+            : s
+        );
+      } catch {
+        setSel((s) => (s && s.producto.id === p.id ? { ...s, estado: "error" } : s));
+      }
+    },
+    [vendedor.codigo]
+  );
+
+  // En la compu: código QR que abre este mismo producto en el celular
+  const idSeleccionado = sel?.producto.id;
+  useEffect(() => {
+    if (!idSeleccionado || esCelu) return;
+    const url = `${window.location.origin}/vendedor/${vendedor.codigo}?p=${idSeleccionado}`;
+    QRCode.toDataURL(url, { width: 220, margin: 1, color: { dark: "#3B2A1E", light: "#FFFFFF" } })
+      .then(setQr)
+      .catch(() => setQr(""));
+  }, [idSeleccionado, esCelu, vendedor.codigo]);
+
+  // Si entraron escaneando el QR (?p=ID), se abre ese producto directo
+  useEffect(() => {
+    const id = Number(new URLSearchParams(window.location.search).get("p"));
+    if (!id) return;
+    fetch(`/api/productos/${id}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((p) => {
+        if (p?.id) abrirProducto(p);
+      })
+      .catch(() => {});
+  }, [abrirProducto]);
+
+  const cerrar = () => {
+    if (sel?.url) URL.revokeObjectURL(sel.url);
+    setSel(null);
   };
 
-  const cerrarHistoria = () => {
-    if (historia) URL.revokeObjectURL(historia.url);
-    setHistoria(null);
-  };
-
-  const descargar = (h: Historia) => {
+  const descargar = (s: Seleccion) => {
+    if (!s.url || !s.archivo) return;
     const a = document.createElement("a");
-    a.href = h.url;
-    a.download = h.archivo.name;
+    a.href = s.url;
+    a.download = s.archivo.name;
     document.body.appendChild(a);
     a.click();
     a.remove();
   };
 
-  const compartir = async (h: Historia) => {
-    const datos = { files: [h.archivo] };
-    if (navigator.canShare?.(datos)) {
-      try {
-        await navigator.share(datos);
-      } catch (e) {
-        if ((e as Error)?.name !== "AbortError") descargar(h);
+  const copiarImagen = async (s: Seleccion) => {
+    if (!s.blob) return;
+    try {
+      await navigator.clipboard.write([new ClipboardItem({ "image/png": s.blob })]);
+      setAviso("Imagen copiada ✅ Pegala con Ctrl+V donde quieras");
+    } catch {
+      descargar(s);
+      setAviso("Tu navegador no deja copiar imágenes: la descargamos.");
+    }
+  };
+
+  // Abre el menú de compartir del celular con la imagen lista
+  const compartir = async (destino: Destino) => {
+    if (!sel || sel.estado !== "listo" || !sel.archivo) return;
+    const datos = { files: [sel.archivo] };
+    if (!navigator.canShare?.(datos)) {
+      descargar(sel);
+      setAviso("Imagen guardada. Subila a tu historia desde la galería.");
+      return;
+    }
+    setAviso(AYUDA[destino === "whatsapp" ? "whatsapp" : "instagram"]);
+    try {
+      await navigator.share(datos);
+      setSel((s) =>
+        s ? { ...s, paso: destino === "los-dos" && s.paso === "elegir" ? "falta-whatsapp" : "listo" } : s
+      );
+    } catch (e) {
+      if ((e as Error)?.name !== "AbortError") {
+        descargar(sel);
+        setAviso("No se pudo compartir: la guardamos en tu celu.");
       }
-    } else {
-      // Compu o celular sin "compartir": se descarga para subirla a mano
-      descargar(h);
-      setAviso("Imagen descargada. Subila a tu historia desde la galería.");
     }
   };
 
@@ -193,7 +270,7 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
           {productos.map((p) => {
             const semanal =
               p.precio_costo > 0
-                ? calcularOpcionesFinanciamiento(p.precio_costo, p.precio_financiado)[0]
+                ? calcularOpcionesFinanciamiento(p.precio_costo, p.precio_financiado ?? 0)[0]
                 : null;
             return (
               <div key={p.id} className="bg-white rounded-2xl shadow-sm overflow-hidden flex flex-col">
@@ -215,13 +292,9 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
                   ) : (
                     <p className="text-xs text-gray-400 mt-1">Consultar precio</p>
                   )}
-                  <button
-                    onClick={() => prepararHistoria(p)}
-                    disabled={generando !== null}
-                    className="mt-auto pt-3 disabled:opacity-50"
-                  >
-                    <span className="block w-full bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] text-white text-sm font-semibold py-2.5 rounded-xl disabled:opacity-50">
-                      {generando === p.id ? "Armando..." : "📲 Subir a historia"}
+                  <button onClick={() => abrirProducto(p)} className="mt-auto pt-3">
+                    <span className="block w-full bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] text-white text-sm font-semibold py-2.5 rounded-xl">
+                      📲 Subir a historia
                     </span>
                   </button>
                 </div>
@@ -246,32 +319,149 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
         )}
       </main>
 
-      {/* Vista previa de la historia */}
-      {historia && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex flex-col items-center justify-center p-4" onClick={cerrarHistoria}>
-          <div className="w-full max-w-sm flex flex-col items-center gap-3" onClick={(e) => e.stopPropagation()}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={historia.url} alt="Historia" className="max-h-[65vh] w-auto rounded-2xl shadow-2xl" />
-            <button
-              onClick={() => compartir(historia)}
-              className="w-full bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] text-white font-semibold py-3.5 rounded-xl text-base"
-            >
-              📲 Compartir en Instagram / WhatsApp
-            </button>
-            <div className="flex gap-2 w-full">
-              <button onClick={() => descargar(historia)} className="flex-1 bg-white text-gray-800 font-medium py-3 rounded-xl text-sm">
-                Guardar en el celu
-              </button>
-              <button onClick={cerrarHistoria} className="flex-1 bg-white/20 text-white font-medium py-3 rounded-xl text-sm">
-                Cerrar
+      {/* Menú para subir la historia */}
+      {sel && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-end sm:items-center justify-center" onClick={cerrar}>
+          <div
+            className="w-full sm:max-w-lg bg-[#F7F1E8] rounded-t-3xl sm:rounded-3xl p-5 pb-7 max-h-[92vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start gap-3">
+              <div className="w-16 h-28 flex-shrink-0 rounded-xl overflow-hidden bg-white border border-[#EADBC4] flex items-center justify-center">
+                {sel.url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={sel.url} alt="Historia" className="w-full h-full object-contain" />
+                ) : (
+                  <span className="text-[10px] text-[#A67A3A] text-center px-1">
+                    {sel.estado === "error" ? "Error" : "Preparando…"}
+                  </span>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-bold tracking-widest text-[#A67A3A]">SUBIR A HISTORIA</p>
+                <p className="text-sm font-semibold text-[#3B2A1E] line-clamp-2">{sel.producto.nombre}</p>
+                <p className="text-xs text-[#5A4530] mt-1">
+                  {sel.estado === "preparando" && "Preparando la imagen con tus precios y tu WhatsApp…"}
+                  {sel.estado === "listo" && "¡Imagen lista! ✅"}
+                  {sel.estado === "error" && "No se pudo armar la imagen."}
+                </p>
+              </div>
+              <button onClick={cerrar} className="text-[#5A4530] text-2xl leading-none px-1" aria-label="Cerrar">
+                ×
               </button>
             </div>
+
+            {sel.estado === "error" && (
+              <button
+                onClick={() => abrirProducto(sel.producto)}
+                className="mt-4 w-full bg-[#C9994F] text-white font-semibold py-3 rounded-xl"
+              >
+                Probar de nuevo
+              </button>
+            )}
+
+            {/* ── CELULAR ── */}
+            {esCelu && sel.estado !== "error" && (
+              <div className="mt-5">
+                {navegadorInterno && (
+                  <p className="mb-3 text-xs bg-white border border-[#EADBC4] rounded-xl p-3 text-[#5A4530]">
+                    ⚠️ Estás dentro de Instagram. Si no se abre el menú para compartir, tocá los 3 puntitos ⋯ y elegí{" "}
+                    <strong>Abrir en el navegador</strong>.
+                  </p>
+                )}
+
+                {sel.paso === "elegir" && (
+                  <>
+                    <p className="text-sm font-semibold text-[#3B2A1E] mb-2">¿Dónde la querés subir?</p>
+                    <div className="grid gap-2">
+                      {BOTONES_DESTINO.map(([dest, texto, color]) => (
+                        <button
+                          key={dest}
+                          onClick={() => compartir(dest)}
+                          disabled={sel.estado !== "listo"}
+                          className={`${color} text-white font-semibold py-4 rounded-2xl text-base disabled:opacity-50`}
+                        >
+                          {sel.estado === "listo" ? texto : "Preparando…"}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+
+                {sel.paso === "falta-whatsapp" && (
+                  <div className="text-center">
+                    <p className="text-sm text-[#3B2A1E] font-semibold">✅ ¡Listo en Instagram!</p>
+                    <button
+                      onClick={() => compartir("whatsapp")}
+                      className="mt-3 w-full bg-[#25D366] text-white font-semibold py-4 rounded-2xl text-base"
+                    >
+                      💬 Ahora subila a WhatsApp
+                    </button>
+                  </div>
+                )}
+
+                {sel.paso === "listo" && (
+                  <div className="text-center">
+                    <p className="text-lg text-[#3B2A1E] font-semibold">✅ ¡Listo! A vender 🙌</p>
+                    <button onClick={cerrar} className="mt-3 w-full bg-[#C9994F] text-white font-semibold py-3.5 rounded-2xl">
+                      Elegir otro producto
+                    </button>
+                  </div>
+                )}
+
+                {sel.estado === "listo" && sel.paso !== "listo" && (
+                  <button
+                    onClick={() => descargar(sel)}
+                    className="mt-3 w-full text-sm text-[#5A4530] underline underline-offset-2"
+                  >
+                    ¿No te aparece? Guardala en el celu
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* ── COMPU ── */}
+            {!esCelu && sel.estado !== "error" && (
+              <div className="mt-5 grid sm:grid-cols-[auto,1fr] gap-4 items-center">
+                <div className="bg-white rounded-2xl p-3 border border-[#EADBC4] mx-auto">
+                  {qr ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={qr} alt="Código QR" width={180} height={180} />
+                  ) : (
+                    <div className="w-[180px] h-[180px]" />
+                  )}
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-[#3B2A1E]">📱 Subila desde tu celu</p>
+                  <p className="text-xs text-[#5A4530] mt-1">
+                    Las historias se suben desde el celular. Escaneá este código con la cámara y se abre este mismo
+                    producto, listo para compartir.
+                  </p>
+                  <div className="grid gap-2 mt-3">
+                    <button
+                      onClick={() => copiarImagen(sel)}
+                      disabled={sel.estado !== "listo"}
+                      className="bg-[#C9994F] text-white font-semibold py-2.5 rounded-xl text-sm disabled:opacity-50"
+                    >
+                      {sel.estado === "listo" ? "📋 Copiar imagen" : "Preparando…"}
+                    </button>
+                    <button
+                      onClick={() => descargar(sel)}
+                      disabled={sel.estado !== "listo"}
+                      className="bg-white border border-[#EADBC4] text-[#3B2A1E] font-semibold py-2.5 rounded-xl text-sm disabled:opacity-50"
+                    >
+                      ⬇️ Descargar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
 
       {aviso && (
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] bg-[#C9994F] text-white text-sm px-4 py-3 rounded-xl shadow-lg max-w-[90vw]">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[60] bg-[#3B2A1E] text-white text-sm px-4 py-3 rounded-xl shadow-lg max-w-[90vw] text-center">
           {aviso}
         </div>
       )}
