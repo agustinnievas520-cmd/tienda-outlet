@@ -95,7 +95,7 @@ export default function TarjetaProducto({ producto, whatsappNumero, onVerDetalle
 
         {/* Badge de categoría */}
         <div className="absolute top-2 left-2">
-          <span className="bg-[#1a1a2e]/80 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
+          <span className="bg-[#3B2A1E]/80 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
             {producto.categoria}
           </span>
         </div>
@@ -104,7 +104,7 @@ export default function TarjetaProducto({ producto, whatsappNumero, onVerDetalle
       {/* Contenido */}
       <div className="p-4 flex flex-col flex-1">
         <h3
-          className="font-semibold text-gray-800 text-sm leading-snug line-clamp-2 mb-3 flex-1 cursor-pointer hover:text-[#1a1a2e] transition-colors"
+          className="font-semibold text-gray-800 text-sm leading-snug line-clamp-2 mb-3 flex-1 cursor-pointer hover:text-[#3B2A1E] transition-colors"
           onClick={onVerDetalle}
         >
           {producto.nombre}
@@ -114,25 +114,25 @@ export default function TarjetaProducto({ producto, whatsappNumero, onVerDetalle
           <div className="space-y-1 mb-4">
             <div className="flex items-baseline gap-1">
               <span className="text-xs text-gray-500">Contado</span>
-              <span className="text-xl font-bold text-[#1a1a2e]">
+              <span className="text-xl font-bold text-[#3B2A1E]">
                 {formatearPrecio(producto.precio_contado)}
               </span>
             </div>
             <div className="text-sm text-gray-600">
-              <span className="font-medium text-green-700">
+              <span className="font-medium text-[#8A6232]">
                 {producto.cuotas}x {formatearPrecio(producto.precio_cuota)}
               </span>
               <span className="text-xs text-gray-400 ml-1">s/ interés</span>
             </div>
             {producto.entrega_inicial != null && producto.entrega_inicial > 0 && (
-              <div className="text-xs font-bold text-[#c9a84c] mt-0.5">
+              <div className="text-xs font-bold text-[#B8864B] mt-0.5">
                 Entrega: {formatearPrecio(producto.entrega_inicial)}
               </div>
             )}
           </div>
         ) : (
           <div className="mb-4">
-            <span className="text-sm text-amber-600 font-medium">
+            <span className="text-sm text-[#B8864B] font-medium">
               Consultá por precio
             </span>
           </div>

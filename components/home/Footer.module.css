@@ -1,6 +1,6 @@
 .footer {
-  background: #111;
-  border-top: 3px solid #FFD100;
+  background: #3B2A1E;
+  border-top: 3px solid #B8864B;
   padding-top: 48px;
 }
 
@@ -44,7 +44,7 @@
 
 .logoSub {
   font-size: 10px;
-  color: #FFD100;
+  color: #B8864B;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 600;
@@ -79,7 +79,7 @@
 .colTitle {
   font-size: 11px;
   font-weight: 700;
-  color: #FFD100;
+  color: #B8864B;
   text-transform: uppercase;
   letter-spacing: 1px;
   margin: 0;
@@ -107,7 +107,7 @@
   padding: 2px 0;
 }
 
-.linkRow:hover { color: #FFD100; }
+.linkRow:hover { color: #B8864B; }
 
 .chevron {
   color: #555;
@@ -115,7 +115,7 @@
   transition: color 0.15s ease;
 }
 
-.linkRow:hover .chevron { color: #FFD100; }
+.linkRow:hover .chevron { color: #B8864B; }
 
 .contactItem {
   display: flex;
@@ -133,14 +133,14 @@
   transition: color 0.15s ease;
 }
 
-.contactItem a:hover { color: #FFD100; }
+.contactItem a:hover { color: #B8864B; }
 
 .contactItem svg { flex-shrink: 0; margin-top: 2px; }
 
 /* Stats bar */
 .stats {
   border-top: 1px solid #1e1e1e;
-  background: #0d0d0d;
+  background: #3B2A1E;
 }
 
 .statsInner {
@@ -161,7 +161,7 @@
 .statValue {
   font-size: 15px;
   font-weight: 800;
-  color: #FFD100;
+  color: #B8864B;
 }
 
 .statLabel {
@@ -170,7 +170,7 @@
 }
 
 /* Bottom */
-.bottom { border-top: 1px solid #1a1a1a; }
+.bottom { border-top: 1px solid #3B2A1E; }
 
 .bottomInner {
   max-width: 1280px;

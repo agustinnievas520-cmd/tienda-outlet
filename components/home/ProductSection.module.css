@@ -1,6 +1,6 @@
 .section {
   background: #fff;
-  border-bottom: 8px solid #f5f5f5;
+  border-bottom: 8px solid #F7F1E8;
   padding: 28px 0;
 }
 
@@ -26,7 +26,7 @@
 
 .verTodos {
   font-size: 13px;
-  color: #FFD100;
+  color: #B8864B;
   text-decoration: none;
   font-weight: 700;
   transition: opacity 0.15s ease;

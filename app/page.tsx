@@ -234,7 +234,7 @@ export default async function HomePage({
   const insertarOfertaEn = idxGastro >= 0 ? idxGastro : secciones.length;
 
   return (
-    <div style={{ background: "#f5f5f5", minHeight: "100vh" }}>
+    <div style={{ background: "#F7F1E8", minHeight: "100vh" }}>
       <TopBar whatsappNumero={whatsappActivo} />
       <Navbar whatsappNumero={whatsappActivo} />
       <Subnav />

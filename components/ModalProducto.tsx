@@ -73,7 +73,7 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
       <div className="flex min-h-full items-start justify-center p-3 sm:p-5">
       <div
-        className="relative bg-[#f8f7f4] rounded-2xl shadow-2xl w-full max-w-[95vw] md:max-w-3xl lg:max-w-4xl overflow-x-hidden my-4"
+        className="relative bg-[#F7F1E8] rounded-2xl shadow-2xl w-full max-w-[95vw] md:max-w-3xl lg:max-w-4xl overflow-x-hidden my-4"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Botón cerrar */}
@@ -95,7 +95,7 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
             {/* Badge disponibilidad */}
             <div className="p-4 pb-2">
               {producto.disponible ? (
-                <span className="inline-flex items-center gap-1.5 bg-[#c9a84c] text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
+                <span className="inline-flex items-center gap-1.5 bg-[#B8864B] text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
                   </svg>
@@ -135,11 +135,11 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
                   </radialGradient>
                   <clipPath id="moic"><circle cx="150" cy="150" r="125"/></clipPath>
                 </defs>
-                <circle cx="150" cy="150" r="149" fill="#18100a"/>
+                <circle cx="150" cy="150" r="149" fill="#2E2219"/>
                 <circle cx="150" cy="150" r="141" fill="#f0ece0"/>
-                <circle cx="150" cy="150" r="133" fill="#18100a"/>
+                <circle cx="150" cy="150" r="133" fill="#2E2219"/>
                 <circle cx="150" cy="150" r="126" fill="url(#mog)"/>
-                <g clipPath="url(#moic)" stroke="#18100a" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                <g clipPath="url(#moic)" stroke="#2E2219" fill="none" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="150" y1="28" x2="150" y2="52" strokeWidth="4"/>
                   <line x1="140" y1="52" x2="160" y2="52" strokeWidth="3.5"/>
                   <line x1="140" y1="52" x2="128" y2="80" strokeWidth="3.5"/>
@@ -153,13 +153,13 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
                   <rect x="238" y="112" width="18" height="24" rx="5" strokeWidth="3.5"/>
                   <rect x="176" y="142" width="72" height="24" rx="5" strokeWidth="3.5"/>
                 </g>
-                <line x1="46" y1="182" x2="254" y2="182" stroke="#18100a" strokeWidth="2" opacity="0.5"/>
-                <text x="150" y="212" fontFamily="Arial, Helvetica, sans-serif" fontSize="22" fontWeight="900" textAnchor="middle" fill="#18100a">OUTLET HOGAR</text>
-                <text x="150" y="231" fontFamily="Arial, Helvetica, sans-serif" fontSize="11" letterSpacing="1.5" textAnchor="middle" fill="#18100a">TODO PARA TU HOGAR</text>
+                <line x1="46" y1="182" x2="254" y2="182" stroke="#2E2219" strokeWidth="2" opacity="0.5"/>
+                <text x="150" y="212" fontFamily="Arial, Helvetica, sans-serif" fontSize="22" fontWeight="900" textAnchor="middle" fill="#2E2219">OUTLET HOGAR</text>
+                <text x="150" y="231" fontFamily="Arial, Helvetica, sans-serif" fontSize="11" letterSpacing="1.5" textAnchor="middle" fill="#2E2219">TODO PARA TU HOGAR</text>
               </svg>
               <div>
-                <p className="font-black text-[#1a1a2e] text-sm tracking-wider leading-none">OUTLET HOGAR</p>
-                <p className="text-[11px] text-[#c9a84c] font-semibold tracking-widest uppercase mt-0.5">Financiación Propia</p>
+                <p className="font-black text-[#3B2A1E] text-sm tracking-wider leading-none">OUTLET HOGAR</p>
+                <p className="text-[11px] text-[#B8864B] font-semibold tracking-widest uppercase mt-0.5">Financiación Propia</p>
               </div>
             </div>
           </div>
@@ -168,26 +168,26 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
           <div className="sm:w-[60%] p-4 sm:p-5 flex flex-col gap-3 min-w-0">
 
             {/* Categoría */}
-            <span className="text-[11px] font-bold text-[#c9a84c] uppercase tracking-widest">
+            <span className="text-[11px] font-bold text-[#B8864B] uppercase tracking-widest">
               {producto.categoria}
             </span>
 
             {/* Nombre */}
-            <h2 className="text-2xl font-black text-[#1a1a2e] leading-tight -mt-1">
+            <h2 className="text-2xl font-black text-[#3B2A1E] leading-tight -mt-1">
               {producto.nombre}
             </h2>
 
             {/* Separador dorado */}
-            <div className="w-10 h-1 bg-[#c9a84c] rounded-full -mt-1" />
+            <div className="w-10 h-1 bg-[#B8864B] rounded-full -mt-1" />
 
             {/* Descripción / Características */}
             {producto.descripcion && (
               <div className="bg-white rounded-xl px-4 py-3 border border-gray-100">
-                <p className="text-[11px] font-bold text-[#c9a84c] uppercase tracking-widest mb-2">Características</p>
+                <p className="text-[11px] font-bold text-[#B8864B] uppercase tracking-widest mb-2">Características</p>
                 <div className="max-h-[120px] overflow-y-auto pr-1 space-y-0.5 scrollbar-thin">
                   {producto.descripcion.split("\n").filter(Boolean).map((linea, i) => (
                     <p key={i} className="text-[12px] text-gray-600 leading-snug flex gap-1.5">
-                      <span className="text-[#c9a84c] flex-shrink-0 mt-0.5">•</span>
+                      <span className="text-[#B8864B] flex-shrink-0 mt-0.5">•</span>
                       <span>{linea.replace(/^[•\-\*]\s*/, "")}</span>
                     </p>
                   ))}
@@ -200,29 +200,29 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
                 {/* Precio contado */}
                 <div className="flex items-center justify-between bg-white rounded-xl px-4 py-3 border border-gray-100 shadow-sm">
                   <span className="text-sm text-gray-500 font-medium">Precio contado</span>
-                  <span className="text-2xl font-black text-[#1a1a2e]">
+                  <span className="text-2xl font-black text-[#3B2A1E]">
                     {formatearPrecio(producto.precio_contado)}
                   </span>
                 </div>
 
                 {/* Header financiación */}
                 <div className="flex items-center gap-2">
-                  <svg className="w-4 h-4 text-[#c9a84c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-[#B8864B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                   </svg>
-                  <span className="text-xs font-black text-[#1a1a2e] uppercase tracking-wider">Financiación Propia</span>
+                  <span className="text-xs font-black text-[#3B2A1E] uppercase tracking-wider">Financiación Propia</span>
                 </div>
 
                 {/* Entrega inicial (compartida entre las 3 opciones) */}
                 {opciones[0] && (
-                  <div className="bg-[#1a1a2e] rounded-xl px-4 py-3.5 flex items-center justify-between">
+                  <div className="bg-[#3B2A1E] rounded-xl px-4 py-3.5 flex items-center justify-between">
                     <div>
                       <p className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold mb-1">Entrega inicial</p>
                       <p className="text-2xl font-black text-white leading-none">{formatearPrecio(opciones[0].entrega)}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-[10px] text-gray-400 uppercase tracking-wide font-semibold mb-1">Total financiado</p>
-                      <p className="text-sm font-bold text-[#c9a84c]">{formatearPrecio(opciones[0].ventaFinal)}</p>
+                      <p className="text-sm font-bold text-[#B8864B]">{formatearPrecio(opciones[0].ventaFinal)}</p>
                     </div>
                   </div>
                 )}
@@ -238,21 +238,21 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
                         onClick={() => setOpcionSeleccionada(i)}
                         className={`w-full flex items-center justify-between px-4 py-3 rounded-xl border-2 transition-all duration-150 text-left ${
                           seleccionada
-                            ? "border-[#c9a84c] bg-[#fffbf0] shadow-sm"
+                            ? "border-[#B8864B] bg-[#fffbf0] shadow-sm"
                             : "border-gray-100 bg-white hover:border-gray-300"
                         }`}
                       >
                         <div className="flex items-center gap-3">
                           <div className={`w-4 h-4 rounded-full border-2 flex-shrink-0 flex items-center justify-center ${
-                            seleccionada ? "border-[#c9a84c] bg-[#c9a84c]" : "border-gray-300"
+                            seleccionada ? "border-[#B8864B] bg-[#B8864B]" : "border-gray-300"
                           }`}>
                             {seleccionada && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <p className="font-bold text-sm text-[#1a1a2e] uppercase tracking-wide">{op.modalidad}</p>
+                              <p className="font-bold text-sm text-[#3B2A1E] uppercase tracking-wide">{op.modalidad}</p>
                               {i === 0 && (
-                                <span className="bg-[#c9a84c] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wide">
+                                <span className="bg-[#B8864B] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wide">
                                   Más elegida
                                 </span>
                               )}
@@ -261,7 +261,7 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className={`text-lg font-black ${seleccionada ? "text-[#c9a84c]" : "text-[#1a1a2e]"}`}>
+                          <p className={`text-lg font-black ${seleccionada ? "text-[#B8864B]" : "text-[#3B2A1E]"}`}>
                             {formatearPrecio(op.cuota)}
                           </p>
                           <p className="text-[10px] text-gray-400">por {op.frecuencia}</p>
@@ -272,8 +272,8 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
                 </div>
               </>
             ) : (
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                <p className="text-amber-700 font-semibold text-sm">Consultá por precio y financiación</p>
+              <div className="bg-[#F7F1E8] border border-[#EADBC4] rounded-xl p-4">
+                <p className="text-[#8A6232] font-semibold text-sm">Consultá por precio y financiación</p>
               </div>
             )}
 
@@ -331,7 +331,7 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
               label: "GARANTÍA",
               desc: "Producto garantizado",
               icon: (
-                <svg className="w-5 h-5 text-[#c9a84c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-[#B8864B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                 </svg>
               ),
@@ -340,7 +340,7 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
               label: "SIN BANCO",
               desc: "Financiación 100% propia",
               icon: (
-                <svg className="w-5 h-5 text-[#c9a84c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-[#B8864B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
                 </svg>
               ),
@@ -349,7 +349,7 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
               label: "FLEXIBLE",
               desc: "Planes a tu medida",
               icon: (
-                <svg className="w-5 h-5 text-[#c9a84c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-[#B8864B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
                 </svg>
               ),
@@ -358,7 +358,7 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
               label: "CONFIANZA",
               desc: "Miles de clientes",
               icon: (
-                <svg className="w-5 h-5 text-[#c9a84c]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 text-[#B8864B]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
                 </svg>
               ),
@@ -366,7 +366,7 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
           ].map((item) => (
             <div key={item.label} className="flex flex-col items-center gap-1 py-3 px-1 text-center">
               {item.icon}
-              <span className="text-[10px] font-black text-[#1a1a2e] tracking-wide">{item.label}</span>
+              <span className="text-[10px] font-black text-[#3B2A1E] tracking-wide">{item.label}</span>
               <span className="text-[9px] text-gray-400 leading-tight">{item.desc}</span>
             </div>
           ))}

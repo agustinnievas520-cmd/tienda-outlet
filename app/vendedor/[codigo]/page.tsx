@@ -23,9 +23,9 @@ export default async function VendedorPage({
 
   if (!vendedor?.activo) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f8f7f4] p-6 text-center">
+      <div className="min-h-screen flex items-center justify-center bg-[#F7F1E8] p-6 text-center">
         <div>
-          <p className="text-xl font-semibold text-[#1a1a2e]">Este link de vendedor no está activo</p>
+          <p className="text-xl font-semibold text-[#3B2A1E]">Este link de vendedor no está activo</p>
           <p className="text-gray-500 mt-2">Pedile a Outlet Hogar que te pase tu link actualizado.</p>
         </div>
       </div>

@@ -163,7 +163,7 @@ export default function CatalogoCliente({ whatsappNumero, whatsappNumero2 = "", 
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)}
                 placeholder="Buscar productos..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#1a1a2e] focus:ring-2 focus:ring-[#1a1a2e]/20 outline-none text-sm transition-all"
+                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#3B2A1E] focus:ring-2 focus:ring-[#3B2A1E]/20 outline-none text-sm transition-all"
               />
               {busqueda && (
                 <button
@@ -179,7 +179,7 @@ export default function CatalogoCliente({ whatsappNumero, whatsappNumero2 = "", 
             <select
               value={orden}
               onChange={(e) => setOrden(e.target.value)}
-              className="px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#1a1a2e] focus:ring-2 focus:ring-[#1a1a2e]/20 outline-none text-sm bg-white transition-all"
+              className="px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#3B2A1E] focus:ring-2 focus:ring-[#3B2A1E]/20 outline-none text-sm bg-white transition-all"
             >
               <option value="precio_asc">Menor precio</option>
               <option value="precio_desc">Mayor precio</option>
@@ -194,7 +194,7 @@ export default function CatalogoCliente({ whatsappNumero, whatsappNumero2 = "", 
                 onClick={() => { setCategoriaActiva(""); setBusqueda(""); }}
                 className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
                   categoriaActiva === ""
-                    ? "bg-[#1a1a2e] text-white"
+                    ? "bg-[#3B2A1E] text-white"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
               >
@@ -206,7 +206,7 @@ export default function CatalogoCliente({ whatsappNumero, whatsappNumero2 = "", 
                   onClick={() => { setCategoriaActiva(cat === categoriaActiva ? "" : cat); setBusqueda(""); }}
                   className={`flex-shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
                     categoriaActiva === cat
-                      ? "bg-[#1a1a2e] text-white"
+                      ? "bg-[#3B2A1E] text-white"
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 >
@@ -243,7 +243,7 @@ export default function CatalogoCliente({ whatsappNumero, whatsappNumero2 = "", 
             {(busqueda || categoriaActiva) && (
               <button
                 onClick={() => { setBusqueda(""); setCategoriaActiva(""); }}
-                className="mt-4 px-6 py-2 bg-[#1a1a2e] text-white rounded-full text-sm hover:bg-[#16213e] transition-colors"
+                className="mt-4 px-6 py-2 bg-[#3B2A1E] text-white rounded-full text-sm hover:bg-[#3B2A1E] transition-colors"
               >
                 Ver todos los productos
               </button>
@@ -272,7 +272,7 @@ export default function CatalogoCliente({ whatsappNumero, whatsappNumero2 = "", 
                 <button
                   onClick={cargarMas}
                   disabled={cargandoMas}
-                  className="px-8 py-3 bg-[#1a1a2e] text-white rounded-xl font-semibold hover:bg-[#16213e] disabled:opacity-50 transition-all"
+                  className="px-8 py-3 bg-[#3B2A1E] text-white rounded-xl font-semibold hover:bg-[#3B2A1E] disabled:opacity-50 transition-all"
                 >
                   {cargandoMas ? "Cargando..." : `Ver más productos (${total - productos.length} restantes)`}
                 </button>

@@ -1,5 +1,5 @@
 .section {
-  background: #0d0d0d;
+  background: #3B2A1E;
   padding: 88px 0 96px;
 }
 
@@ -145,7 +145,7 @@
 
 .cierreText {
   margin: 0;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-titulo), Georgia, "Times New Roman", serif;
   font-style: italic;
   font-weight: 400;
   font-size: 26px;

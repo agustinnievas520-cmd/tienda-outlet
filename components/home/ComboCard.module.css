@@ -11,7 +11,7 @@
 .card:hover {
   transform: translateY(-4px);
   box-shadow: 0 16px 40px rgba(0,0,0,0.1);
-  border-color: #C9962A;
+  border-color: #B8864B;
 }
 
 .top {
@@ -25,7 +25,7 @@
 .tag {
   font-size: 11px;
   font-weight: 700;
-  color: #C9962A;
+  color: #B8864B;
   text-transform: uppercase;
   letter-spacing: 0.8px;
 }
@@ -43,7 +43,7 @@
 .name {
   font-size: 18px;
   font-weight: 800;
-  color: #1A1A1A;
+  color: #3B2A1E;
   margin: 0;
   line-height: 1.2;
 }
@@ -73,7 +73,7 @@
 .price {
   font-size: 24px;
   font-weight: 800;
-  color: #1A1A1A;
+  color: #3B2A1E;
 }
 
 .sub {
@@ -84,19 +84,19 @@
 .cuota {
   font-size: 12px;
   font-weight: 600;
-  color: #1A7A3C;
+  color: #8A6232;
 }
 
 .entrega {
   font-size: 12px;
   font-weight: 500;
-  color: #D93025;
+  color: #B8864B;
 }
 
 .btn {
   display: block;
   text-align: center;
-  background: #C9962A;
+  background: #B8864B;
   color: #fff;
   text-decoration: none;
   padding: 11px;
@@ -107,5 +107,5 @@
 }
 
 .btn:hover {
-  background: #E8B84B;
+  background: #B8864B;
 }

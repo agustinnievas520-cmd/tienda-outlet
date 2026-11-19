@@ -34,7 +34,7 @@ export default async function CatalogoPage({
   const { activo: whatsappActivo, fijo: vendedorFijo } = await resolverWhatsapp(v, numero1, numero2);
 
   return (
-    <div style={{ background: "#f5f5f5", minHeight: "100vh" }}>
+    <div style={{ background: "#F7F1E8", minHeight: "100vh" }}>
       <TopBar whatsappNumero={whatsappActivo} />
       <Navbar whatsappNumero={whatsappActivo} />
       <Subnav />

@@ -134,11 +134,11 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8f7f4]">
+    <div className="min-h-screen bg-[#F7F1E8]">
       {/* Encabezado */}
-      <header className="bg-[#1a1a2e] text-white px-4 pt-6 pb-5">
+      <header className="bg-[#3B2A1E] text-white px-4 pt-6 pb-5">
         <div className="max-w-5xl mx-auto">
-          <p className="text-[#c9a84c] text-xs font-semibold tracking-widest">OUTLET HOGAR · PANEL DE VENDEDOR</p>
+          <p className="text-[#B8864B] text-xs font-semibold tracking-widest">OUTLET HOGAR · PANEL DE VENDEDOR</p>
           <h1 className="text-2xl font-semibold mt-1">Hola, {vendedor.nombre} 👋</h1>
           <p className="text-white/70 text-sm mt-1">
             Tocá <strong className="text-white">&quot;Subir a historia&quot;</strong> en cualquier producto. La imagen sale con
@@ -148,7 +148,7 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
             <span className="flex-1 min-w-0 truncate text-xs text-white/80 px-2">Tu link: {miLink}</span>
             <button
               onClick={copiarLink}
-              className="flex-shrink-0 bg-[#c9a84c] text-white text-xs font-semibold px-3 py-2 rounded-lg"
+              className="flex-shrink-0 bg-[#B8864B] text-white text-xs font-semibold px-3 py-2 rounded-lg"
             >
               {linkCopiado ? "¡Copiado!" : "Copiar link"}
             </button>
@@ -157,14 +157,14 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
       </header>
 
       {/* Buscador y categorías */}
-      <div className="sticky top-0 z-10 bg-[#f8f7f4]/95 backdrop-blur px-4 pt-3 pb-2 shadow-sm">
+      <div className="sticky top-0 z-10 bg-[#F7F1E8]/95 backdrop-blur px-4 pt-3 pb-2 shadow-sm">
         <div className="max-w-5xl mx-auto">
           <input
             type="search"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
             placeholder="Buscar producto (ej: heladera, bici, pileta)"
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-base outline-none focus:border-[#1a1a2e]"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-base outline-none focus:border-[#3B2A1E]"
           />
           <div className="flex gap-2 overflow-x-auto mt-2 pb-1">
             {["", ...categorias].map((c) => (
@@ -173,7 +173,7 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
                 onClick={() => setCategoria(c)}
                 className={`flex-shrink-0 text-xs px-3 py-1.5 rounded-full border ${
                   categoria === c
-                    ? "bg-[#1a1a2e] text-white border-[#1a1a2e]"
+                    ? "bg-[#3B2A1E] text-white border-[#3B2A1E]"
                     : "bg-white text-gray-600 border-gray-200"
                 }`}
               >
@@ -210,7 +210,7 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
                   <p className="text-sm font-medium text-gray-800 line-clamp-2 leading-snug">{p.nombre}</p>
                   {semanal ? (
                     <p className="text-xs text-gray-500 mt-1">
-                      12 x <strong className="text-[#1a1a2e]">{formatearPrecio(semanal.cuota)}</strong> semanal
+                      12 x <strong className="text-[#3B2A1E]">{formatearPrecio(semanal.cuota)}</strong> semanal
                     </p>
                   ) : (
                     <p className="text-xs text-gray-400 mt-1">Consultar precio</p>
@@ -271,7 +271,7 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
       )}
 
       {aviso && (
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] bg-[#1a1a2e] text-white text-sm px-4 py-3 rounded-xl shadow-lg max-w-[90vw]">
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] bg-[#3B2A1E] text-white text-sm px-4 py-3 rounded-xl shadow-lg max-w-[90vw]">
           {aviso}
         </div>
       )}

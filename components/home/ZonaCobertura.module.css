@@ -39,7 +39,7 @@
 
 .accent {
   display: block;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-titulo), Georgia, "Times New Roman", serif;
   font-style: italic;
   font-weight: 700;
   font-size: 38px;
@@ -60,7 +60,7 @@
   width: fit-content;
   padding: 12px 22px;
   border-radius: 10px;
-  background: #1a1a1a;
+  background: #3B2A1E;
   color: #fff;
   font-size: 13.5px;
   font-weight: 700;
@@ -69,7 +69,7 @@
 }
 
 .cta:hover {
-  background: #C9962A;
+  background: #B8864B;
   transform: translateY(-1px);
 }
 
@@ -96,8 +96,8 @@
 }
 
 .pillSede {
-  background: #1a1a1a;
-  border-color: #1a1a1a;
+  background: #3B2A1E;
+  border-color: #3B2A1E;
   color: #fff;
 }
 
@@ -106,7 +106,7 @@
   font-weight: 800;
   letter-spacing: 0.6px;
   text-transform: uppercase;
-  color: #C9962A;
+  color: #B8864B;
   background: rgba(255, 255, 255, 0.12);
   border-radius: 100px;
   padding: 2px 7px;

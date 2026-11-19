@@ -20,9 +20,9 @@ export const dynamic = "force-dynamic";
 
 const W = 1080;
 const H = 1920;
-const AZUL = "#1a1a2e";
-const DORADO = "#c9a84c";
-const FONDO = "#f8f7f4";
+const AZUL = "#3B2A1E";
+const DORADO = "#B8864B";
+const FONDO = "#F7F1E8";
 
 async function cargarFuentes() {
   const dir = path.join(process.cwd(), "lib", "fonts");
@@ -158,7 +158,7 @@ export async function GET(
             background: "white",
             borderRadius: 40,
             padding: "28px 30px 30px",
-            boxShadow: "0 10px 40px rgba(26,26,46,0.10)",
+            boxShadow: "0 10px 40px rgba(59,42,30,0.10)",
           }}
         >
           <div

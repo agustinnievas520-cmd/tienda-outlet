@@ -16,6 +16,18 @@ const Icon = {
   gift: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-7"/><path d="M12 8c-1.5-3.5-5-4-6-2.5S7 8 12 8ZM12 8c1.5-3.5 5-4 6-2.5S17 8 12 8Z"/></svg>,
 };
 
+// Estilo de la marca (igual que el Instagram): fondo crema, foto clara a la
+// derecha y detalles en bronce. Se aplica a todas las tarjetas.
+const ESTILO_MARCA = {
+  bg: "#F7F1E8",
+  accent: "#B8864B",
+  overlay: "linear-gradient(105deg, rgba(247,241,232,0.98) 30%, rgba(247,241,232,0.88) 46%, rgba(247,241,232,0.2) 72%, transparent 90%)",
+  lightRay: "none",
+  productGlow: "none",
+  imgFilter: "brightness(1.02) saturate(0.95)",
+  blend: false,
+};
+
 const promos = [
   {
     tagIcon: "☀️",
@@ -96,7 +108,7 @@ export default function PromoGrid() {
           <h2 className={styles.heading}>Lo más buscado ahora</h2>
         </div>
         <div className={styles.grid}>
-          {promos.map((p) => (
+          {promos.map((original) => ({ ...original, ...ESTILO_MARCA })).map((p) => (
             <a
               key={p.tag}
               href={p.href}

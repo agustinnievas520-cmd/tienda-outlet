@@ -20,7 +20,7 @@
 .heading {
   font-size: 20px;
   font-weight: 700;
-  color: #1A1A1A;
+  color: #3B2A1E;
   margin: 0 0 4px;
 }
 
@@ -33,14 +33,14 @@
 .verTodos {
   font-size: 13px;
   font-weight: 600;
-  color: #C9962A;
+  color: #B8864B;
   text-decoration: none;
   white-space: nowrap;
   transition: color 0.15s ease;
 }
 
 .verTodos:hover {
-  color: #E8B84B;
+  color: #B8864B;
 }
 
 .grid {

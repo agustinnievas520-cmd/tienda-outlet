@@ -5,7 +5,15 @@
 @layer base {
   body {
     @apply text-gray-900;
-    background: #f5f5f5;
+    background: #F7F1E8;
+  }
+
+  /* Títulos con la letra del Instagram (marrón oscuro, serif elegante) */
+  h1, h2 {
+    font-family: var(--font-titulo), Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    color: inherit;
+    letter-spacing: 0;
   }
 }
 

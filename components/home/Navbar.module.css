@@ -58,12 +58,12 @@
 
 .outlet {
   font-weight: 400;
-  color: #1a1a1a;
+  color: #3B2A1E;
 }
 
 .hogar {
   font-weight: 800;
-  color: #1a1a1a;
+  color: #3B2A1E;
 }
 
 .logoSub {
@@ -84,8 +84,8 @@
 }
 
 .search:focus-within {
-  border-color: #FFD100;
-  box-shadow: 0 0 0 3px rgba(255,209,0,0.15);
+  border-color: #B8864B;
+  box-shadow: 0 0 0 3px rgba(184,134,75,0.15);
 }
 
 .searchInput {
@@ -101,18 +101,18 @@
 .searchInput::placeholder { color: #aaa; }
 
 .searchBtn {
-  background: #FFD100;
+  background: #B8864B;
   border: none;
   padding: 11px 20px;
   cursor: pointer;
-  color: #1a1a1a;
+  color: #3B2A1E;
   display: flex;
   align-items: center;
   font-weight: 700;
   transition: background 0.15s ease;
 }
 
-.searchBtn:hover { background: #f0c800; }
+.searchBtn:hover { background: #A2733C; }
 
 .actions {
   display: flex;
