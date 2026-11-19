@@ -200,7 +200,7 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
                 <div className="aspect-square bg-white p-2">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={`/api/imagen?v=14&url=${encodeURIComponent(p.imagen_url.split("?")[0])}`}
+                    src={`/api/imagen?v=15&url=${encodeURIComponent(p.imagen_url.split("?")[0])}`}
                     alt={p.nombre}
                     loading="lazy"
                     className="w-full h-full object-contain"

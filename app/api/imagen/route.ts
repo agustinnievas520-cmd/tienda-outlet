@@ -5,7 +5,33 @@ import fs from "fs";
 
 const SELLO_PATH = path.join(process.cwd(), "public", "sello-outlet.png");
 
-const VIENA_PLACEHOLDER ="https://vienamuebles.com/wp-content/uploads/clientResources/marca-y-producto_no-image.jpg";
+// Casi todas las fotos de Viena traen el logo abajo a la izquierda, pero
+// algunas lo traen abajo a la derecha. Cuenta píxeles del rojo del logo en
+// cada rincón inferior: si solo aparece a la derecha, el sello va a la derecha.
+async function ladoDelLogo(buf: Buffer): Promise<"izquierda" | "derecha"> {
+  try {
+    const { data } = await sharp(buf)
+      .removeAlpha()
+      .resize(200, 200, { fit: "fill" })
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    const contarRojo = (x0: number, x1: number) => {
+      let n = 0;
+      for (let y = 160; y < 200; y++)
+        for (let x = x0; x < x1; x++) {
+          const k = (y * 200 + x) * 3;
+          const r = data[k], g = data[k + 1], b = data[k + 2];
+          if (r > 150 && g < 70 && b < 90 && r - g > 100) n++;
+        }
+      return n;
+    };
+    return contarRojo(136, 200) >= 15 && contarRojo(0, 64) < 15 ? "derecha" : "izquierda";
+  } catch {
+    return "izquierda";
+  }
+}
+
+const VIENA_PLACEHOLDER = "https://vienamuebles.com/wp-content/uploads/clientResources/marca-y-producto_no-image.jpg";
 
 const PLACEHOLDER_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
   <rect width="400" height="300" fill="#f3f4f6"/>
@@ -117,8 +143,13 @@ export async function GET(request: NextRequest) {
       .resize(selloW, selloH, { fit: "fill" })
       .png()
       .toBuffer();
+    const lado = await ladoDelLogo(raw!);
     const processed = await image
-      .composite([{ input: sello, top: height - selloH - margen, left: margen }])
+      .composite([{
+        input: sello,
+        top: height - selloH - margen,
+        left: lado === "derecha" ? width - selloW - margen : margen,
+      }])
       .jpeg({ quality: 90 })
       .toBuffer();
 

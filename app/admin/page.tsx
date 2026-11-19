@@ -824,7 +824,7 @@ export default function AdminPage() {
                                   imagenesLocales[p.id]
                                     ? imagenesLocales[p.id]
                                     : p.imagen_url
-                                    ? `/api/imagen?v=14&url=${encodeURIComponent(p.imagen_url.split("?")[0])}`
+                                    ? `/api/imagen?v=15&url=${encodeURIComponent(p.imagen_url.split("?")[0])}`
                                     : "/logo-marca.svg"
                                 }
                                 alt={p.nombre}
