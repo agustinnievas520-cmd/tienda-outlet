@@ -220,6 +220,22 @@ export default function CatalogoCliente({ whatsappNumero, whatsappNumero2 = "", 
 
       {/* Grid de productos */}
       <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Tecnología → acceso a la sección de iPhone usados */}
+        {(categoriaActiva === "Informática y Celulares" || /iphone|celular/i.test(busqueda)) && (
+          <a
+            href="/iphone-usados"
+            className="mb-6 flex items-center gap-4 bg-[#F3EADC] border border-[#C9994F]/40 rounded-2xl p-4 hover:border-[#C9994F] transition-colors"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/iphones/16pro-natural.webp" alt="" className="w-16 h-16 object-contain bg-white rounded-xl flex-shrink-0" />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-bold tracking-widest text-[#A67A3A]">TECNOLOGÍA</p>
+              <p className="text-lg font-semibold text-[#3B2A1E] leading-tight">iPhone Usados</p>
+              <p className="text-sm text-[#5A4530]">Con 90 días de garantía y financiación solo con DNI</p>
+            </div>
+            <span className="flex-shrink-0 bg-[#C9994F] text-white text-sm font-semibold px-4 py-2 rounded-xl">Ver equipos</span>
+          </a>
+        )}
         {cargando ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {Array.from({ length: 8 }).map((_, i) => (

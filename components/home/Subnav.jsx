@@ -4,6 +4,7 @@ import styles from "./Subnav.module.css";
 const categorias = [
   { label: "Electrodomésticos", href: "/catalogo?categoria=Electrodom%C3%A9sticos" },
   { label: "Tecnología", href: "/catalogo?categoria=Inform%C3%A1tica+y+Celulares" },
+  { label: "📱 iPhone Usados", href: "/iphone-usados" },
   { label: "Muebles y Hogar", href: "/catalogo?categoria=Muebles" },
   { label: "Motos", href: "/catalogo?q=moto" },
   { label: "Bicicletas", href: "/catalogo?q=bicicleta" },
