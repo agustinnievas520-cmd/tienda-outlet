@@ -407,7 +407,7 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
           <h1 className="text-3xl font-semibold mt-1">Hola, {vendedor.nombre} 👋</h1>
           <p className="text-[#5A4530] text-sm mt-1">
             Tocá <strong className="text-[#3B2A1E]">&quot;Subir a historia&quot;</strong> en cualquier producto. La imagen sale con
-            los precios del día y tu WhatsApp.
+            los precios del día y &quot;Consultá con tu vendedor&quot;.
           </p>
           <p className="text-[#5A4530] text-sm mt-1">
             ¿Varios juntos? Tocá la <strong className="text-[#3B2A1E]">foto</strong> de cada producto para marcarlo (hasta{" "}

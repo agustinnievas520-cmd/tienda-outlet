@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { formatearPrecio } from "@/lib/calculos";
 import { resolverWhatsapp, esCodigoVendedor, limpiarNumero } from "@/lib/whatsapp";
 import { GARANTIA_DIAS, IPHONES_USADOS } from "@/lib/data/iphonesUsados";
+import { PieConsultaVendedor } from "@/lib/historiaPie";
 
 // Historia 1080x1920 para los iPhone usados (mismo diseño que la de los
 // productos, pero con los valores fijos de la lista: entrega y 16/8/4 cuotas).
@@ -175,8 +176,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
           </div>
         </div>
 
-        {/* Pie con WhatsApp */}
+        {/* Pie: si la sube un vendedor, "Consultá con tu vendedor"; si no, el WhatsApp */}
         <div style={{ flex: 1 }} />
+        {nombreVendedor ? (
+          <PieConsultaVendedor />
+        ) : (
         <div
           style={{
             display: "flex",
@@ -193,6 +197,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
           </div>
           <div style={{ fontSize: 66, fontWeight: 600, marginTop: 4 }}>{formatearWhatsapp(limpiarNumero(activo))}</div>
         </div>
+        )}
       </div>
     ),
     { width: W, height: H, fonts: fuentes, headers: { "Cache-Control": "no-store" } }

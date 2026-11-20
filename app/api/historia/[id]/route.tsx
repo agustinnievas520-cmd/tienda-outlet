@@ -11,6 +11,7 @@ import {
 } from "@/lib/calculos";
 import { resolverWhatsapp, esCodigoVendedor } from "@/lib/whatsapp";
 import { GET as obtenerImagen } from "@/app/api/imagen/route";
+import { PieConsultaVendedor } from "@/lib/historiaPie";
 
 // Genera una imagen vertical (1080x1920) lista para historias de Instagram /
 // estados de WhatsApp: foto del producto, entrega, cuotas semanal/quincenal/
@@ -264,8 +265,11 @@ export async function GET(
           </div>
         )}
 
-        {/* Pie con WhatsApp (deja lugar abajo para la barra de respuesta) */}
+        {/* Pie: si la sube un vendedor, "Consultá con tu vendedor"; si no, el WhatsApp */}
         <div style={{ flex: 1 }} />
+        {nombreVendedor ? (
+          <PieConsultaVendedor />
+        ) : (
         <div
           style={{
             display: "flex",
@@ -284,6 +288,7 @@ export async function GET(
             {formatearWhatsapp(whatsapp)}
           </div>
         </div>
+        )}
       </div>
     ),
     {
