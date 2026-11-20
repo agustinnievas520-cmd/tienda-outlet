@@ -1,38 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import sharp from "sharp";
 import { prisma } from "@/lib/prisma";
+import { aplicarSello } from "@/lib/selloViena";
 import path from "path";
 import fs from "fs";
 
 const SELLO_PATH = path.join(process.cwd(), "public", "sello-outlet.png");
 
-// Casi todas las fotos de Viena traen el logo abajo a la izquierda, pero
-// algunas lo traen abajo a la derecha. Cuenta píxeles del rojo del logo en
-// cada rincón inferior: si solo aparece a la derecha, el sello va a la derecha.
-async function ladoDelLogo(buf: Buffer): Promise<"izquierda" | "derecha"> {
-  try {
-    const { data } = await sharp(buf)
-      .removeAlpha()
-      .resize(200, 200, { fit: "fill" })
-      .raw()
-      .toBuffer({ resolveWithObject: true });
-    const contarRojo = (x0: number, x1: number) => {
-      let n = 0;
-      for (let y = 160; y < 200; y++)
-        for (let x = x0; x < x1; x++) {
-          const k = (y * 200 + x) * 3;
-          const r = data[k], g = data[k + 1], b = data[k + 2];
-          if (r > 150 && g < 70 && b < 90 && r - g > 100) n++;
-        }
-      return n;
-    };
-    return contarRojo(136, 200) >= 15 && contarRojo(0, 64) < 15 ? "derecha" : "izquierda";
-  } catch {
-    return "izquierda";
-  }
-}
-
-// Fotos propias viejas: 800x800 con el logo redondo dorado viejo centrado
 // en la franja blanca de abajo (x 335-465, y 655-785).
 async function tieneLogoViejo(buf: Buffer): Promise<boolean> {
   try {
@@ -176,28 +150,11 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Imágenes de Viena: su logo está en la esquina inferior izquierda.
-  // Se tapa solo ese rincón con el sello de Outlet Hogar (30% x 18% de la foto),
-  // así el logo de Viena no se ve y el producto no queda cortado abajo.
+  // Imágenes de Viena: se tapa su logo con el sello de Outlet Hogar, del
+  // tamaño y en el lugar justo para cada foto (ver lib/selloViena.ts), así el
+  // logo de Viena no se ve y el producto no queda cortado.
   try {
-    const image = sharp(raw!).flatten({ background: "#ffffff" });
-    const { width = 400, height = 400 } = await sharp(raw!).metadata();
-    const selloW = Math.round(width * 0.30);
-    const selloH = Math.round(height * 0.18);
-    const margen = Math.round(Math.min(width, height) * 0.005);
-    const sello = await sharp(fs.readFileSync(SELLO_PATH))
-      .resize(selloW, selloH, { fit: "fill" })
-      .png()
-      .toBuffer();
-    const lado = await ladoDelLogo(raw!);
-    const processed = await image
-      .composite([{
-        input: sello,
-        top: height - selloH - margen,
-        left: lado === "derecha" ? width - selloW - margen : margen,
-      }])
-      .jpeg({ quality: 90 })
-      .toBuffer();
+    const processed = await aplicarSello(raw!, fs.readFileSync(SELLO_PATH));
 
     return new NextResponse(processed as unknown as BodyInit, {
       headers: {

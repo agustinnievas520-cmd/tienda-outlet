@@ -88,7 +88,8 @@ async function descargar(url: string): Promise<string> {
   for (let intento = 0; intento < 3; intento++) {
     try {
       const res = await fetch(url, { headers: { "User-Agent": UA }, signal: AbortSignal.timeout(20000) });
-      if (res.ok) return await res.text();
+      // Viena usa la codificación vieja ISO-8859-1 (por eso las tildes salían rotas)
+      if (res.ok) return new TextDecoder("windows-1252").decode(await res.arrayBuffer());
       if (res.status === 404) return "";
     } catch {
       // reintenta

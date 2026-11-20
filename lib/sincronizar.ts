@@ -128,6 +128,8 @@ export async function sincronizar(slugs: string[]): Promise<ResultadoSync> {
         else r.ocultados++;
       }
       if (t.categoria !== v.categoria) data.categoria = v.categoria;
+      // Nombres con letras rotas (tildes mal leídas): se corrigen con el de Viena
+      if (t.nombre.includes("�") && !v.nombre.includes("�")) data.nombre = v.nombre;
       if (t.url_origen !== v.url_origen && !porUrl.has(v.url_origen)) data.url_origen = v.url_origen;
       if (foto !== t.imagen_url) data.imagen_url = foto;
       if (Object.keys(data).length) cambios.push(() => prisma.producto.update({ where: { id: t.id }, data }));

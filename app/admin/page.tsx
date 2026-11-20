@@ -853,7 +853,7 @@ export default function AdminPage() {
                                   imagenesLocales[p.id]
                                     ? imagenesLocales[p.id]
                                     : p.imagen_url
-                                    ? `/api/imagen?v=16&url=${encodeURIComponent(p.imagen_url.split("?")[0])}`
+                                    ? `/api/imagen?v=17&url=${encodeURIComponent(p.imagen_url.split("?")[0])}`
                                     : "/logo-casa-icono.png"
                                 }
                                 alt={p.nombre}
