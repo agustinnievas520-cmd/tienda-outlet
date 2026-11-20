@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import QRCode from "qrcode";
 import { calcularOpcionesFinanciamiento, formatearPrecio } from "@/lib/calculos";
+import { IPHONES_USADOS, ORDEN_MODELOS } from "@/lib/data/iphonesUsados";
 
 interface Producto {
   id: number;
@@ -11,7 +12,35 @@ interface Producto {
   precio_costo: number;
   precio_financiado?: number;
   imagen_url: string;
+  // Solo para los iPhone usados (no están en la base de productos)
+  foto?: string;
+  historia?: string;
+  linea?: string;
 }
+
+// Los iPhone usados se muestran en el panel con ids negativos (-1, -2, …)
+// para no chocar con los productos de la base.
+const CAT_IPHONE = "📱 iPhone Usados";
+const IPHONES_PANEL: Producto[] = IPHONES_USADOS.filter((p) => p.disponible)
+  .sort((a, b) => ORDEN_MODELOS.indexOf(a.modelo) - ORDEN_MODELOS.indexOf(b.modelo) || a.entrega - b.entrega)
+  .map((p, i) => ({
+    id: -(i + 1),
+    nombre: `${p.modelo} ${p.capacidad} ${p.color} · Batería ${p.bateria}%${p.conCaja ? " · Con caja" : ""}`,
+    categoria: CAT_IPHONE,
+    precio_costo: 0,
+    imagen_url: "",
+    foto: p.foto,
+    historia: `/api/historia-iphone/${p.id}`,
+    linea: `Entrega ${formatearPrecio(p.entrega)} · 16 x ${formatearPrecio(p.semanal)} semanal`,
+  }));
+
+const urlHistoria = (p: Producto, codigo: string) =>
+  `${p.historia ?? `/api/historia/${p.id}`}?v=${encodeURIComponent(codigo)}`;
+
+const iphonesQueCoinciden = (q: string) => {
+  const t = q.trim().toLowerCase();
+  return t ? IPHONES_PANEL.filter((p) => p.nombre.toLowerCase().includes(t)) : IPHONES_PANEL;
+};
 
 interface Props {
   vendedor: { nombre: string; codigo: string };
@@ -89,6 +118,14 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
   const cargar = useCallback(
     async (paginaPedida: number, reemplazar: boolean) => {
       const nro = ++pedidoActual.current;
+      // iPhone usados: no están en la base, se filtran acá mismo
+      if (categoria === CAT_IPHONE) {
+        setProductos(iphonesQueCoinciden(busqueda));
+        setTotalPaginas(1);
+        setPagina(1);
+        setCargando(false);
+        return;
+      }
       setCargando(true);
       try {
         const params = new URLSearchParams({ pagina: String(paginaPedida) });
@@ -98,7 +135,9 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
         if (!res.ok) throw new Error();
         const data = await res.json();
         if (nro !== pedidoActual.current) return; // llegó una búsqueda más nueva
-        setProductos((prev) => (reemplazar ? data.productos : [...prev, ...data.productos]));
+        // Si buscan "iphone" en Todas, los iPhone usados aparecen primero
+        const extra = paginaPedida === 1 && !categoria && /iphone/i.test(busqueda) ? iphonesQueCoinciden(busqueda) : [];
+        setProductos((prev) => (reemplazar ? [...extra, ...data.productos] : [...prev, ...data.productos]));
         setTotalPaginas(data.totalPaginas ?? 1);
         setPagina(paginaPedida);
       } catch {
@@ -129,10 +168,10 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
       setSel({ producto: p, estado: "preparando", paso: "elegir" });
       setQr("");
       try {
-        const res = await fetch(`/api/historia/${p.id}?v=${encodeURIComponent(vendedor.codigo)}`);
+        const res = await fetch(urlHistoria(p, vendedor.codigo));
         if (!res.ok) throw new Error();
         const blob = await res.blob();
-        const archivo = new File([blob], `outlet-hogar-${p.id}.png`, { type: "image/png" });
+        const archivo = new File([blob], `outlet-hogar-${Math.abs(p.id)}${p.id < 0 ? "-iphone" : ""}.png`, { type: "image/png" });
         setSel((s) =>
           s && s.producto.id === p.id
             ? { ...s, estado: "listo", url: URL.createObjectURL(blob), archivo, blob }
@@ -187,10 +226,10 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
           const p = lista[k];
           let archivo: File | null = null;
           try {
-            const res = await fetch(`/api/historia/${p.id}?v=${encodeURIComponent(vendedor.codigo)}`);
+            const res = await fetch(urlHistoria(p, vendedor.codigo));
             if (!res.ok) throw new Error();
             const blob = await res.blob();
-            archivo = new File([blob], `outlet-hogar-${p.id}.png`, { type: "image/png" });
+            archivo = new File([blob], `outlet-hogar-${Math.abs(p.id)}${p.id < 0 ? "-iphone" : ""}.png`, { type: "image/png" });
           } catch {
             archivo = null;
           }
@@ -272,22 +311,24 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
   // Si entraron escaneando el QR (?p=ID o ?ps=ID,ID,...), se abre directo
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    // ids negativos = iPhone usados (están acá mismo, no en la base)
+    const buscar = (n: number): Promise<Producto | null> =>
+      n < 0
+        ? Promise.resolve(IPHONES_PANEL.find((p) => p.id === n) ?? null)
+        : fetch(`/api/productos/${n}`).then((r) => (r.ok ? r.json() : null)).catch(() => null);
     const id = Number(params.get("p"));
     if (id) {
-      fetch(`/api/productos/${id}`)
-        .then((r) => (r.ok ? r.json() : null))
-        .then((p) => {
-          if (p?.id) abrirProducto(p);
-        })
-        .catch(() => {});
+      buscar(id).then((p) => {
+        if (p?.id) abrirProducto(p);
+      });
     }
     const ids = (params.get("ps") || "")
       .split(",")
       .map(Number)
-      .filter((n) => n > 0)
+      .filter((n) => Number.isInteger(n) && n !== 0)
       .slice(0, MAX_JUNTAS);
     if (ids.length) {
-      Promise.all(ids.map((n) => fetch(`/api/productos/${n}`).then((r) => (r.ok ? r.json() : null)).catch(() => null)))
+      Promise.all(ids.map(buscar))
         .then((lista) => {
           const ok = lista.filter((p): p is Producto => !!p?.id);
           if (ok.length) {
@@ -395,7 +436,7 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
             className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-base outline-none focus:border-[#C9994F]"
           />
           <div className="flex gap-2 overflow-x-auto mt-2 pb-1">
-            {["", ...categorias].map((c) => (
+            {["", CAT_IPHONE, ...categorias].map((c) => (
               <button
                 key={c || "todas"}
                 onClick={() => setCategoria(c)}
@@ -440,7 +481,7 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={`/api/imagen?v=17&url=${encodeURIComponent(p.imagen_url.split("?")[0])}`}
+                    src={p.foto ?? `/api/imagen?v=17&url=${encodeURIComponent(p.imagen_url.split("?")[0])}`}
                     alt={p.nombre}
                     loading="lazy"
                     className={`w-full h-full object-contain ${marcado ? "opacity-80" : ""}`}
@@ -455,7 +496,9 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
                 </button>
                 <div className="p-3 flex flex-col flex-1">
                   <p className="text-sm font-medium text-gray-800 line-clamp-2 leading-snug">{p.nombre}</p>
-                  {semanal ? (
+                  {p.linea ? (
+                    <p className="text-xs text-gray-500 mt-1">{p.linea}</p>
+                  ) : semanal ? (
                     <p className="text-xs text-gray-500 mt-1">
                       12 x <strong className="text-[#3B2A1E]">{formatearPrecio(semanal.cuota)}</strong> semanal
                     </p>

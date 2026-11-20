@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   // Fuentes y logo que usa el generador de historias (/api/historia)
   outputFileTracingIncludes: {
     "/api/historia/[id]": ["./lib/fonts/**", "./public/logo-casa-icono.png", "./public/logo-casa-texto.png", "./public/sello-outlet.png"],
+    "/api/historia-iphone/[id]": ["./lib/fonts/**", "./public/logo-casa-icono.png", "./public/logo-casa-texto.png", "./public/iphones/**"],
     "/api/imagen": ["./public/sello-outlet.png"],
     "/api/admin/imagen/[id]": ["./public/sello-outlet.png"],
   },
