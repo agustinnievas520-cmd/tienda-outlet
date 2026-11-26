@@ -17,6 +17,8 @@ model Producto {
   // Oculto a mano (ej: sin foto usable). La sincronización con Viena no lo vuelve a mostrar.
   oculto_manual Boolean @default(false)
   url_origen   String   @unique
+  // Código de artículo del proveedor (el que se usa para hacer el pedido)
+  codigo       String?
   descripcion  String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

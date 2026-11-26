@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
       const variantesPorPalabra = palabras.map(variantesPalabra);
       const condicionesPalabras = variantesPorPalabra.map((variantes) => {
         const condicionesVariantes = variantes.map(
-          (v) => Prisma.sql`(unaccent(nombre) ILIKE unaccent(${"%" + v + "%"}) OR unaccent(categoria) ILIKE unaccent(${"%" + v + "%"}))`
+          (v) => Prisma.sql`(unaccent(nombre) ILIKE unaccent(${"%" + v + "%"}) OR unaccent(categoria) ILIKE unaccent(${"%" + v + "%"}) OR codigo ILIKE ${"%" + v + "%"})`
         );
         return Prisma.sql`(${Prisma.join(condicionesVariantes, " OR ")})`;
       });

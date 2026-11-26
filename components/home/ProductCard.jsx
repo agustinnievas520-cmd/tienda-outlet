@@ -9,8 +9,8 @@ function fmt(n) {
 
 export default function ProductCard({ product, whatsappNumero = WA_DEFAULT }) {
   const WA = whatsappNumero;
-  const { nombre, precio_contado, precio_financiado, precio_cuota, cuotas, imagen_url, entrega_inicial } = product;
-  const waMsg = encodeURIComponent(`Hola, me interesa: ${nombre}`);
+  const { nombre, codigo, precio_contado, precio_financiado, precio_cuota, cuotas, imagen_url, entrega_inicial } = product;
+  const waMsg = encodeURIComponent(`Hola, me interesa: ${nombre}${codigo ? ` (Cód. ${codigo})` : ""}`);
   const descuento = precio_financiado > precio_contado
     ? Math.round(((precio_financiado - precio_contado) / precio_financiado) * 100)
     : 0;
@@ -36,6 +36,7 @@ export default function ProductCard({ product, whatsappNumero = WA_DEFAULT }) {
       </div>
       <div className={styles.body}>
         <p className={styles.name}>{nombre}</p>
+        {codigo && <span className={styles.codigo}>Cód. {codigo}</span>}
         {precio_financiado > precio_contado && (
           <span className={styles.oldPrice}>${fmt(precio_financiado)}</span>
         )}

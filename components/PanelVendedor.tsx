@@ -12,6 +12,7 @@ interface Producto {
   precio_costo: number;
   precio_financiado?: number;
   imagen_url: string;
+  codigo?: string | null;
   // Solo para los iPhone usados (no están en la base de productos)
   foto?: string;
   historia?: string;
@@ -496,6 +497,7 @@ export default function PanelVendedor({ vendedor, categorias }: Props) {
                 </button>
                 <div className="p-3 flex flex-col flex-1">
                   <p className="text-sm font-medium text-gray-800 line-clamp-2 leading-snug">{p.nombre}</p>
+                  {p.codigo && <p className="text-[11px] text-gray-500 font-mono mt-0.5">Cód. {p.codigo}</p>}
                   {p.linea ? (
                     <p className="text-xs text-gray-500 mt-1">{p.linea}</p>
                   ) : semanal ? (

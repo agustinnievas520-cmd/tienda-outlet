@@ -105,3 +105,12 @@
   font-weight: 700;
   margin-top: 1px;
 }
+
+.codigo {
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  color: #6b7280;
+  margin: -2px 0 6px;
+}

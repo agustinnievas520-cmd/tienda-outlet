@@ -166,6 +166,7 @@ export default async function HomePage({
   const productosConPrecios = todosLosProductos.map((p) => ({
     id: p.id,
     nombre: p.nombre,
+    codigo: p.codigo,
     categoria: p.categoria,
     imagen_url: p.imagen_url,
     precio_contado: calcularPrecioContado(p.precio_costo, cfg),
@@ -178,6 +179,7 @@ export default async function HomePage({
   const trendingConPrecios = productosTrending.map((p) => ({
     id: p.id,
     nombre: p.nombre,
+    codigo: p.codigo,
     categoria: p.categoria,
     imagen_url: p.imagen_url,
     precio_contado: calcularPrecioContado(p.precio_costo, cfg),
@@ -190,6 +192,7 @@ export default async function HomePage({
   const gastronomicosConPrecios = productosGastronomicos.map((p) => ({
     id: p.id,
     nombre: p.nombre,
+    codigo: p.codigo,
     categoria: p.categoria,
     imagen_url: p.imagen_url,
     precio_contado: calcularPrecioContado(p.precio_costo, cfg),
@@ -202,6 +205,7 @@ export default async function HomePage({
   const veranoConPrecios = productosVerano.map((p) => ({
     id: p.id,
     nombre: p.nombre,
+    codigo: p.codigo,
     categoria: p.categoria,
     imagen_url: p.imagen_url,
     precio_contado: calcularPrecioContado(p.precio_costo, cfg),

@@ -16,6 +16,7 @@ interface Producto {
   imagen_url: string;
   disponible: boolean;
   url_origen: string;
+  codigo?: string | null;
   descripcion?: string | null;
 }
 
@@ -44,7 +45,7 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
 
   const mensajeWA = tienePrecio && opActual
     ? encodeURIComponent(
-        `Hola! Estoy interesado en *${producto.nombre}*.\n\n` +
+        `Hola! Estoy interesado en *${producto.nombre}*${producto.codigo ? ` (Cód. ${producto.codigo})` : ""}.\n\n` +
         `Opción elegida: *${opActual.modalidad}*\n` +
         `• Entrega inicial: ${formatearPrecio(opActual.entrega)}\n` +
         `• ${opActual.cuotas} cuotas de ${formatearPrecio(opActual.cuota)} por ${opActual.frecuencia}\n` +
@@ -52,7 +53,7 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
         `¿Podemos coordinarlo?`
       )
     : encodeURIComponent(
-        `Hola! Estoy interesado en *${producto.nombre}*. ¿Me podés dar más info y opciones de financiación?`
+        `Hola! Estoy interesado en *${producto.nombre}*${producto.codigo ? ` (Cód. ${producto.codigo})` : ""}. ¿Me podés dar más info y opciones de financiación?`
       );
 
   const urlWA = `https://wa.me/${numeroDestino}?text=${mensajeWA}`;
@@ -148,6 +149,11 @@ export default function ModalProducto({ producto, whatsappNumero, whatsappNumero
             <h2 className="text-2xl font-black text-[#3B2A1E] leading-tight -mt-1">
               {producto.nombre}
             </h2>
+            {producto.codigo && (
+              <p className="text-sm text-gray-500 font-mono tracking-wide -mt-2 select-all">
+                Cód. {producto.codigo}
+              </p>
+            )}
 
             {/* Separador dorado */}
             <div className="w-10 h-1 bg-[#C9994F] rounded-full -mt-1" />

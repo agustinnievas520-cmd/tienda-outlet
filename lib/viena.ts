@@ -104,23 +104,46 @@ export function esFotoDeRelleno(url: string): boolean {
   return !url || /logo-vienamuebles|no-image/i.test(url);
 }
 
+// Código de artículo (el que se usa para hacer el pedido). No viene en el
+// listado: está debajo del título en la página del producto.
+export function codigoDeFicha(html: string): string {
+  const m = html.match(/class="products-model-below-name"[^>]*>([^<]*)</i);
+  return (m?.[1] || "").replace(/&nbsp;/g, " ").trim();
+}
+
+export interface Ficha {
+  codigo: string;
+  foto: string;
+}
+
+// Lee la página del producto una sola vez: código y foto real.
+// null si no se pudo leer (para no confundir "sin código" con "falló").
+export async function leerFicha(urlProducto: string): Promise<Ficha | null> {
+  try {
+    const html = await descargar(urlProducto);
+    if (!html) return null;
+    return { codigo: codigoDeFicha(html), foto: fotoDeFicha(html) };
+  } catch {
+    return null;
+  }
+}
+
+function fotoDeFicha(html: string): string {
+  const og = html.match(/<meta[^>]+property="og:image"[^>]+content="([^"]+)"/i)?.[1];
+  const candidatas = [
+    og,
+    ...Array.from(html.matchAll(/["'(]((?:https?:\/\/[^"' )]+)?\/?mods\/html\/fil\/Model\/Product\/[^"' )]+\.(?:jpg|jpeg|png|webp)(?:\.webp)?)/gi)).map((m) => m[1]),
+  ]
+    .filter((u): u is string => !!u)
+    .map(absoluta)
+    .filter((u) => !esFotoDeRelleno(u));
+  return candidatas[0] || "";
+}
+
 // Cuando el listado trae la imagen de relleno, la foto real suele estar en la
 // página del producto.
 export async function fotoDesdePagina(urlProducto: string): Promise<string> {
-  try {
-    const html = await descargar(urlProducto);
-    const og = html.match(/<meta[^>]+property="og:image"[^>]+content="([^"]+)"/i)?.[1];
-    const candidatas = [
-      og,
-      ...Array.from(html.matchAll(/["'(]((?:https?:\/\/[^"' )]+)?\/?mods\/html\/fil\/Model\/Product\/[^"' )]+\.(?:jpg|jpeg|png|webp)(?:\.webp)?)/gi)).map((m) => m[1]),
-    ]
-      .filter((u): u is string => !!u)
-      .map(absoluta)
-      .filter((u) => !esFotoDeRelleno(u));
-    return candidatas[0] || "";
-  } catch {
-    return "";
-  }
+  return (await leerFicha(urlProducto))?.foto || "";
 }
 
 // Lee todas las páginas de una categoría, de a 4 páginas a la vez

@@ -16,6 +16,13 @@ interface Producto {
   imagen_url: string;
   disponible: boolean;
   url_origen: string;
+  codigo?: string | null;
+}
+
+// Busca por nombre o por código de artículo
+function coincide(p: { nombre: string; codigo?: string | null }, texto: string): boolean {
+  const t = texto.toLowerCase().trim();
+  return !t || p.nombre.toLowerCase().includes(t) || (p.codigo ?? "").toLowerCase().includes(t);
 }
 
 interface Configuracion {
@@ -478,7 +485,7 @@ export default function AdminPage() {
 
   const productosFiltradosCot = useMemo(() =>
     cotBusqueda.length < 2 ? [] : productos.filter(p =>
-      p.nombre.toLowerCase().includes(cotBusqueda.toLowerCase()) && p.precio_costo > 0
+      coincide(p, cotBusqueda) && p.precio_costo > 0
     ).slice(0, 8),
     [cotBusqueda, productos]
   );
@@ -489,6 +496,7 @@ export default function AdminPage() {
       `🏠 *OUTLET HOGAR — Propuesta de financiación*`,
       ``,
       `*${productoCot.nombre}*`,
+      ...(productoCot.codigo ? [`Cód. ${productoCot.codigo}`] : []),
       `💰 Precio contado: ${fmt(productoCot.precio_contado)}`,
       ``,
       `📦 Entrega inicial: *${fmt(calcularEntregaInicial(productoCot.precio_costo))}*`,
@@ -795,7 +803,7 @@ export default function AdminPage() {
                   type="text"
                   value={busquedaAdmin}
                   onChange={(e) => setBusquedaAdmin(e.target.value)}
-                  placeholder="Buscar producto..."
+                  placeholder="Buscar por nombre o código..."
                   className="pl-9 pr-4 py-2 rounded-xl border border-gray-200 text-sm bg-white outline-none focus:border-[#1a1a2e] w-56"
                 />
                 {busquedaAdmin && (
@@ -840,7 +848,7 @@ export default function AdminPage() {
                   </thead>
                   <tbody className="divide-y divide-gray-50">
                     {productos.filter(p =>
-                      !busquedaAdmin || p.nombre.toLowerCase().includes(busquedaAdmin.toLowerCase())
+                      coincide(p, busquedaAdmin)
                     ).map((p) => (
                       <tr key={p.id} className="hover:bg-gray-50 transition-colors">
                         {/* Imagen + nombre */}
@@ -892,6 +900,9 @@ export default function AdminPage() {
                               <p className="font-medium text-gray-800 line-clamp-1 max-w-[200px]">
                                 {p.nombre}
                               </p>
+                              {p.codigo && (
+                                <p className="text-xs text-gray-500 font-mono select-all">Cód. {p.codigo}</p>
+                              )}
                               <a
                                 href={p.url_origen}
                                 target="_blank"
@@ -975,7 +986,7 @@ export default function AdminPage() {
                   </tbody>
                 </table>
 
-                {productos.filter(p => !busquedaAdmin || p.nombre.toLowerCase().includes(busquedaAdmin.toLowerCase())).length === 0 && (
+                {productos.filter(p => coincide(p, busquedaAdmin)).length === 0 && (
                   <div className="text-center py-12 text-gray-400">
                     {busquedaAdmin ? `Sin resultados para "${busquedaAdmin}"` : "No hay productos. Sincronizá el catálogo primero."}
                   </div>
@@ -1026,6 +1037,7 @@ export default function AdminPage() {
                           className="w-full text-left px-4 py-2.5 text-sm hover:bg-gray-50 border-b border-gray-50 last:border-0"
                         >
                           <span className="font-medium text-gray-800 line-clamp-1">{p.nombre}</span>
+                          {p.codigo && <span className="text-xs text-gray-500 font-mono">Cód. {p.codigo}</span>}
                           <span className="text-xs text-gray-400 ml-2">{fmt(p.precio_contado)}</span>
                         </button>
                       ))}

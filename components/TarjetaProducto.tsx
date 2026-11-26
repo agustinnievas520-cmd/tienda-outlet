@@ -15,6 +15,7 @@ interface Producto {
   imagen_url: string;
   disponible: boolean;
   url_origen: string;
+  codigo?: string | null;
   entrega_inicial?: number;
 }
 
@@ -36,7 +37,7 @@ function formatearPrecio(valor: number): string {
 export default function TarjetaProducto({ producto, whatsappNumero, onVerDetalle }: Props) {
   const [imgError, setImgError] = useState(false);
   const mensajeWA = encodeURIComponent(
-    `Hola! Estoy interesado en ${producto.nombre}. ¿Me podés dar más info y opciones de financiación?`
+    `Hola! Estoy interesado en ${producto.nombre}${producto.codigo ? ` (Cód. ${producto.codigo})` : ""}. ¿Me podés dar más info y opciones de financiación?`
   );
   const urlWA = `https://wa.me/${whatsappNumero}?text=${mensajeWA}`;
 
@@ -104,11 +105,16 @@ export default function TarjetaProducto({ producto, whatsappNumero, onVerDetalle
       {/* Contenido */}
       <div className="p-4 flex flex-col flex-1">
         <h3
-          className="font-semibold text-gray-800 text-sm leading-snug line-clamp-2 mb-3 flex-1 cursor-pointer hover:text-[#3B2A1E] transition-colors"
+          className={`font-semibold text-gray-800 text-sm leading-snug line-clamp-2 ${producto.codigo ? "mb-1" : "mb-3 flex-1"} cursor-pointer hover:text-[#3B2A1E] transition-colors`}
           onClick={onVerDetalle}
         >
           {producto.nombre}
         </h3>
+        {producto.codigo && (
+          <p className="text-[11px] text-gray-500 font-mono tracking-wide mb-3 flex-1 select-all">
+            Cód. {producto.codigo}
+          </p>
+        )}
 
         {tienePrecio ? (
           <div className="space-y-1 mb-4">
