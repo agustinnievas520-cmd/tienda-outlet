@@ -111,7 +111,7 @@ export default async function IphoneUsadosPage({ searchParams }: { searchParams:
   const { v: vQuery } = await searchParams;
   const cookieStore = await cookies();
   const v = vendedorActivo(vQuery, cookieStore.get("vendedor")?.value);
-  const { activo } = await resolverWhatsapp(v, numero1, numero2);
+  const { activo, puntoVenta } = await resolverWhatsapp(v, numero1, numero2);
   // formato que pide WhatsApp para celulares de Argentina (549 + número)
   const whatsapp = limpiarNumero(activo);
 
@@ -123,8 +123,8 @@ export default async function IphoneUsadosPage({ searchParams }: { searchParams:
 
   return (
     <div style={{ background: "#F7F1E8", minHeight: "100vh" }}>
-      <TopBar whatsappNumero={whatsapp} />
-      <Navbar whatsappNumero={whatsapp} />
+      <TopBar whatsappNumero={whatsapp} puntoVenta={puntoVenta} />
+      <Navbar whatsappNumero={whatsapp} puntoVenta={puntoVenta} />
       <Subnav />
 
       <header className="bg-[#F3EADC] border-b-4 border-[#C9994F]">
@@ -198,7 +198,7 @@ export default async function IphoneUsadosPage({ searchParams }: { searchParams:
         </p>
       </main>
 
-      <Footer whatsappNumero={whatsapp} />
+      <Footer whatsappNumero={whatsapp} puntoVenta={puntoVenta} />
     </div>
   );
 }

@@ -27,6 +27,7 @@ const items = [
     ),
     title: "Envío a Domicilio",
     desc: "A toda la zona de El Trébol",
+    zona: true,
   },
   {
     icon: (
@@ -39,7 +40,7 @@ const items = [
   },
 ];
 
-export default function TrustBar() {
+export default function TrustBar({ puntoVenta }) {
   return (
     <section className={styles.section}>
       <div className={styles.inner}>
@@ -48,7 +49,9 @@ export default function TrustBar() {
             <div className={styles.icon}>{item.icon}</div>
             <div className={styles.text}>
               <span className={styles.title}>{item.title}</span>
-              <span className={styles.desc}>{item.desc}</span>
+              <span className={styles.desc}>
+                {item.zona && puntoVenta ? `A toda la zona de ${puntoVenta.localidad}` : item.desc}
+              </span>
             </div>
           </div>
         ))}

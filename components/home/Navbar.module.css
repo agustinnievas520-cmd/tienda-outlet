@@ -74,6 +74,14 @@
   gap: 3px;
 }
 
+.logoPuntoVenta {
+  font-size: 11px;
+  font-weight: 700;
+  color: #A67A3A;
+  padding-left: 13px;
+  white-space: nowrap;
+}
+
 .search {
   flex: 1;
   display: flex;
@@ -166,4 +174,8 @@
   .searchBtn { padding: 11px 12px; }
   .searchInput { padding: 11px 10px; min-width: 0; }
   .outlet { display: none; }
+  /* Con punto de venta son tres renglones: se achican para entrar en la barra */
+  .logoText:has(.logoPuntoVenta) .logoNombreImg { height: 19px; margin-bottom: 2px; }
+  .logoText:has(.logoPuntoVenta) .logoSub { font-size: 10px; line-height: 1.2; }
+  .logoPuntoVenta { font-size: 10px; line-height: 1.2; }
 }

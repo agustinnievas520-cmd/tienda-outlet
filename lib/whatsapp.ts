@@ -52,6 +52,38 @@ export interface WhatsappResuelto {
   // Si el visitante vino por un vendedor puntual, su número (todas las
   // consultas van ahí). Si no, undefined y se reparte entre 1 y 2.
   fijo?: string;
+  // Si el vendedor del link es de otra localidad (no El Trébol), esa
+  // localidad se muestra en la página como "Punto de venta".
+  puntoVenta?: PuntoVenta;
+}
+
+export interface PuntoVenta {
+  localidad: string; // "Arteaga"
+  encargado: string; // "Federico Sangiovani"
+}
+
+const SEDE = "el trebol";
+const MINUSCULAS = new Set(["de", "del", "la", "las", "los", "el", "y"]);
+
+// "LAS ROSAS" → "Las Rosas", "SAN MARTIN DE LAS ESCOBAS" → "San Martin de las Escobas"
+export function nombrePropio(texto: string): string {
+  return texto
+    .trim()
+    .toLowerCase()
+    .split(/\s+/)
+    .map((p, i) => (i > 0 && MINUSCULAS.has(p) ? p : p.charAt(0).toUpperCase() + p.slice(1)))
+    .join(" ");
+}
+
+function sinTildes(texto: string): string {
+  return texto.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+}
+
+// Punto de venta de un vendedor: solo si cargó una localidad distinta de la sede
+export function puntoVentaDe(vendedor: { nombre: string; localidad: string }): PuntoVenta | undefined {
+  const loc = vendedor.localidad?.trim();
+  if (!loc || sinTildes(loc) === SEDE) return undefined;
+  return { localidad: nombrePropio(loc), encargado: nombrePropio(vendedor.nombre) };
 }
 
 // Resuelve a qué WhatsApp va un lead según el código del vendedor.
@@ -69,7 +101,7 @@ export async function resolverWhatsapp(
     try {
       const vendedor = await prisma.vendedor.findUnique({ where: { codigo: v } });
       if (vendedor?.activo && vendedor.whatsapp) {
-        return { activo: vendedor.whatsapp, fijo: vendedor.whatsapp };
+        return { activo: vendedor.whatsapp, fijo: vendedor.whatsapp, puntoVenta: puntoVentaDe(vendedor) };
       }
     } catch (error) {
       console.error("Error al buscar vendedor:", error);

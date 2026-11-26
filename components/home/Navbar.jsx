@@ -5,7 +5,7 @@ import styles from "./Navbar.module.css";
 
 const WA_DEFAULT = "5403401642045";
 
-export default function Navbar({ whatsappNumero = WA_DEFAULT }) {
+export default function Navbar({ whatsappNumero = WA_DEFAULT, puntoVenta }) {
   const WA = whatsappNumero;
   const [query, setQuery] = useState("");
   const router = useRouter();
@@ -30,6 +30,9 @@ export default function Navbar({ whatsappNumero = WA_DEFAULT }) {
               <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
               El Trébol, Santa Fe
             </span>
+            {puntoVenta && (
+              <span className={styles.logoPuntoVenta}>Punto de venta {puntoVenta.localidad}</span>
+            )}
           </div>
         </a>
 

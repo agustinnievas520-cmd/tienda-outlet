@@ -31,19 +31,19 @@ export default async function CatalogoPage({
   const { v: vQuery } = await searchParams;
   const cookieStore = await cookies();
   const v = vendedorActivo(vQuery, cookieStore.get("vendedor")?.value);
-  const { activo: whatsappActivo, fijo: vendedorFijo } = await resolverWhatsapp(v, numero1, numero2);
+  const { activo: whatsappActivo, fijo: vendedorFijo, puntoVenta } = await resolverWhatsapp(v, numero1, numero2);
 
   return (
     <div style={{ background: "#F7F1E8", minHeight: "100vh" }}>
-      <TopBar whatsappNumero={whatsappActivo} />
-      <Navbar whatsappNumero={whatsappActivo} />
+      <TopBar whatsappNumero={whatsappActivo} puntoVenta={puntoVenta} />
+      <Navbar whatsappNumero={whatsappActivo} puntoVenta={puntoVenta} />
       <Subnav />
 
       <Suspense fallback={<div style={{ padding: "40px", textAlign: "center", color: "#999" }}>Cargando catálogo...</div>}>
         <CatalogoCliente whatsappNumero={numero1} whatsappNumero2={numero2} vendedorFijo={vendedorFijo} />
       </Suspense>
 
-      <Footer whatsappNumero={whatsappActivo} />
+      <Footer whatsappNumero={whatsappActivo} puntoVenta={puntoVenta} />
     </div>
   );
 }

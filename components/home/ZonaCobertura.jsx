@@ -14,7 +14,8 @@ const LOCALIDADES = [
   "Estación Clucellas", "San Martín de las Escobas",
 ];
 
-export default function ZonaCobertura({ whatsappNumero = WA_DEFAULT }) {
+export default function ZonaCobertura({ whatsappNumero = WA_DEFAULT, puntoVenta }) {
+  const otras = puntoVenta ? LOCALIDADES.filter((l) => l !== puntoVenta.localidad) : LOCALIDADES;
   const WA = whatsappNumero;
   return (
     <section className={styles.section}>
@@ -28,6 +29,11 @@ export default function ZonaCobertura({ whatsappNumero = WA_DEFAULT }) {
           <p className={styles.sub}>
             Llevamos los productos hasta tu localidad con nuestra propia logística de entregas.
           </p>
+          {puntoVenta && (
+            <p className={styles.sub}>
+              <strong>Punto de venta {puntoVenta.localidad}</strong> — te atiende {puntoVenta.encargado}, encargado de la zona.
+            </p>
+          )}
           <a
             href={`https://wa.me/${WA}?text=${encodeURIComponent("Hola! Quiero saber si hacen envíos a mi localidad")}`}
             target="_blank"
@@ -43,7 +49,13 @@ export default function ZonaCobertura({ whatsappNumero = WA_DEFAULT }) {
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
             {SEDE} <span className={styles.pillTag}>sede</span>
           </span>
-          {LOCALIDADES.map((loc) => (
+          {puntoVenta && (
+            <span className={`${styles.pill} ${styles.pillSede}`}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              {puntoVenta.localidad} <span className={styles.pillTag}>punto de venta</span>
+            </span>
+          )}
+          {otras.map((loc) => (
             <span key={loc} className={styles.pill}>{loc}</span>
           ))}
         </div>

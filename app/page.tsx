@@ -161,7 +161,7 @@ export default async function HomePage({
     whatsapp_numero_2: "",
   };
 
-  const { activo: whatsappActivo } = await resolverWhatsapp(v, cfg.whatsapp_numero, cfg.whatsapp_numero_2);
+  const { activo: whatsappActivo, puntoVenta } = await resolverWhatsapp(v, cfg.whatsapp_numero, cfg.whatsapp_numero_2);
 
   const productosConPrecios = todosLosProductos.map((p) => ({
     id: p.id,
@@ -239,8 +239,8 @@ export default async function HomePage({
 
   return (
     <div style={{ background: "#F7F1E8", minHeight: "100vh" }}>
-      <TopBar whatsappNumero={whatsappActivo} />
-      <Navbar whatsappNumero={whatsappActivo} />
+      <TopBar whatsappNumero={whatsappActivo} puntoVenta={puntoVenta} />
+      <Navbar whatsappNumero={whatsappActivo} puntoVenta={puntoVenta} />
       <Subnav />
       <HeroSlider heroImages={heroImages} whatsappNumero={whatsappActivo} />
 
@@ -266,11 +266,11 @@ export default async function HomePage({
         />
       )}
 
-      <TrustBar />
-      <ZonaCobertura whatsappNumero={whatsappActivo} />
+      <TrustBar puntoVenta={puntoVenta} />
+      <ZonaCobertura whatsappNumero={whatsappActivo} puntoVenta={puntoVenta} />
       <FinBanner whatsappNumero={whatsappActivo} />
       <Institucional />
-      <Footer whatsappNumero={whatsappActivo} />
+      <Footer whatsappNumero={whatsappActivo} puntoVenta={puntoVenta} />
     </div>
   );
 }

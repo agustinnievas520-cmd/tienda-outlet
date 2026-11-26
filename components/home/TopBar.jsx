@@ -2,7 +2,7 @@ import styles from "./TopBar.module.css";
 
 const WA_DEFAULT = "5403401642045";
 
-export default function TopBar({ whatsappNumero = WA_DEFAULT }) {
+export default function TopBar({ whatsappNumero = WA_DEFAULT, puntoVenta }) {
   const WA = whatsappNumero;
   return (
     <div className={styles.bar}>
@@ -11,7 +11,7 @@ export default function TopBar({ whatsappNumero = WA_DEFAULT }) {
           <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
           </svg>
-          <span>Envíos a todo El Trébol y zona</span>
+          <span>Envíos a todo {puntoVenta?.localidad ?? "El Trébol"} y zona</span>
         </div>
         <div className={styles.item}>
           <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
