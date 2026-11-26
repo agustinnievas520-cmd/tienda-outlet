@@ -5,6 +5,7 @@ import fs from "fs/promises";
 import path from "path";
 import { prisma } from "@/lib/prisma";
 import {
+  calcularPrecioContado,
   calcularPrecioFinanciado,
   calcularOpcionesFinanciamiento,
   formatearPrecio,
@@ -115,6 +116,7 @@ export async function GET(
       )
     : [];
   const entrega = opciones[0]?.entrega ?? 0;
+  const contado = tienePrecio ? calcularPrecioContado(producto.precio_costo, config) : 0;
   const nombreVendedor = vendedor?.activo ? vendedor.nombre : "";
 
   return new ImageResponse(
@@ -180,14 +182,14 @@ export async function GET(
             style={{
               display: "flex",
               width: 900,
-              height: 640,
+              height: 530,
               alignItems: "center",
               justifyContent: "center",
             }}
           >
             {foto ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={foto} alt="" style={{ maxWidth: 860, maxHeight: 620, objectFit: "contain", borderRadius: 24 }} />
+              <img src={foto} alt="" style={{ maxWidth: 860, maxHeight: 510, objectFit: "contain", borderRadius: 24 }} />
             ) : (
               <div style={{ display: "flex", fontSize: 40, color: "#9ca3af" }}>Sin imagen</div>
             )}
@@ -205,23 +207,51 @@ export async function GET(
           >
             {producto.nombre}
           </div>
+          {producto.codigo && (
+            <div
+              style={{
+                display: "flex",
+                marginTop: 10,
+                fontSize: 30,
+                letterSpacing: 2,
+                color: "#7A6650",
+              }}
+            >
+              {`Cód. ${producto.codigo}`}
+            </div>
+          )}
         </div>
 
         {/* Precios */}
         {tienePrecio ? (
           <div style={{ display: "flex", flexDirection: "column", margin: "34px 50px 0", gap: 18 }}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "baseline",
-                gap: 18,
-                fontSize: 40,
-              }}
-            >
-              <span>Llevátelo con</span>
-              <span style={{ fontSize: 60, fontWeight: 600 }}>{formatearPrecio(entrega)}</span>
-              <span>de entrega</span>
+            {/* Contado y entrega, lado a lado */}
+            <div style={{ display: "flex", gap: 18 }}>
+              {[
+                { titulo: "PRECIO CONTADO", valor: contado },
+                { titulo: "ENTREGA INICIAL", valor: entrega },
+              ].map((b) => (
+                <div
+                  key={b.titulo}
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    background: "white",
+                    border: `4px solid ${DORADO}`,
+                    borderRadius: 28,
+                    padding: "14px 10px 16px",
+                  }}
+                >
+                  <div style={{ fontSize: 28, fontWeight: 600, letterSpacing: 2, color: "#A67A3A" }}>
+                    {b.titulo}
+                  </div>
+                  <div style={{ fontSize: 58, fontWeight: 600, marginTop: 2 }}>
+                    {formatearPrecio(b.valor)}
+                  </div>
+                </div>
+              ))}
             </div>
             <div style={{ display: "flex", gap: 18 }}>
               {opciones.map((op) => (
@@ -266,7 +296,7 @@ export async function GET(
         )}
 
         {/* Pie: si la sube un vendedor, "Consultá con tu vendedor"; si no, el WhatsApp */}
-        <div style={{ flex: 1 }} />
+        <div style={{ flex: 1, minHeight: 36 }} />
         {nombreVendedor ? (
           <PieConsultaVendedor />
         ) : (
