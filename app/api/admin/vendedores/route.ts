@@ -29,6 +29,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const nombre = String(body.nombre ?? "").trim();
     const localidad = String(body.localidad ?? "").trim();
+    const socia = String(body.socia ?? "").trim();
     const whatsapp = limpiarNumero(String(body.whatsapp ?? ""));
     if (!nombre) return NextResponse.json({ error: "Falta el nombre" }, { status: 400 });
     if (whatsapp.length < 10) {
@@ -48,7 +49,7 @@ export async function POST(request: NextRequest) {
     }
 
     const vendedor = await prisma.vendedor.create({
-      data: { nombre, localidad, whatsapp, codigo },
+      data: { nombre, socia, localidad, whatsapp, codigo },
     });
     return NextResponse.json(vendedor);
   } catch (error) {

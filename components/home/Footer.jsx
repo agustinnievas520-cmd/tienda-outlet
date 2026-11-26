@@ -142,7 +142,7 @@ export default function Footer({ whatsappNumero = WA_DEFAULT, puntoVenta }) {
                 <span>
                   Punto de venta {puntoVenta.localidad}
                   <br />
-                  Encargado: {puntoVenta.encargado}
+                  {puntoVenta.varios ? "Encargados" : "Encargado"}: {puntoVenta.encargado}
                 </span>
               </li>
             )}

@@ -31,7 +31,8 @@ export default function ZonaCobertura({ whatsappNumero = WA_DEFAULT, puntoVenta 
           </p>
           {puntoVenta && (
             <p className={styles.sub}>
-              <strong>Punto de venta {puntoVenta.localidad}</strong> — te atiende {puntoVenta.encargado}, encargado de la zona.
+              <strong>Punto de venta {puntoVenta.localidad}</strong> — {puntoVenta.varios ? "te atienden" : "te atiende"} {puntoVenta.encargado},{" "}
+              {puntoVenta.varios ? "encargados" : "encargado"} de la zona.
             </p>
           )}
           <a

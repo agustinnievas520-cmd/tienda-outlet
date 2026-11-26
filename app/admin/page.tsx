@@ -39,6 +39,7 @@ interface Vendedor {
   id: number;
   nombre: string;
   localidad: string;
+  socia: string;
   whatsapp: string;
   codigo: string;
   activo: boolean;
@@ -83,7 +84,7 @@ export default function AdminPage() {
 
   // ─── Vendedores ────────────────────────────────────────────
   const [vendedores, setVendedores] = useState<Vendedor[]>([]);
-  const [formVendedor, setFormVendedor] = useState({ nombre: "", localidad: "", whatsapp: "" });
+  const [formVendedor, setFormVendedor] = useState({ nombre: "", socia: "", localidad: "", whatsapp: "" });
   const [guardandoVendedor, setGuardandoVendedor] = useState(false);
   const [editandoVendedor, setEditandoVendedor] = useState<Vendedor | null>(null);
   const [linkCopiado, setLinkCopiado] = useState<string | null>(null);
@@ -282,7 +283,7 @@ export default function AdminPage() {
       });
       const data = await res.json();
       if (res.ok) {
-        setFormVendedor({ nombre: "", localidad: "", whatsapp: "" });
+        setFormVendedor({ nombre: "", socia: "", localidad: "", whatsapp: "" });
         await cargarVendedores();
         mostrarExito(`✅ Vendedor ${data.nombre} agregado`);
       } else {
@@ -1268,12 +1269,19 @@ export default function AdminPage() {
               <p className="text-sm text-gray-500 mb-5">
                 Cada vendedor recibe su propio link. Los clientes que entren por ese link le escriben a su WhatsApp.
               </p>
-              <div className="grid sm:grid-cols-3 gap-3">
+              <div className="grid sm:grid-cols-2 gap-3">
                 <input
                   type="text"
                   value={formVendedor.nombre}
                   onChange={(e) => setFormVendedor((f) => ({ ...f, nombre: e.target.value }))}
                   placeholder="Nombre (ej: Juan)"
+                  className="px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#1a1a2e] focus:ring-2 focus:ring-[#1a1a2e]/20 outline-none text-sm"
+                />
+                <input
+                  type="text"
+                  value={formVendedor.socia}
+                  onChange={(e) => setFormVendedor((f) => ({ ...f, socia: e.target.value }))}
+                  placeholder="Socia/o que atiende con él (opcional)"
                   className="px-4 py-2.5 rounded-xl border border-gray-200 focus:border-[#1a1a2e] focus:ring-2 focus:ring-[#1a1a2e]/20 outline-none text-sm"
                 />
                 <input
@@ -1310,11 +1318,19 @@ export default function AdminPage() {
                   {vendedores.map((v) =>
                     editandoVendedor?.id === v.id ? (
                       <div key={v.id} className="border border-[#1a1a2e] rounded-xl p-4 space-y-3">
-                        <div className="grid sm:grid-cols-3 gap-3">
+                        <div className="grid sm:grid-cols-2 gap-3">
                           <input
                             type="text"
                             value={editandoVendedor.nombre}
                             onChange={(e) => setEditandoVendedor({ ...editandoVendedor, nombre: e.target.value })}
+                            placeholder="Nombre"
+                            className="px-3 py-2 rounded-lg border border-gray-200 text-sm"
+                          />
+                          <input
+                            type="text"
+                            value={editandoVendedor.socia}
+                            onChange={(e) => setEditandoVendedor({ ...editandoVendedor, socia: e.target.value })}
+                            placeholder="Socia/o (opcional)"
                             className="px-3 py-2 rounded-lg border border-gray-200 text-sm"
                           />
                           <input
@@ -1336,6 +1352,7 @@ export default function AdminPage() {
                             onClick={async () => {
                               const ok = await actualizarVendedor(v.id, {
                                 nombre: editandoVendedor.nombre,
+                                socia: editandoVendedor.socia,
                                 localidad: editandoVendedor.localidad,
                                 whatsapp: editandoVendedor.whatsapp,
                               });
@@ -1365,6 +1382,7 @@ export default function AdminPage() {
                           <div>
                             <p className="font-semibold text-gray-800">
                               {v.nombre}
+                              {v.socia && <span className="font-normal text-gray-700"> y {v.socia}</span>}
                               {v.localidad && <span className="font-normal text-gray-500"> · {v.localidad}</span>}
                               {!v.activo && <span className="ml-2 text-xs text-red-500 font-medium">PAUSADO</span>}
                             </p>

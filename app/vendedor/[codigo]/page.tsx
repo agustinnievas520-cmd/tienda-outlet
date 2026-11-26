@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
-import { esCodigoVendedor } from "@/lib/whatsapp";
+import { esCodigoVendedor, nombrePropio } from "@/lib/whatsapp";
 import PanelVendedor from "@/components/PanelVendedor";
 
 export const dynamic = "force-dynamic";
@@ -32,6 +32,12 @@ export default async function VendedorPage({
     );
   }
 
+  // Bienvenida: "Federico y Jazmin" (primeros nombres, si tiene socia)
+  const primerNombre = (n: string) => nombrePropio(n).split(" ")[0];
+  const saludo = vendedor.socia
+    ? `${primerNombre(vendedor.nombre)} y ${primerNombre(vendedor.socia)}`
+    : nombrePropio(vendedor.nombre);
+
   let categorias: string[] = [];
   try {
     const filas = await prisma.producto.findMany({
@@ -47,7 +53,7 @@ export default async function VendedorPage({
 
   return (
     <PanelVendedor
-      vendedor={{ nombre: vendedor.nombre, codigo: vendedor.codigo }}
+      vendedor={{ nombre: saludo, codigo: vendedor.codigo }}
       categorias={categorias}
     />
   );

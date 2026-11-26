@@ -48,6 +48,9 @@ model Vendedor {
   id        Int      @id @default(autoincrement())
   nombre    String
   localidad String   @default("")
+  // Socia/o que atiende junto al vendedor (opcional). Aparece en la
+  // bienvenida del panel y en la página de su punto de venta.
+  socia     String   @default("")
   whatsapp  String
   codigo    String   @unique
   activo    Boolean  @default(true)

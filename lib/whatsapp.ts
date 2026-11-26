@@ -59,7 +59,8 @@ export interface WhatsappResuelto {
 
 export interface PuntoVenta {
   localidad: string; // "Arteaga"
-  encargado: string; // "Federico Sangiovani"
+  encargado: string; // "Federico Sangiovani" o "Federico Sangiovani y Jazmin Palmucci"
+  varios: boolean; // true si atienden dos (para decir "te atienden" / "encargados")
 }
 
 const SEDE = "el trebol";
@@ -80,10 +81,12 @@ function sinTildes(texto: string): string {
 }
 
 // Punto de venta de un vendedor: solo si cargó una localidad distinta de la sede
-export function puntoVentaDe(vendedor: { nombre: string; localidad: string }): PuntoVenta | undefined {
+export function puntoVentaDe(vendedor: { nombre: string; localidad: string; socia?: string }): PuntoVenta | undefined {
   const loc = vendedor.localidad?.trim();
   if (!loc || sinTildes(loc) === SEDE) return undefined;
-  return { localidad: nombrePropio(loc), encargado: nombrePropio(vendedor.nombre) };
+  const socia = vendedor.socia?.trim();
+  const encargado = nombrePropio(vendedor.nombre) + (socia ? ` y ${nombrePropio(socia)}` : "");
+  return { localidad: nombrePropio(loc), encargado, varios: !!socia };
 }
 
 // Resuelve a qué WhatsApp va un lead según el código del vendedor.
